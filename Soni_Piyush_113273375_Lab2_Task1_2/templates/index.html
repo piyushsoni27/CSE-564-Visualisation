@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="static/dashboard.css" />
+    <link rel="stylesheet" href="static/scatterMatrix.css" />
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    
+    <ul class="tab">
+      <li><p>Mini-Project#2</p></li>
+      <li><button class="tablinks" onclick="openMenu(event, 'scree')" id="defaultOpen">Scree Plot</button></li>
+      <li><button class="tablinks" onclick="openMenu(event, 'BiPlot')">BiPlot</button></li>
+      <li><button class="tablinks" onclick="openMenu(event, 'MDS')">MDS</button></li>
+      <!-- <li style="float:right"><a class="active" href="#about">About</a></li> -->
+    </ul>
+
+    <div id="scree" class="tabcontent">
+      <p id="d_i">Intrinsic Dimensionality: 3</p>
+      <div class="row">
+        <div class="col-sm-5">
+          <div class="row">
+            <svg id='svgScree'></svg>
+          </div>
+          <div class="row">
+            <table id="table" class = "col-sm-5" border="1px">
+              <tr>
+                <th class="head">Top Attributes</th>
+                <th class="head">Sum of Squared Loadings</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="col-sm-7">
+          <div class = "row">
+            <p id="slidertext" class="col-sm-2">Number of Clusters:</p>
+            <div id="slider-step" class="col-sm-10"></div>
+          </div>
+          <div class="row">
+            <svg id="scatterMatrix"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+      
+      
+
+    <div id="BiPlot" class="tabcontent">
+      <div id="biplot col-sm-12" align="center">
+        <svg id='svgbiplot'></svg>
+      </div>
+    </div>
+
+    <div id="MDS" class="tabcontent">
+      <h3>MDS</h3>
+    </div>
+
+    <script>
+      function openMenu(evt, menuName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(menuName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+
+      // Get the element with id="defaultOpen" and click on it
+      document.getElementById("defaultOpen").click();
+    </script>
+    
+    <script type="text/javascript" src="static/global_vars.js"></script>
+    <script type="text/javascript" src="static/plotSMmatrix.js"></script>
+    
+    <script type="text/javascript" src="static/screePlot.js"></script>
+    <script type="text/javascript" src="static/biPlot.js"></script>
+    <script type="text/javascript" src="static/scree.js"></script>
+  </body>
+</html> 

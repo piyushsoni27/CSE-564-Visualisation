@@ -1,0 +1,204 @@
+.mynavbar{
+    background-color: #333;
+    /* padding-left: 300px; */
+    margin-bottom: 0px !important;
+    margin-right: 0px !important;
+    overflow: hidden;
+    border-radius: 0px !important; 
+}
+
+.mynavbar h1{
+    font-family: "Georgia", serif;
+    background-color: #333;
+    color: #f5f5f5;
+    margin-top: 5px;
+    font-size: 35px;
+    font-style: bold;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+.mynavbar h2 {
+  float: left;
+  font-size: 20px;
+  margin-bottom: 0px;
+  color: #f5f5f5;
+  margin-top: 10px;
+  margin-left: 15px;
+  font-weight: bold;
+}
+
+.mycontainer {
+  padding-left: 250px !important;
+}
+
+/* Add a black background color to the top navigation */
+.topnavChart, .topnavData, .topnavScatter {
+  background-color: #f5f5f5;
+  overflow: hidden;
+  padding-left: 30px;
+}
+
+.topnavChart .row .chartsnav{
+  margin-left: 400px !important;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.topnavScatter {
+  background-color: #f5f5f5;
+  overflow: hidden;
+  padding-left: 30px;
+}
+
+.topnavData .row .chartsnav{
+  margin-left: 400px !important;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#chartsdropdown {
+  height: 30px;
+}
+
+#scatterdropdown {
+  height: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 0px;
+}
+
+#radiobuttons {
+  /* margin-left: 100px; */
+  padding-left: 20px;
+}
+
+.chartsnavbar{
+    background-color: #f5f5f5;
+    padding-left: 300px;
+    margin-bottom: 0px !important;
+}
+
+body {
+    font-family: "Lato", sans-serif;
+  }
+
+.sidenav {
+    top: 50px;
+    bottom: 0;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    background-color: #9c9c9c;
+    color: #333;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    border-right: 1px solid #eee;
+  }
+
+.pagelist{
+    list-style-type: none !important;
+    margin-left: 0px;
+    padding-left: 0px;
+  }
+
+  button {
+    float: left;
+    color: #333;
+    text-align: center;
+    text-decoration: none;
+    font-size: 25px;
+    background-color: #9c9c9c;
+    width: 250px;
+    padding: 0;
+    border: none;
+    padding: 32px 16px;
+    transition-duration: 0.4s;
+    font-style: bold;
+  }
+  
+  /* Change the color of links on hover */
+  button:hover {
+  background-color: #333;
+  color: #f5f5f5;
+  }
+  
+  /* Add a color to the active/current link */
+  button:focus {
+  background-color: #333;
+  color: #f5f5f5;
+  /* margin: 1px 1px 1px 1px; */
+  }
+  
+ button.active {
+  background-color: #333;
+  color: #f5f5f5;
+    /* margin: 1px 1px 1px 1px; */
+    }
+  
+ 
+  
+.main {
+    margin-left: 10px; /* Same as the width of the sidenav */
+    margin-right: 20px;
+    margin-top: 80px;
+  }
+
+#controls{
+    margin-top: 50px;
+    font-family: "Georgia", serif;
+    font-size: 20px;
+}
+
+#controls h1{
+    font-style: bold;
+    font-family: "Georgia", serif;
+    font-size: 25px;
+}
+
+.attributes{
+    list-style: none;
+    /* margin-left: 300px; */
+}
+
+#chart {
+  margin-left: 100px
+}
+
+#datadiv.row {
+  margin-left: 10px;
+}
+
+.para h3{
+  margin-left: 5px;
+}
+
+.para p {
+  margin-left: 10px;
+  margin-right: 10px; 
+}
+
+.dataColumnList h3{
+  font-size: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 0px;
+  font-weight: bold;
+  width: 50px;
+}
+
+#columnHead {
+  font-size: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 0px;
+  font-weight: bold;
+  width: 50px;
+}
+
+.para{
+  margin-left: 20px !important;
+}

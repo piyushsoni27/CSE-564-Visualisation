@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="dashboard.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+ 
+    <title>CSE564 Lab#1</title>
+  </head>
+
+  <body>
+    <div class="navbar mynavbar">
+      <h2>CSE564 Lab#1</h2>
+      <h1>Dashboard</h1>
+    </div>
+
+    <div class="sidenav">
+      <div id="controls">
+          <ul class="pagelist">
+            <li>
+              <button type="button" name="sidenav" class="data" id="buttonData" value="data">Data</button>
+            </li>
+            <li>
+              <button type="button" name="sidenav" class="charts" id="buttonChart" value="charts">Histogram/BarChart</button>
+            </li>
+            <li>
+              <button type="button" name="sidenav" class="scatter" id="buttonScatter" value="scatter">Scatter Plot</button>
+            </li>
+          </ul>
+      </div>
+    </div>
+    
+    <div id="datadiv" class="container-fluid mycontainer" style="display: none;">
+      <div class='row'>
+        <div class="col-sm-12 para">
+          <h2 class="heading">Dataset</h2>
+          <p>
+            Data for this Lab was selected from Kaggle, which originates from the UCI Machine Learning Repository. It was collected from homes in suburbs of Boston, Massachusetts in 1978. This dataset was formerly intended for the prediction of Median value of homes in Suburbs of Boston (MEDV) and its dependency on the locality.
+          </p>
+          
+          <h3>Attributes:</h3>
+          <table>
+            <tbody>
+                <tr>
+                  <td id="columnHead">CRIM:</td>
+                  <td>per capita crime rate by town</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">ZN:</td>
+                  <td>proportion of residential land zoned for lots over 25,000 sq.ft.</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">INDUS:</td>
+                  <td>proportion of non-retail business acres per town</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">CHAS:</td>
+                  <td>Charles River dummy variable (= 1 if tract bounds river; 0 otherwise)</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">NOX:</td>
+                  <td>nitric oxides concentration (parts per 10 million)</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">RM:</td>
+                  <td>average number of rooms per dwelling</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">AGE:</td>
+                  <td>proportion of owner-occupied units built prior to 1940</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">DIS:</td>
+                  <td>weighted distances to five Boston employment centres</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">RAD:</td>
+                  <td>index of accessibility to radial highways</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">TAX:</td>
+                  <td>full-value property-tax rate per $10,000</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">PTRATIO:</td>
+                  <td>pupil-teacher ratio by town</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">B:</td>
+                  <td>1000(Bk - 0.63)^2 where Bk is the proportion of blacks by town</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">LSTAT:</td>
+                  <td>% lower status of the population</td>
+                </tr>
+                <tr>
+                  <td id="columnHead">MEDV:</td>
+                  <td>Median value of owner-occupied homes in $1000's</td>
+                </tr>              
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="chartsdiv" class="container-fluid mycontainer" style="display: none;">
+        <div class='row'>
+          <div class="topnavChart">
+            <div class="row">
+              <div class="chartsnav">
+                <select class="dropdown" id="chartsdropdown" name="dropdown"></select>
+              </div>
+            </div>
+            
+          </div>
+          </div>
+          
+          <div class="col-sm-12 main">
+            <div class="row">
+                <div id="chart" class="col-sm-9 mx-auto">
+                  <svg id="global">
+                    <svg id="hist"></svg>
+                    <svg id="bar"></svg>
+                    </svg>  
+                </div>
+            </div>  
+          </div>
+        </div>
+
+    <div id="scatterdiv" class="container-fluid mycontainer" style="display: none;">
+          <div class='row'>
+            <div class="topnavScatter">
+              <div class="row">
+                <div class="col-sm-4 radiobuttons" id="radiobuttons">
+                  <input type="radio" id="xScatterRadio" name="scatterVariable" value="x" checked>
+                  <label for="xvar">x</label><br>
+                  <input type="radio" id="yScatterRadio" name="scatterVariable" value="y">
+                  <label for="yvar">y</label><br>
+                </div>
+                <div class="col-sm-8 scatterdropdown">
+                    <select class="dropdown" id="scatterdropdown" name="dropdown"></select>
+                </div>
+              </div>
+              
+            </div>
+            </div>
+            
+            <div class="col-sm-12 main">
+              <div class="row">
+                  <div id="chart" class="col-sm-9 mx-auto">
+                    <svg id="scatter"></svg>  
+                  </div>
+              </div>  
+            </div>
+          </div>
+    </div>
+
+    <script src="globalVars.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="histogram.js"></script>
+    <script src="bar.js"></script>
+    <script src="scatter.js"></script>
+    <script src="homeVis.js"></script>
+
+  </body>
+</html>

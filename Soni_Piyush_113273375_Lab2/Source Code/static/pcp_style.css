@@ -1,0 +1,57 @@
+#svgpcplot {
+        font: 10px sans-serif;
+    }
+
+    .background path {
+        fill: none;
+        /* stroke: #ddd; */
+        shape-rendering: crispEdges;
+    }
+
+    .foreground path {
+        fill: none;
+        /* stroke: steelblue; */
+    }
+
+    .brush .selection {
+        fill-opacity: .3;
+        stroke: #fff;
+        shape-rendering: crispEdges;
+    }
+
+    .axispcp line,
+    .axispcp path {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .axispcp text {
+        text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+        cursor: move;
+    }
+
+#mdsCORRplot {
+    margin-top: 70px;
+}
+
+#reset_pcp button {
+    display: block;
+    background-color: rgb(82, 80, 80);
+    color: #ccc;
+    padding: 15px 10px;
+    width: 300px;
+    border: none;
+    outline: none;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 30px;
+  }
+
+#reset_pcp button:active {
+    background-color: #ddd;
+    color: black;
+}
