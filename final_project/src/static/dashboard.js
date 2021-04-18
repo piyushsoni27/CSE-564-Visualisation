@@ -1,12 +1,9 @@
 $.ajax({
-        type: "POST",
+        type: "GET",
         url: "/worldmap",
-        contentType: "application/json",
-        data: JSON.stringify(val),
-        dataType: "json",
         success: function(response) {
-            mds_eucData = (response)
-            plot_mds_euc(mds_eucData)
+            worldData = JSON.parse(response)
+            worldMap(worldData, "total_cases")
         },
         error: function(err) {
             console.log(err);
