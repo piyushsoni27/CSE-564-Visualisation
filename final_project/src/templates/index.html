@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="static/dashboard.css" />
+    <link rel="stylesheet" href="static/scatterMatrix.css" />
+    <link rel="stylesheet" href="static/pcp_style.css" />
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    
+    <ul class="tab">
+      <li><p>Dashboard</p></li>
+      <li><button class="tablinks" onclick="openMenu(event, 'dashboard')" id="defaultOpen">World Map</button></li>
+    </ul>
+
+    <div id="dashboard" class="tabcontent">
+      <div class="row">
+        <div class="col-sm-5">
+          <div id="worldmap" class="row">
+            <svg id='svgWorldMap'></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <script type="text/javascript" src="static/worldMap.js"></script>
+  </body>
+</html> 
