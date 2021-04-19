@@ -51,24 +51,28 @@ def createjson(df):
             
     return json.dumps(gj)
 
+@app.route("/geo_data", methods=["GET"])
+def get_geo_data():
+    return gj
+
 @app.route("/worldmap", methods=["POST" , "GET"])
-def get_country_data():
-    
-    country_df = data.loc[data.iso_code == "USA"]
-    
+def get_worldmap_data():
+        
     country_codes = data.iso_code.unique()
-    world_data = pd.DataFrame(columns=("iso_code", "new_cases", "new_deaths"))
+    world_data = pd.DataFrame(columns=("iso_code", "new_cases", "new_deaths", "new_vaccinations"))
     world_data.iso_code = country_codes
     
     for code in country_codes:
         world_data.loc[world_data.iso_code == code, "new_cases"] = data.loc[data.iso_code == code].new_cases.iloc[-1]
         world_data.loc[world_data.iso_code == code, "new_deaths"] = data.loc[data.iso_code == code].new_deaths.iloc[-1]
         
-    print(covid_geo)
     # country_df = country_df.to_dict(orient="records")
+    print(world_data)
+    pop_data = pd.read_csv("data/world_population.tsv", sep='\t')
+    pop_data.drop("Unnamed: 3", axis=1, inplace=True)
     
     world_data = world_data.to_dict(orient="records")
-    return covid_geo
+    return json.dumps(pop_data.to_dict(orient="records"))
 
 @app.route("/")
 def home():
@@ -76,26 +80,23 @@ def home():
 
 
 if(__name__ == "__main__"):
-    print(type(data.date[0]))
     preprocess()
     
-    country_codes = data.iso_code.unique()
-    world_data = pd.DataFrame(columns=("iso_code", "new_cases", "new_deaths"))
-    world_data.iso_code = country_codes
+    # country_codes = data.iso_code.unique()
+    # world_data = pd.DataFrame(columns=("iso_code", "new_cases", "new_deaths"))
+    # world_data.iso_code = country_codes
     
+    # for code in country_codes:
+    #     world_data.loc[world_data.iso_code == code, "new_cases"] = data.loc[data.iso_code == code].new_cases.iloc[-1]
+    #     world_data.loc[world_data.iso_code == code, "new_deaths"] = data.loc[data.iso_code == code].new_deaths.iloc[-1]
     
-    
-    for code in country_codes:
-        world_data.loc[world_data.iso_code == code, "new_cases"] = data.loc[data.iso_code == code].new_cases.iloc[-1]
-        world_data.loc[world_data.iso_code == code, "new_deaths"] = data.loc[data.iso_code == code].new_deaths.iloc[-1]
-    
-    if(os.path.isfile(covid_geo_json_path)):
-        with open(covid_geo_json_path) as f:
-            covid_geo = geojson.load(f)    
-    else:
-        covid_geo = createjson(world_data)
+    # if(os.path.isfile(covid_geo_json_path)):
+    #     with open(covid_geo_json_path) as f:
+    #         covid_geo = geojson.load(f)    
+    # else:
+    #     covid_geo = createjson(world_data)
         
-    get_country_data()
+    # get_worldmap_data()
     
     # get_country_data()
     app.config['TEMPLATES_AUTO_RELOAD'] = True

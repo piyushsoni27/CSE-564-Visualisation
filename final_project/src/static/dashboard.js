@@ -2,8 +2,20 @@ $.ajax({
         type: "GET",
         url: "/worldmap",
         success: function(response) {
-            worldData = (response)
-            worldMap(worldData, "total_cases")
+            worldData = JSON.parse(response)
+            
+            $.ajax({
+                type: "GET",
+                url: "/geo_data",
+                success: function(response) {
+                    geoData = (response)
+                    
+                    worldMap(geoData, worldData)
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
         },
         error: function(err) {
             console.log(err);
