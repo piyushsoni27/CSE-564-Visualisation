@@ -10,7 +10,7 @@ function worldMap(world_data, attr){
     // var total_cases = world_data.map(function (e) {
     //     return e.new_cases; })
 
-    console.log(total_cases)
+    console.log(world_data)
 
     var plotOuter = d3.select("svg#svgWorldMap")
                     .attr("width", outerWidthWorld)
@@ -39,7 +39,7 @@ function worldMap(world_data, attr){
     // Draw the map
     plotInner.append("g")
         .selectAll("path")
-        .data(world_data)
+        .data(world_data.features)
         .enter()
         .append("path")
         // draw each country
