@@ -65,7 +65,7 @@ def get_worldmap_data():
     for code in country_codes:
         world_data.loc[world_data.iso_code == code, "new_cases"] = data.loc[data.iso_code == code].new_cases.iloc[-1]
         world_data.loc[world_data.iso_code == code, "new_deaths"] = data.loc[data.iso_code == code].new_deaths.iloc[-1]
-        
+    # print(covid_geo)
     # country_df = country_df.to_dict(orient="records")
     print(world_data)
     pop_data = pd.read_csv("data/world_population.tsv", sep='\t')
