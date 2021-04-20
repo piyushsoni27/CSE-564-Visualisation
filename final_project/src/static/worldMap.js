@@ -90,13 +90,28 @@ function worldMap(data, population, attr) {
     for(i=min; i<=max; i+=(max-min)/10){
         attr_domain.push(i)
     }
+    // var range_color = []
+    // for(i=0; i<=10; i++){
+    //     range_color.push(d3.schemeBlues[6][i])
+    // }
 
-    console.log(attr_domain)
+    console.log(max)
 
+    var indexToColor = d3.scaleLinear()
+                    .domain([0, 10])
+                    .range(['rgb(46,73,123)', 'rgb(71, 187, 94)']);
+    var range = d3.range(10).map(indexToColor);
+
+    // var color = d3.scaleQuantile()
+    //     .domain([0, max])
+    //     // .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)"]);
+    //     .range(range_color);
+
+    // var color = d3.scaleSequential(d3.interpolateBlues).domain([0, max]);
 
     var color = d3.scaleThreshold()
-        .domain(attr_domain)
-        .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)"]);
+	.domain([0, 10, 100, 1000, 5000, 10000, 15000, 20000, 40000, 60000, 80000])
+	.range(["#fff7bc", "#fee391", "#fec44f", "#fe9929", "#ec7014", "#cc4c02", "#993404", "#662506"]);
 
     var path = d3.geoPath();
 
@@ -137,7 +152,7 @@ function worldMap(data, population, attr) {
         .enter().append("path")
         .attr("d", path)
         .style("fill", function(d) {
-            return color(populationById[d.id]);
+            return color(populationById[+d.id]);
         })
         .style('stroke', 'white')
         .style('stroke-width', 1.5)
