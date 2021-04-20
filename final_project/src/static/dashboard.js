@@ -10,7 +10,7 @@ $.ajax({
                 success: function(response) {
                     geoData = (response)
                     
-                    worldMap(geoData, worldData)
+                    worldMap(geoData, worldData, "new_cases")
                 },
                 error: function(err) {
                     console.log(err);

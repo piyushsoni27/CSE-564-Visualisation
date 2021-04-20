@@ -6,7 +6,7 @@ var marginsWorld = { top: 10, bottom: 10, left: 10, right: 10 }
 var innerWidthWorld = outerWidthWorld - marginsWorld.left - marginsWorld.right - 10
 var innerHeightWorld = outerHeightWorld - marginsWorld.top - marginsWorld.bottom - 10
 
-function worldMap(data, population) {
+function worldMap(data, population, attr) {
 // function ready(error, data, population) {
 
     var format = d3.format(",");
@@ -16,7 +16,7 @@ function worldMap(data, population) {
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
-            return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Population: </strong><span class='details'>" + format(d.population) + "</span>";
+            return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Population: </strong><span class='details'>" + format(+d[attr]) + "</span>";
         })
 
     tip.direction(function(d) {
@@ -81,9 +81,21 @@ function worldMap(data, population) {
             // otherwise if not specified
             return [-10, 0]
         })
+    
+    // attr = "population"
+    var max = d3.max(population, function(d){ return +d[attr] }) 
+    var min = d3.min(population, function(d){ return +d[attr] })
+    var attr_domain = []
+
+    for(i=min; i<=max; i+=(max-min)/10){
+        attr_domain.push(i)
+    }
+
+    console.log(attr_domain)
+
 
     var color = d3.scaleThreshold()
-        .domain([10000, 100000, 500000, 1000000, 5000000, 10000000, 50000000, 100000000, 500000000, 1500000000])
+        .domain(attr_domain)
         .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)"]);
 
     var path = d3.geoPath();
@@ -111,11 +123,11 @@ function worldMap(data, population) {
     var populationById = {};
 
     population.forEach(function(d) {
-        populationById[d.id] = +d.population;
+        populationById[d.id] = d[attr];
     });
 
     data.features.forEach(function(d) {
-        d.population = populationById[d.id]
+        d[attr] = populationById[d.id]
     });
 
     plotInner.append("g")

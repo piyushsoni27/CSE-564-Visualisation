@@ -34,14 +34,15 @@ data = pd.read_csv(data_path)
 data_original = data.copy()
 
 global covid_geo
-
 def preprocess():
     data.fillna(0, inplace=True)
+    data.rename({"iso_code" : "id"}, axis="columns", inplace=True)
+    
     
 def createjson(df):
     for i in geo_features:
         for index, row in df.iterrows():
-            if(row['iso_code'] == i['id']):
+            if(row['id'] == i['id']):
                 i['new_cases'] = row['new_cases']
                 i['new_deaths'] = row['new_deaths']
             else:
@@ -57,22 +58,24 @@ def get_geo_data():
 
 @app.route("/worldmap", methods=["POST" , "GET"])
 def get_worldmap_data():
-        
-    country_codes = data.iso_code.unique()
-    world_data = pd.DataFrame(columns=("iso_code", "new_cases", "new_deaths", "new_vaccinations"))
-    world_data.iso_code = country_codes
     
-    for code in country_codes:
-        world_data.loc[world_data.iso_code == code, "new_cases"] = data.loc[data.iso_code == code].new_cases.iloc[-1]
-        world_data.loc[world_data.iso_code == code, "new_deaths"] = data.loc[data.iso_code == code].new_deaths.iloc[-1]
-    # print(covid_geo)
-    # country_df = country_df.to_dict(orient="records")
+    start_date = "2020-03-25"
+    end_date = "2020-03-28"
+        
+    country_codes = data.id.unique()
+    world_data = pd.DataFrame(columns=("new_cases", "new_deaths", "new_vaccinations"))
+    
+    world_data.new_vaccinations = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_vaccinations.mean()
+    world_data.new_deaths = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_deaths.mean()
+    world_data.new_cases = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_cases.mean()
+    
+    world_data.reset_index(inplace=True)
     print(world_data)
     pop_data = pd.read_csv("data/world_population.tsv", sep='\t')
     pop_data.drop("Unnamed: 3", axis=1, inplace=True)
     
-    world_data = world_data.to_dict(orient="records")
-    return json.dumps(pop_data.to_dict(orient="records"))
+    # world_data = world_data.to_dict(orient="records")
+    return json.dumps(world_data.to_dict(orient="records"))
 
 @app.route("/")
 def home():
