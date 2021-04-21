@@ -123,6 +123,11 @@ function worldMap(data, population, attr) {
 	// .range(["#fff7bc", "#fee391", "#fec44f", "#fe9929", "#ec7014", "#cc4c02", "#993404", "#662506"]);
     .range(["rgb(255,251,247)", "rgb(247,235,222)", "rgb(239,219,198)", "rgb(225,202,158)", "rgb(214,174,107)", "rgb(198,146,66)", "rgb(181,113,33)", "rgb(156,81,8)", "rgb(107,48,8)", "rgb(43,19,3)"]);
 
+    // var color = d3.scaleLinear()
+	// .domain([min, max])
+	// // .range(["#fff7bc", "#fee391", "#fec44f", "#fe9929", "#ec7014", "#cc4c02", "#993404", "#662506"]);
+    // .range(["yellow", "red"]);
+
     var path = d3.geoPath();
 
     var plotOuter = d3.select("svg#svgWorldMap")

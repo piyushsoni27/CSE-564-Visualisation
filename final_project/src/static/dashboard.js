@@ -3,19 +3,7 @@ $.ajax({
         url: "/worldmap",
         success: function(response) {
             worldData = JSON.parse(response)
-            
-            $.ajax({
-                type: "GET",
-                url: "/geo_data",
-                success: function(response) {
-                    geoData = (response)
-                    
-                    worldMap(geoData, worldData, "new_cases")
-                },
-                error: function(err) {
-                    console.log(err);
-                }
-            });
+            worldMap(geoData, worldData, "new_cases")
         },
         error: function(err) {
             console.log(err);
