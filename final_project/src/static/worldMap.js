@@ -6,8 +6,7 @@ var marginsWorld = { top: 10, bottom: 10, left: 10, right: 10 }
 var innerWidthWorld = outerWidthWorld - marginsWorld.left - marginsWorld.right - 10
 var innerHeightWorld = outerHeightWorld - marginsWorld.top - marginsWorld.bottom
 
-function worldMap(data, population, attr) {
-// function ready(error, data, population) {
+function worldMap(geoData, population, attr) {
 
     var format = d3.format(",");
 
@@ -156,14 +155,14 @@ function worldMap(data, population, attr) {
         populationById[d.id] = d[attr];
     });
 
-    data.features.forEach(function(d) {
+    geoData.features.forEach(function(d) {
         d[attr] = populationById[d.id]
     });
 
     plotInner.append("g")
         .attr("class", "countries")
         .selectAll("path")
-        .data(data.features)
+        .data(geoData.features)
         .enter().append("path")
         .attr("d", path)
         .style("fill", function(d) {
@@ -194,10 +193,10 @@ function worldMap(data, population, attr) {
         });
 
         plotInner.append("path")
-        .datum(topojson.mesh(data.features, function(a, b) {
+        .datum(topojson.mesh(geoData.features, function(a, b) {
             return a.id !== b.id;
         }))
-        // .datum(topojson.mesh(data.features, function(a, b) { return a !== b; }))
+        // .datum(topojson.mesh(geoData.features, function(a, b) { return a !== b; }))
         .attr("class", "names")
         .attr("d", path);
 }
