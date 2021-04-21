@@ -59,8 +59,8 @@ def get_geo_data():
 @app.route("/worldmap", methods=["POST" , "GET"])
 def get_worldmap_data():
     
-    start_date = "2020-03-25"
-    end_date = "2020-03-28"
+    start_date = "2021-01-25"
+    end_date = "2021-03-28"
         
     country_codes = data.id.unique()
     world_data = pd.DataFrame(columns=("new_cases", "new_deaths", "new_vaccinations"))
@@ -71,8 +71,8 @@ def get_worldmap_data():
     
     world_data.reset_index(inplace=True)
     print(world_data)
-    pop_data = pd.read_csv("data/world_population.tsv", sep='\t')
-    pop_data.drop("Unnamed: 3", axis=1, inplace=True)
+    # pop_data = pd.read_csv("data/world_population.tsv", sep='\t')
+    # pop_data.drop("Unnamed: 3", axis=1, inplace=True)
     
     # world_data = world_data.to_dict(orient="records")
     return json.dumps(world_data.to_dict(orient="records"))
