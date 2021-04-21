@@ -1,14 +1,15 @@
 // https: //bl.ocks.org/EfratVil/92f894ac0ba265192411e73f633a3e2f
 
-var outerWidthWorld = 700,
-    outerHeightWorld = 500 / 960 * outerWidthWorld
+var outerWidthWorld = 960,
+    outerHeightWorld = (500 / 960) * outerWidthWorld
 var marginUpperLineChart = { top: 20, right: 20, bottom: 110, left: 40 }
 var marginBottomLineChart = { top: 430, right: 20, bottom: 30, left: 40 }
 var innerWidthWorld = outerWidthWorld - marginsWorld.left - marginsWorld.right - 10
 var innerHeightWorld = outerHeightWorld - marginsWorld.top - marginsWorld.bottom - 10
 
 function createLineChart(data) {
-    var svg = d3.select("svgLineChart"),
+
+    var svg = d3.select("svg#svgLineChart"),
         margin = marginUpperLineChart,
         margin2 = marginBottomLineChart,
         width = outerWidthWorld - margin.left - margin.right,
@@ -16,6 +17,10 @@ function createLineChart(data) {
         height2 = outerHeightWorld - margin2.top - margin2.bottom;
 
     var parseDate = d3.timeParse("%m/%d/%Y %H:%M");
+
+    console.log(data)
+    dd = type(data)
+    console.log(dd)
 
     var x = d3.scaleTime().range([0, width]),
         x2 = d3.scaleTime().range([0, width]),
@@ -60,7 +65,7 @@ function createLineChart(data) {
         .attr("height", height)
         .attr("x", 0)
         .attr("y", 0);
-
+    // console.log(clip)
 
     var Line_chart = svg.append("g")
         .attr("class", "focus")
@@ -80,7 +85,6 @@ function createLineChart(data) {
     y.domain([0, d3.max(data, function(d) { return d.Air_Temp; })]);
     x2.domain(x.domain());
     y2.domain(y.domain());
-
 
     focus.append("g")
         .attr("class", "axis axis--x")
@@ -119,31 +123,29 @@ function createLineChart(data) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(zoom);
 
-    console.log(data);
-}
+    function brushed() {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+        var s = d3.event.selection || x2.range();
+        x.domain(s.map(x2.invert, x2));
+        Line_chart.select(".line").attr("d", line);
+        focus.select(".axis--x").call(xAxis);
+        svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+            .scale(width / (s[1] - s[0]))
+            .translate(-s[0], 0));
+    }
 
-function brushed() {
-    if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
-    var s = d3.event.selection || x2.range();
-    x.domain(s.map(x2.invert, x2));
-    Line_chart.select(".line").attr("d", line);
-    focus.select(".axis--x").call(xAxis);
-    svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
-        .scale(width / (s[1] - s[0]))
-        .translate(-s[0], 0));
-}
+    function zoomed() {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+        var t = d3.event.transform;
+        x.domain(t.rescaleX(x2).domain());
+        Line_chart.select(".line").attr("d", line);
+        focus.select(".axis--x").call(xAxis);
+        context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+    }
 
-function zoomed() {
-    if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
-    var t = d3.event.transform;
-    x.domain(t.rescaleX(x2).domain());
-    Line_chart.select(".line").attr("d", line);
-    focus.select(".axis--x").call(xAxis);
-    context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
-}
-
-function type(d) {
-    d.Date = parseDate(d.Date);
-    d.Air_Temp = +d.Air_Temp;
-    return d;
+    function type(d) {
+        d.Date = parseDate(d.Date);
+        d.Air_Temp = +d.Air_Temp;
+        return d;
+    }
 }
