@@ -1,10 +1,10 @@
 // http://bl.ocks.org/micahstubbs/8e15870eb432a21f0bc4d3d527b2d14f
 // https://jsfiddle.net/mamounothman/04t6wmya/4/
 
-var outerWidthWorld = 700, outerHeightWorld = 500/960 * outerWidthWorld
+var outerWidthWorld = 960, outerHeightWorld = 350/960 * outerWidthWorld
 var marginsWorld = { top: 10, bottom: 10, left: 10, right: 10 }
 var innerWidthWorld = outerWidthWorld - marginsWorld.left - marginsWorld.right - 10
-var innerHeightWorld = outerHeightWorld - marginsWorld.top - marginsWorld.bottom - 10
+var innerHeightWorld = outerHeightWorld - marginsWorld.top - marginsWorld.bottom
 
 function worldMap(data, population, attr) {
 // function ready(error, data, population) {
@@ -16,7 +16,16 @@ function worldMap(data, population, attr) {
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
-            return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Population: </strong><span class='details'>" + format(+d[attr]) + "</span>";
+            var attr_str = "";
+            if(attr === "new_cases"){
+                attr_str = "New Cases"
+            }
+            else if(attr === "new_deaths"){
+                attr_str = "New Deaths"
+            } else if(attr === "new_vaccinates"){
+                attr_str = "New Vaccinations"
+            }
+            return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>" + attr_str + ": </strong><span class='details'>" + format(+d[attr]) + "</span>";
         })
 
     tip.direction(function(d) {
@@ -95,7 +104,7 @@ function worldMap(data, population, attr) {
     //     range_color.push(d3.schemeBlues[6][i])
     // }
 
-    console.log(max)
+    // console.log(max)
 
     var indexToColor = d3.scaleLinear()
                     .domain([0, 10])
@@ -104,14 +113,15 @@ function worldMap(data, population, attr) {
 
     // var color = d3.scaleQuantile()
     //     .domain([0, max])
-    //     // .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)"]);
-    //     .range(range_color);
+    //     .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)"]);
+    //     // .range(range_color);
 
     // var color = d3.scaleSequential(d3.interpolateBlues).domain([0, max]);
 
     var color = d3.scaleThreshold()
 	.domain([0, 10, 100, 1000, 5000, 10000, 15000, 20000, 40000, 60000, 80000])
-	.range(["#fff7bc", "#fee391", "#fec44f", "#fe9929", "#ec7014", "#cc4c02", "#993404", "#662506"]);
+	// .range(["#fff7bc", "#fee391", "#fec44f", "#fe9929", "#ec7014", "#cc4c02", "#993404", "#662506"]);
+    .range(["rgb(255,251,247)", "rgb(247,235,222)", "rgb(239,219,198)", "rgb(225,202,158)", "rgb(214,174,107)", "rgb(198,146,66)", "rgb(181,113,33)", "rgb(156,81,8)", "rgb(107,48,8)", "rgb(43,19,3)"]);
 
     var path = d3.geoPath();
 
@@ -152,7 +162,7 @@ function worldMap(data, population, attr) {
         .enter().append("path")
         .attr("d", path)
         .style("fill", function(d) {
-            return color(populationById[+d.id]);
+            return color(populationById[d.id]);
         })
         .style('stroke', 'white')
         .style('stroke-width', 1.5)
@@ -161,7 +171,8 @@ function worldMap(data, population, attr) {
         .style("stroke", "white")
         .style('stroke-width', 0.3)
         .on('mouseover', function(d) {
-            tip.show(d);
+            console.log(typeof(+d[attr]))
+            if(String(+d[attr]) !== "NaN") tip.show(d);
 
             d3.select(this)
                 .style("opacity", 1)
