@@ -1,17 +1,17 @@
 // https: //bl.ocks.org/EfratVil/92f894ac0ba265192411e73f633a3e2f
 
 var outerWidthLine = 960,
-    outerHeightLine =  500/960 * outerWidthLine
+    outerHeightLine = 500 / 960 * outerWidthLine
 var marginUpperLineChart = { top: 20, right: 20, bottom: 110, left: 40 }
-var marginBottomLineChart = { top: 430, right: 20, bottom: 30, left: 40 }
+var marginBottomLineChart = { top: 430, right: 20, bottom: 50, left: 40 }
 var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
 var innerHeightLine = outerHeightLine - marginBottomLineChart.top - marginBottomLineChart.bottom - 10
 
 function createLineChart(data) {
 
     var plotOuter = d3.select("svg#svgLineChart")
-                        .attr("width", outerWidthLine)
-                        .attr("height", outerHeightLine)
+        .attr("width", outerWidthLine)
+        .attr("height", outerHeightLine)
 
     svg = plotOuter
         .append('g')
@@ -21,22 +21,18 @@ function createLineChart(data) {
         .attr('height', innerHeightLine)
         .attr('transform', 'translate(' + marginUpperLineChart.left + ',' + marginUpperLineChart.top + ')')
 
-    // var svg = d3.select("svg#svgLineChart"),
-        margin = marginUpperLineChart,
+    margin = marginUpperLineChart,
         margin2 = marginBottomLineChart,
         width = outerWidthLine - margin.left - margin.right,
         height = outerHeightLine - margin.top - margin.bottom,
         height2 = outerHeightLine - margin2.top - margin2.bottom;
 
-    var parseDate = d3.timeParse("%M/%d/%Y %H:%M");
+    var parseDate = d3.timeParse("%Y-%m-%d");
 
-    console.log(data)
-        // dd = type(data)
     data.forEach(d => {
-        d.Date = parseDate(d.Date)
-        d.Air_Temp = +d.Air_Temp
+        d.date = parseDate(d.date)
+        d.new_cases = +d.new_cases
     });
-    console.log(data)
 
     var x = d3.scaleTime().range([0, width]),
         x2 = d3.scaleTime().range([0, width]),
@@ -67,12 +63,12 @@ function createLineChart(data) {
         .on("zoom", zoomed);
 
     var line = d3.line()
-        .x(function(d) { return x(d.Date); })
-        .y(function(d) { return y(d.Air_Temp); });
+        .x(function(d) { return x(d.date); })
+        .y(function(d) { return y(d.new_cases); });
 
     var line2 = d3.line()
-        .x(function(d) { return x2(d.Date); })
-        .y(function(d) { return y2(d.Air_Temp); });
+        .x(function(d) { return x2(d.date); })
+        .y(function(d) { return y2(d.new_cases); });
 
     var clip = svg.append("defs").append("svg:clipPath")
         .attr("id", "clip")
@@ -81,7 +77,6 @@ function createLineChart(data) {
         .attr("height", height)
         .attr("x", 0)
         .attr("y", 0);
-    // console.log(clip)
 
     var Line_chart = svg.append("g")
         .attr("class", "focus")
@@ -97,8 +92,8 @@ function createLineChart(data) {
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
-    x.domain(d3.extent(data, function(d) { return d.Date; }));
-    y.domain([0, d3.max(data, function(d) { return d.Air_Temp; })]);
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain([0, d3.max(data, function(d) { return d.new_cases; })]);
     x2.domain(x.domain());
     y2.domain(y.domain());
 
@@ -160,8 +155,8 @@ function createLineChart(data) {
     }
 
     function type(d) {
-        d.Date = parseDate(d.Date);
-        d.Air_Temp = +d.Air_Temp;
+        d.date = parseDate(d.date);
+        d.new_cases = +d.new_cases;
         return d;
     }
 }
