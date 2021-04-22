@@ -3,7 +3,7 @@
 var outerWidthLine = 960,
     outerHeightLine = 500 / 960 * outerWidthLine
 var marginUpperLineChart = { top: 20, right: 20, bottom: 110, left: 40 }
-var marginBottomLineChart = { top: 430, right: 20, bottom: 30, left: 40 }
+var marginBottomLineChart = { top: 430, right: 20, bottom: 50, left: 40 }
 var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
 var innerHeightLine = outerHeightLine - marginBottomLineChart.top - marginBottomLineChart.bottom - 10
 
@@ -21,22 +21,18 @@ function createLineChart(data) {
         .attr('height', innerHeightLine)
         .attr('transform', 'translate(' + marginUpperLineChart.left + ',' + marginUpperLineChart.top + ')')
 
-    // var svg = d3.select("svg#svgLineChart"),
     margin = marginUpperLineChart,
         margin2 = marginBottomLineChart,
         width = outerWidthLine - margin.left - margin.right,
         height = outerHeightLine - margin.top - margin.bottom,
         height2 = outerHeightLine - margin2.top - margin2.bottom;
 
-    console.log(width, height, height2)
     var parseDate = d3.timeParse("%Y-%m-%d");
-
 
     data.forEach(d => {
         d.date = parseDate(d.date)
         d.new_cases = +d.new_cases
     });
-    console.log(data)
 
     var x = d3.scaleTime().range([0, width]),
         x2 = d3.scaleTime().range([0, width]),
@@ -81,7 +77,6 @@ function createLineChart(data) {
         .attr("height", height)
         .attr("x", 0)
         .attr("y", 0);
-    // console.log(clip)
 
     var Line_chart = svg.append("g")
         .attr("class", "focus")
