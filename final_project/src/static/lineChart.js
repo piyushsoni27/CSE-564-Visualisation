@@ -32,11 +32,13 @@ function createLineChart(data) {
     data.forEach(d => {
         d.date = parseDate(d.date)
         d.new_cases = +d.new_cases
+        d.new_deaths = +d.new_deaths
+        d.new_vaccinations = +d.new_vaccinations
     });
 
     var x = d3.scaleTime().range([0, width]),
         x2 = d3.scaleTime().range([0, width]),
-        y = d3.scaleLinear().range([height, 0]),
+        y = d3.scaleLog().range([height, 0]),
         y2 = d3.scaleLinear().range([height2, 0]);
 
     var xAxis = d3.axisBottom(x),
@@ -67,6 +69,10 @@ function createLineChart(data) {
         .y(function(d) { return y(d.new_cases); });
 
     var line2 = d3.line()
+        .x(function(d) { return x(d.date); })
+        .y(function(d) { return y(d.new_deaths); });
+
+    var lineBottom2 = d3.line()
         .x(function(d) { return x2(d.date); })
         .y(function(d) { return y2(d.new_cases); });
 
@@ -93,7 +99,8 @@ function createLineChart(data) {
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
     x.domain(d3.extent(data, function(d) { return d.date; }));
-    y.domain([0, d3.max(data, function(d) { return d.new_cases; })]);
+    // y.domain([0, d3.max(data, function(d) { return Math.max(d.new_cases, d.new_cases); })]);
+    y.domain([0, 10000]);
     x2.domain(x.domain());
     y2.domain(y.domain());
 
@@ -111,10 +118,15 @@ function createLineChart(data) {
         .attr("class", "line")
         .attr("d", line);
 
-    context.append("path")
+    Line_chart.append("path")
         .datum(data)
         .attr("class", "line")
         .attr("d", line2);
+
+    context.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("d", lineBottom2);
 
 
     context.append("g")
