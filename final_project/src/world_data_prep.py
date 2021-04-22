@@ -17,6 +17,15 @@ save_path = os.path.join(curr_dir, os.path.join('data', "world-data.csv"))
 
 data = pd.read_csv(data_path)
 
+def preprocess():
+    global data
+    data.fillna(0, inplace=True)
+    data = data[~data['iso_code'].astype(str).str.startswith('OWID')]
+    data.reset_index(drop=True, inplace=True)
+    data.rename({"iso_code" : "id"}, axis="columns", inplace=True)
+    
+preprocess()
+
 dict_list = []
 
 dates = data.date.unique()
