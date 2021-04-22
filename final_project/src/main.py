@@ -99,6 +99,7 @@ def get_linechart_data():
     # pop_data.drop("Unnamed: 3", axis=1, inplace=True)
     
     # world_data = world_data.to_dict(orient="records")
+    # linedf.reset_index(inplace=True)
     print(linedf)
     return json.dumps(linedf.to_dict(orient="records"))
 

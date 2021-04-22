@@ -1,26 +1,30 @@
 // https: //bl.ocks.org/EfratVil/92f894ac0ba265192411e73f633a3e2f
 
-var outerWidthWorld = 960,
-    outerHeightWorld = (500 / 960) * outerWidthWorld
+var outerWidthLine = 960,
+    outerHeightLine = 350 / 960 * outerWidthLine
 var marginUpperLineChart = { top: 20, right: 20, bottom: 110, left: 40 }
 var marginBottomLineChart = { top: 430, right: 20, bottom: 30, left: 40 }
-var innerWidthWorld = outerWidthWorld - marginsWorld.left - marginsWorld.right - 10
-var innerHeightWorld = outerHeightWorld - marginsWorld.top - marginsWorld.bottom - 10
+var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
+var innerHeightLine = outerHeightLine - marginBottomLineChart.top - marginBottomLineChart.bottom - 10
 
 function createLineChart(data) {
 
     var svg = d3.select("svg#svgLineChart"),
         margin = marginUpperLineChart,
         margin2 = marginBottomLineChart,
-        width = outerWidthWorld - margin.left - margin.right,
-        height = outerHeightWorld - margin.top - margin.bottom,
-        height2 = outerHeightWorld - margin2.top - margin2.bottom;
+        width = outerWidthLine - margin.left - margin.right,
+        height = outerHeightLine - margin.top - margin.bottom,
+        height2 = outerHeightLine - margin2.top - margin2.bottom;
 
-    var parseDate = d3.timeParse("%m/%d/%Y %H:%M");
+    var parseDate = d3.timeParse("%M/%d/%Y %H:%M");
 
     console.log(data)
-    dd = type(data)
-    console.log(dd)
+        // dd = type(data)
+    data.forEach(d => {
+        d.Date = parseDate(d.Date)
+        d.Air_Temp = +d.Air_Temp
+    });
+    console.log(data)
 
     var x = d3.scaleTime().range([0, width]),
         x2 = d3.scaleTime().range([0, width]),
