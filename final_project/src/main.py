@@ -22,7 +22,7 @@ curr_dir = os.path.dirname(__file__)
 data_path = os.path.join(curr_dir, os.path.join('data', "owid-covid-data.csv"))
 geo_json_path = os.path.join(curr_dir, os.path.join('data', 'countries.geo.json'))
 covid_geo_json_path = os.path.join(curr_dir, os.path.join('data', 'covid_geo.json'))
-line_data_path = os.path.join(curr_dir, os.path.join('data', "linechart.csv"))
+line_data_path = os.path.join(curr_dir, os.path.join('data', "world-data.csv"))
 
 with open(geo_json_path) as f:
     gj = geojson.load(f)
@@ -100,6 +100,7 @@ def get_linechart_data():
     
     # world_data = world_data.to_dict(orient="records")
     # linedf.reset_index(inplace=True)
+    linedf = linedf.drop(linedf.columns[0], axis=1)
     print(linedf)
     return json.dumps(linedf.to_dict(orient="records"))
 
