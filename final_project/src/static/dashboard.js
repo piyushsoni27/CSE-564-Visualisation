@@ -21,3 +21,15 @@ $.ajax({
         console.log(err);
     }
 });
+
+$.ajax({
+    type: "GET",
+    url: "/barchart",
+    success: function(response) {
+        barData = JSON.parse(response)
+        createBarChart(barData)
+    },
+    error: function(err) {
+        console.log(err);
+    }
+});
