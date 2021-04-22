@@ -63,13 +63,11 @@ def get_worldmap_data():
     start_date = "2021-01-25"
     end_date = "2021-03-28"
         
-    country_codes = data.id.unique()
     world_data = pd.DataFrame(columns=("new_cases", "new_deaths", "new_vaccinations"))
     
-    
-    world_data.new_vaccinations = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_vaccinations.mean()
-    world_data.new_deaths = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_deaths.mean()
-    world_data.new_cases = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_cases.mean()
+    world_data.new_vaccinations = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_vaccinations.mean().astype('int')
+    world_data.new_deaths = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_deaths.mean().astype('int')
+    world_data.new_cases = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_cases.mean().astype('int')
     
     world_data.reset_index(inplace=True)
     print(world_data)

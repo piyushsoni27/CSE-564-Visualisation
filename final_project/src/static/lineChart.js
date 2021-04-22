@@ -1,7 +1,7 @@
 // https: //bl.ocks.org/EfratVil/92f894ac0ba265192411e73f633a3e2f
 
 var outerWidthLine = 960,
-    outerHeightLine = 650 / 960 * outerWidthLine
+    outerHeightLine = 500 / 960 * outerWidthLine
 var marginUpperLineChart = { top: 20, right: 20, bottom: 110, left: 40 }
 var marginBottomLineChart = { top: 430, right: 20, bottom: 30, left: 40 }
 var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
@@ -9,9 +9,20 @@ var innerHeightLine = outerHeightLine - marginBottomLineChart.top - marginBottom
 
 function createLineChart(data) {
 
-    console.log(data)
-    var svg = d3.select("svg#svgLineChart"),
-        margin = marginUpperLineChart,
+    var plotOuter = d3.select("svg#svgLineChart")
+        .attr("width", outerWidthLine)
+        .attr("height", outerHeightLine)
+
+    svg = plotOuter
+        .append('g')
+        .attr('id', 'inner-plot')
+        .attr('width', innerWidthLine)
+        .attr('class', 'map')
+        .attr('height', innerHeightLine)
+        .attr('transform', 'translate(' + marginUpperLineChart.left + ',' + marginUpperLineChart.top + ')')
+
+    // var svg = d3.select("svg#svgLineChart"),
+    margin = marginUpperLineChart,
         margin2 = marginBottomLineChart,
         width = outerWidthLine - margin.left - margin.right,
         height = outerHeightLine - margin.top - margin.bottom,
