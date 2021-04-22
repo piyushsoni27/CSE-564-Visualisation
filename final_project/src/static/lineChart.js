@@ -1,9 +1,9 @@
 // https: //bl.ocks.org/EfratVil/92f894ac0ba265192411e73f633a3e2f
 
-var outerWidthLine = 800,
-    outerHeightLine =  500/960 * outerWidthLine
+var outerWidthLine = 960,
+    outerHeightLine = 500 / 960 * outerWidthLine
 var marginUpperLineChart = { top: 20, right: 20, bottom: 110, left: 40 }
-var marginBottomLineChart = { top: 400, right: 20, bottom: 30, left: 40 }
+var marginBottomLineChart = { top: 430, right: 20, bottom: 50, left: 40 }
 var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
 var innerHeightLine = outerHeightLine - marginBottomLineChart.top - marginBottomLineChart.bottom - 10
 
