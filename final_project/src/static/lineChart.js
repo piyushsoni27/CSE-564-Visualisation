@@ -1,4 +1,5 @@
 // https: //bl.ocks.org/EfratVil/92f894ac0ba265192411e73f633a3e2f
+// https: //observablehq.com/@connor-roche/multi-line-chart-focus-context-w-mouseover-tooltip
 
 var outerWidthLine = 960,
     outerHeightLine = 500 / 960 * outerWidthLine
@@ -31,15 +32,22 @@ function createLineChart(data) {
 
     data.forEach(d => {
         d.date = parseDate(d.date)
-        d.new_cases = +d.new_cases
-        d.new_deaths = +d.new_deaths
-        d.new_vaccinations = +d.new_vaccinations
+        d.numbers = +d.numbers
     });
 
+    var sumstat = d3.nest()
+        .key(d => d.covidattr)
+        .entries(data);
+
+    // console.log(sumstat)
+    // for (let key of Object.keys(sumstat)) {
+    //     let bucket = sumstat[key];
+    //     console.log(bucket.key)
+    // }
     var x = d3.scaleTime().range([0, width]),
         x2 = d3.scaleTime().range([0, width]),
         y = d3.scaleLog().range([height, 0]),
-        y2 = d3.scaleLinear().range([height2, 0]);
+        y2 = d3.scaleLog().range([height2, 0]);
 
     var xAxis = d3.axisBottom(x),
         xAxis2 = d3.axisBottom(x2),
@@ -64,17 +72,16 @@ function createLineChart(data) {
         ])
         .on("zoom", zoomed);
 
-    var line = d3.line()
-        .x(function(d) { return x(d.date); })
-        .y(function(d) { return y(d.new_cases); });
+    var line = d3
+        .line()
+        .x(d => x(d.date))
+        .y(d => y(d.numbers));
 
-    var line2 = d3.line()
-        .x(function(d) { return x(d.date); })
-        .y(function(d) { return y(d.new_deaths); });
-
-    var lineBottom2 = d3.line()
-        .x(function(d) { return x2(d.date); })
-        .y(function(d) { return y2(d.new_cases); });
+    // create line for context chart
+    var line2 = d3
+        .line()
+        .x(d => x2(d.date))
+        .y(d => y2(d.numbers));
 
     var clip = svg.append("defs").append("svg:clipPath")
         .attr("id", "clip")
@@ -89,7 +96,6 @@ function createLineChart(data) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("clip-path", "url(#clip)");
 
-
     var focus = svg.append("g")
         .attr("class", "focus")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -99,8 +105,9 @@ function createLineChart(data) {
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
     x.domain(d3.extent(data, function(d) { return d.date; }));
-    // y.domain([0, d3.max(data, function(d) { return Math.max(d.new_cases, d.new_cases); })]);
-    y.domain([0, 10000]);
+    y.domain([1, 1000000000])
+        // y.domain([0.0001, d3.max(data, function(d) { return Math.max(d.new_cases, d.new_deaths, d.new_vaccinations); })]).base(10);
+        // y.domain([0, 10000]);
     x2.domain(x.domain());
     y2.domain(y.domain());
 
@@ -113,21 +120,37 @@ function createLineChart(data) {
         .attr("class", "axis axis--y")
         .call(yAxis);
 
-    Line_chart.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .attr("d", line);
+    var bucketNames = [];
+    for (let key of Object.keys(sumstat)) {
+        bucketNames.push(sumstat[key].key);
+    }
 
-    Line_chart.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .attr("d", line2);
+    // match colors to bucket name
+    var colors = d3
+        .scaleOrdinal()
+        .domain(bucketNames)
+        .range(["#3498db", "#3cab4b", "#e74c3c", "#73169e", "#2ecc71"]);
 
-    context.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .attr("d", lineBottom2);
-
+    // go through data and create/append lines to both charts
+    for (let key of Object.keys(sumstat)) {
+        let bucket = sumstat[key].values;
+        Line_chart
+            .append("path")
+            .datum(bucket)
+            .attr("class", "line")
+            .attr("fill", "none")
+            .attr("stroke", d => colors(sumstat[key].key))
+            .attr("stroke-width", 4.5)
+            .attr("d", line);
+        context
+            .append("path")
+            .datum(bucket)
+            .attr("class", "line")
+            .attr("fill", "none")
+            .attr("stroke", d => colors(sumstat[key].key))
+            .attr("stroke-width", 1.5)
+            .attr("d", line2);
+    }
 
     context.append("g")
         .attr("class", "axis axis--x")
@@ -150,7 +173,7 @@ function createLineChart(data) {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
         var s = d3.event.selection || x2.range();
         x.domain(s.map(x2.invert, x2));
-        Line_chart.select(".line").attr("d", line);
+        Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
             .scale(width / (s[1] - s[0]))
@@ -161,7 +184,7 @@ function createLineChart(data) {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
         var t = d3.event.transform;
         x.domain(t.rescaleX(x2).domain());
-        Line_chart.select(".line").attr("d", line);
+        Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
         context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
     }
