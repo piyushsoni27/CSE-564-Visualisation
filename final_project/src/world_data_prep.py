@@ -23,9 +23,9 @@ dates = data.date.unique()
 
 for date in dates:
     df = data.loc[data.date==date]
-    new_cases = df.new_cases.sum()
-    new_deaths = df.new_deaths.sum()
-    new_vaccinations = df.new_vaccinations.sum()   
+    new_cases = df.new_cases_smoothed.sum()
+    new_deaths = df.new_deaths_smoothed.sum()
+    new_vaccinations = df.new_vaccinations_smoothed.sum()   
     
     dict_ = {"date": date, "new_cases":new_cases, "new_deaths":new_deaths, "new_vaccinations":new_vaccinations}
     
