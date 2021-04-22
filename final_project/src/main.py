@@ -22,7 +22,7 @@ curr_dir = os.path.dirname(__file__)
 data_path = os.path.join(curr_dir, os.path.join('data', "owid-covid-data.csv"))
 geo_json_path = os.path.join(curr_dir, os.path.join('data', 'countries.geo.json'))
 covid_geo_json_path = os.path.join(curr_dir, os.path.join('data', 'covid_geo.json'))
-line_data_path = os.path.join(curr_dir, os.path.join('data', "world-data.csv"))
+line_data_path = os.path.join(curr_dir, os.path.join('data', "world-data_1.csv"))
 
 with open(geo_json_path) as f:
     gj = geojson.load(f)
@@ -84,24 +84,8 @@ def get_worldmap_data():
 def get_linechart_data():
     
     linedf = pd.read_csv(line_data_path)
-    # start_date = "2020-03-25"
-    # end_date = "2020-03-28"
-        
-    # country_codes = data.id.unique()
-    # world_data = pd.DataFrame(columns=("new_cases", "new_deaths", "new_vaccinations"))
-    
-    # world_data.new_vaccinations = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_vaccinations.mean()
-    # world_data.new_deaths = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_deaths.mean()
-    # world_data.new_cases = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_cases.mean()
-    
-    # world_data.reset_index(inplace=True)
-    # print(world_data)
-    # pop_data = pd.read_csv("data/world_population.tsv", sep='\t')
-    # pop_data.drop("Unnamed: 3", axis=1, inplace=True)
-    
-    # world_data = world_data.to_dict(orient="records")
-    # linedf.reset_index(inplace=True)
-    linedf = linedf.drop(linedf.columns[0], axis=1)
+    linedf = linedf.fillna(0)
+    linedf['numbers'] =  linedf['numbers'].replace(0,1)
     # print(linedf)
     return json.dumps(linedf.to_dict(orient="records"))
 
