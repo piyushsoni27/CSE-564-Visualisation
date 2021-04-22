@@ -2,11 +2,11 @@
 // https://jsfiddle.net/mamounothman/04t6wmya/4/
 
 var outerWidthWorld = 960, outerHeightWorld = 350/960 * outerWidthWorld
-var marginsWorld = { top: 10, bottom: 10, left: 10, right: 10 }
+var marginsWorld = { top: 30, bottom: 10, left: 10, right: 10 }
 var innerWidthWorld = outerWidthWorld - marginsWorld.left - marginsWorld.right - 10
 var innerHeightWorld = outerHeightWorld - marginsWorld.top - marginsWorld.bottom
 
-function worldMap(geoData, population, attr) {
+function worldMap(geoData, dataset, attr) {
 
     var format = d3.format(",");
 
@@ -32,7 +32,7 @@ function worldMap(geoData, population, attr) {
         // Americas
         if (d.properties.name === 'Greenland') return 's'
         if (d.properties.name === 'Canada') return 'e'
-        if (d.properties.name === 'USA') return 'e'
+        if (d.properties.name === 'United States of America') return 'e'
         if (d.properties.name === 'Mexico') return 'e'
         // Europe
         if (d.properties.name === 'Iceland') return 's'
@@ -90,9 +90,9 @@ function worldMap(geoData, population, attr) {
             return [-10, 0]
         })
     
-    // attr = "population"
-    var max = d3.max(population, function(d){ return +d[attr] }) 
-    var min = d3.min(population, function(d){ return +d[attr] })
+    // attr = "dataset"
+    var max = d3.max(dataset, function(d){ return +d[attr] }) 
+    var min = d3.min(dataset, function(d){ return +d[attr] })
     var attr_domain = []
 
     for(i=min; i<=max; i+=(max-min)/10){
@@ -149,14 +149,14 @@ function worldMap(geoData, population, attr) {
 
     plotInner.call(tip);
 
-    var populationById = {};
+    var datasetById = {};
 
-    population.forEach(function(d) {
-        populationById[d.id] = d[attr];
+    dataset.forEach(function(d) {
+        datasetById[d.id] = d[attr];
     });
 
     geoData.features.forEach(function(d) {
-        d[attr] = populationById[d.id]
+        d[attr] = datasetById[d.id]
     });
 
     plotInner.append("g")
@@ -166,7 +166,7 @@ function worldMap(geoData, population, attr) {
         .enter().append("path")
         .attr("d", path)
         .style("fill", function(d) {
-            return color(populationById[d.id]);
+            return color(datasetById[d.id]);
         })
         .style('stroke', 'white')
         .style('stroke-width', 1.5)
