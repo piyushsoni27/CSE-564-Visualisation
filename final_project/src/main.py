@@ -86,6 +86,7 @@ def get_linechart_data():
     linedf = pd.read_csv(line_data_path)
     linedf = linedf.fillna(0)
     linedf['numbers'] =  linedf['numbers'].replace(0,1)
+    # linedf.drop(linedf.loc[linedf['covidattr']=='new_vaccinations'].index, inplace=True)
     # print(linedf)
     return json.dumps(linedf.to_dict(orient="records"))
 
