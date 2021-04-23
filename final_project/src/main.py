@@ -23,6 +23,7 @@ data_path = os.path.join(curr_dir, os.path.join('data', "owid-covid-data.csv"))
 geo_json_path = os.path.join(curr_dir, os.path.join('data', 'countries.geo.json'))
 covid_geo_json_path = os.path.join(curr_dir, os.path.join('data', 'covid_geo.json'))
 line_data_path = os.path.join(curr_dir, os.path.join('data', "world-data_1.csv"))
+barchart_data_path = os.path.join(curr_dir, os.path.join('data', "world-seasonal-data.csv"))
 
 with open(geo_json_path) as f:
     gj = geojson.load(f)
@@ -34,7 +35,8 @@ geo_features = gj['features']
 data = pd.read_csv(data_path)
 data_original = data.copy()
 
-global covid_geo
+bar_df = pd.read_csv(barchart_data_path)
+
 def preprocess():
     global data
     data.fillna(0, inplace=True)
@@ -42,19 +44,6 @@ def preprocess():
     data.reset_index(drop=True, inplace=True)
     data.rename({"iso_code" : "id"}, axis="columns", inplace=True)
     
-    
-def createjson(df):
-    for i in geo_features:
-        for index, row in df.iterrows():
-            if(row['id'] == i['id']):
-                i['new_cases'] = row['new_cases']
-                i['new_deaths'] = row['new_deaths']
-            else:
-                pass
-        with open(covid_geo_json_path, 'w') as outfile:
-            json.dump(gj, outfile)
-            
-    return json.dumps(gj)
 
 @app.route("/geo_data", methods=["GET"])
 def get_geo_data():
@@ -77,7 +66,6 @@ def get_worldmap_data():
     # pop_data = pd.read_csv("data/world_population.tsv", sep='\t')
     # pop_data.drop("Unnamed: 3", axis=1, inplace=True)
     
-    # world_data = world_data.to_dict(orient="records")
     return json.dumps(world_data.to_dict(orient="records"))
 
 @app.route("/linechart", methods=["POST" , "GET"])
@@ -89,6 +77,12 @@ def get_linechart_data():
     # linedf.drop(linedf.loc[linedf['covidattr']=='new_vaccinations'].index, inplace=True)
     # print(linedf)
     return json.dumps(linedf.to_dict(orient="records"))
+
+@app.route("/barchart", methods=["POST" , "GET"])
+def get_barchart_data():
+    global bar_df
+    
+    return json.dumps(bar_df.to_dict(orient="records"))
 
 @app.route("/")
 def home():
