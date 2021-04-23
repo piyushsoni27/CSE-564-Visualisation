@@ -46,6 +46,8 @@ function createLineChart(data) {
     // }
     var x = d3.scaleTime().range([0, width]),
         x2 = d3.scaleTime().range([0, width]),
+        // y = d3.scaleLinear().range([height, 0]),
+        // y2 = d3.scaleLinear().range([height2, 0]);
         y = d3.scaleLog().range([height, 0]),
         y2 = d3.scaleLog().range([height2, 0]);
 
@@ -106,7 +108,7 @@ function createLineChart(data) {
 
     x.domain(d3.extent(data, function(d) { return d.date; }));
     y.domain([1, 1000000000])
-        // y.domain([0.0001, d3.max(data, function(d) { return Math.max(d.new_cases, d.new_deaths, d.new_vaccinations); })]).base(10);
+        // y.domain([0, d3.max(data, function(d) { return Math.max(d.numbers); })]);
         // y.domain([0, 10000]);
     x2.domain(x.domain());
     y2.domain(y.domain());
@@ -119,6 +121,19 @@ function createLineChart(data) {
     focus.append("g")
         .attr("class", "axis axis--y")
         .call(yAxis);
+
+    focus.append("text")
+        .attr("transform", "translate(" + width / 2 + " ," + (height + margin.top + 12) + ")")
+        .style("text-anchor", "middle")
+        .style("font-size", "18px")
+        .text("Time");
+
+    // focus chart y label
+    focus.append("text")
+        .attr("text-anchor", "middle")
+        .attr("transform", "translate(" + (-margin.left - 10) + "," + height / 2 + ")rotate(-90)")
+        .style("font-size", "18px")
+        .text("Number of Cases (Logarithmic)");
 
     var bucketNames = [];
     for (let key of Object.keys(sumstat)) {
