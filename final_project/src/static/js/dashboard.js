@@ -33,3 +33,15 @@ $.ajax({
         console.log(err);
     }
 });
+
+$.ajax({
+    type: "GET",
+    url: "/wordcloud",
+    success: function(response) {
+        wordCloudData = JSON.parse(response)
+        createWordCloud(wordCloudData)
+    },
+    error: function(err) {
+        console.log(err);
+    }
+});

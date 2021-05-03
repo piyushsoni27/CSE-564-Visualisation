@@ -92,27 +92,27 @@ def get_barchart_data():
     
     return json.dumps(bar_df.to_dict(orient="records"))
 
-def get_worldcloud_data():
+@app.route("/wordcloud", methods=["POST", "GET"])
+def get_wordcloud_data():
     global hashtag_df
     
-    start_date = pd.to_datetime("2020-03-15")
-    end_date = pd.to_datetime("2020-07-28")
+    start_date = pd.to_datetime("2020-12-15")
+    end_date = pd.to_datetime("2021-03-28")
     
     hashtag_df['date'] = pd.to_datetime(hashtag_df['date'])
     
     date_check = np.where((hashtag_df.date>=start_date) & (hashtag_df.date<=end_date))
     
-    # hashtag_df = pd.DataFrame(columns=("hashtag", "count"))
-    hashtag_df['count'] = hashtag_df.loc[date_check]['count']
+    word_cloud_df = hashtag_df.loc[date_check]
+        
+    word_cloud_df = word_cloud_df.groupby(["hashtag"])['count'].sum().astype('int64').sort_values().tail(20).reset_index()
+    word_cloud_df['count'] = word_cloud_df['count']//1000
     
-    hashtag_df.sort_values(by=['count'], ascending=False, inplace=True, ignore_index=True)
+    print(word_cloud_df)
+    # word_cloud_df = pd.read_csv("E:\\Stony Brook\\Spring21\\CSE564 Visualization\\Assignments\\final_project\\src\\static\\js\\Team_info.csv")
     
-    top_20_unique_hashtags = hashtag_df.hashtag.unique()[:20]
-    
-    # hasattr(o, name)shtag_df = hashtag_df.head(20)
-    
-    print(top_20_unique_hashtags)
-    return top_20_unique_hashtags
+    print(type(word_cloud_df['hashtag'][0]))
+    return json.dumps(word_cloud_df.to_dict(orient="records"))
 
 @app.route("/")
 def home():
@@ -138,7 +138,7 @@ if(__name__ == "__main__"):
         
     # get_worldmap_data()
     
-    get_worldcloud_data()
+    get_wordcloud_data()
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
     app.run(debug=True)
