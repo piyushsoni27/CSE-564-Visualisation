@@ -9,3 +9,5 @@ final_project/../.DS_Store
 final_project/.DS_Store
 final_project/.ipynb_checkpoints/
 final_project/data_preprocess.ipynb
+final_project/src/data/hashtags
+final_project/src/data/full_dataset-clean.tsv
