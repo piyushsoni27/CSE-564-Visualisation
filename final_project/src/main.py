@@ -24,6 +24,7 @@ geo_json_path = os.path.join(curr_dir, os.path.join('data', 'countries.geo.json'
 covid_geo_json_path = os.path.join(curr_dir, os.path.join('data', 'covid_geo.json'))
 line_data_path = os.path.join(curr_dir, os.path.join('data', "world-data_1.csv"))
 barchart_data_path = os.path.join(curr_dir, os.path.join('data', "world-seasonal-data.csv"))
+hashtags_data_path = os.path.join(curr_dir, os.path.join('data', "hashtags.csv"))
 
 with open(geo_json_path) as f:
     gj = geojson.load(f)
@@ -36,6 +37,8 @@ data = pd.read_csv(data_path)
 data_original = data.copy()
 
 bar_df = pd.read_csv(barchart_data_path)
+line_df = pd.read_csv(line_data_path)
+hashtag_df = pd.read_csv(hashtags_data_path)
 
 def preprocess():
     global data
@@ -43,6 +46,7 @@ def preprocess():
     data = data[~data['iso_code'].astype(str).str.startswith('OWID')]
     data.reset_index(drop=True, inplace=True)
     data.rename({"iso_code" : "id"}, axis="columns", inplace=True)
+    data['date'] = pd.to_datetime(data['date'])
     
 
 @app.route("/geo_data", methods=["GET"])
@@ -52,16 +56,20 @@ def get_geo_data():
 @app.route("/worldmap", methods=["POST" , "GET"])
 def get_worldmap_data():
     
-    start_date = "2021-01-25"
-    end_date = "2021-03-28"
-        
-    world_data = pd.DataFrame(columns=("new_cases", "new_deaths", "new_vaccinations"))
+    start_date = pd.to_datetime("2020-10-25")
+    end_date = pd.to_datetime("2021-03-28")
     
-    world_data.new_vaccinations = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_vaccinations.mean().astype('int')
-    world_data.new_deaths = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_deaths.mean().astype('int')
-    world_data.new_cases = data.loc[(pd.to_datetime(data.date)>=pd.to_datetime(start_date)) & (pd.to_datetime(data.date)<=pd.to_datetime(end_date))].groupby(["id"]).new_cases.mean().astype('int')
+    # print(data.date[0]>=pd.to_datetime(start_date))
+    
+    date_check = np.where((data.date>=start_date) & (data.date<=end_date))
+    
+    world_data = pd.DataFrame(columns=("new_cases", "new_deaths", "new_vaccinations"))
+    world_data.new_vaccinations = data.loc[date_check].groupby(["id"]).new_vaccinations.mean().astype('int')
+    world_data.new_deaths = data.loc[date_check].groupby(["id"]).new_deaths.mean().astype('int')
+    world_data.new_cases = data.loc[date_check].groupby(["id"]).new_cases.mean().astype('int')        
     
     world_data.reset_index(inplace=True)
+    print("world_data")
     print(world_data)
     # pop_data = pd.read_csv("data/world_population.tsv", sep='\t')
     # pop_data.drop("Unnamed: 3", axis=1, inplace=True)
@@ -70,19 +78,41 @@ def get_worldmap_data():
 
 @app.route("/linechart", methods=["POST" , "GET"])
 def get_linechart_data():
+    global line_df
     
-    linedf = pd.read_csv(line_data_path)
-    linedf = linedf.fillna(0)
-    linedf['numbers'] =  linedf['numbers'].replace(0,1)
+    line_df = line_df.fillna(0)
+    line_df['numbers'] =  line_df['numbers'].replace(0,1)
     # linedf.drop(linedf.loc[linedf['covidattr']=='new_vaccinations'].index, inplace=True)
     # print(linedf)
-    return json.dumps(linedf.to_dict(orient="records"))
+    return json.dumps(line_df.to_dict(orient="records"))
 
 @app.route("/barchart", methods=["POST" , "GET"])
 def get_barchart_data():
     global bar_df
     
     return json.dumps(bar_df.to_dict(orient="records"))
+
+def get_worldcloud_data():
+    global hashtag_df
+    
+    start_date = pd.to_datetime("2020-03-15")
+    end_date = pd.to_datetime("2020-07-28")
+    
+    hashtag_df['date'] = pd.to_datetime(hashtag_df['date'])
+    
+    date_check = np.where((hashtag_df.date>=start_date) & (hashtag_df.date<=end_date))
+    
+    # hashtag_df = pd.DataFrame(columns=("hashtag", "count"))
+    hashtag_df['count'] = hashtag_df.loc[date_check]['count']
+    
+    hashtag_df.sort_values(by=['count'], ascending=False, inplace=True, ignore_index=True)
+    
+    top_20_unique_hashtags = hashtag_df.hashtag.unique()[:20]
+    
+    # hasattr(o, name)shtag_df = hashtag_df.head(20)
+    
+    print(top_20_unique_hashtags)
+    return top_20_unique_hashtags
 
 @app.route("/")
 def home():
@@ -108,7 +138,7 @@ if(__name__ == "__main__"):
         
     # get_worldmap_data()
     
-    # get_country_data()
+    get_worldcloud_data()
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
     app.run(debug=True)
