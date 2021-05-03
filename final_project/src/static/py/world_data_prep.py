@@ -10,9 +10,11 @@ import pandas as pd
 import numpy as np
 
 
-curr_dir = os.path.dirname(__file__)
-data_path = os.path.join(curr_dir, os.path.join('data', "owid-covid-data.csv"))
-save_path = os.path.join(curr_dir, os.path.join('data', "world-data.csv"))
+root_path = os.path.split(os.path.split(os.path.dirname(__file__))[0])[0]
+data_folder = os.path.join(root_path, 'data')
+
+data_path = os.path.join(data_folder, "owid-covid-data.csv")
+save_path = os.path.join(data_folder, "world-data.csv")
 
 
 data = pd.read_csv(data_path)
