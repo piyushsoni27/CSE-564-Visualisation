@@ -96,8 +96,8 @@ def get_barchart_data():
 def get_wordcloud_data():
     global hashtag_df
     
-    start_date = pd.to_datetime("2020-12-15")
-    end_date = pd.to_datetime("2021-03-28")
+    start_date = pd.to_datetime("2020-10-15")
+    end_date = pd.to_datetime("2020-11-10")
     
     hashtag_df['date'] = pd.to_datetime(hashtag_df['date'])
     
@@ -106,12 +106,10 @@ def get_wordcloud_data():
     word_cloud_df = hashtag_df.loc[date_check]
         
     word_cloud_df = word_cloud_df.groupby(["hashtag"])['count'].sum().astype('int64').sort_values().tail(20).reset_index()
-    word_cloud_df['count'] = word_cloud_df['count']//1000
+    word_cloud_df['count'] = np.log(word_cloud_df['count'])
     
     print(word_cloud_df)
-    # word_cloud_df = pd.read_csv("E:\\Stony Brook\\Spring21\\CSE564 Visualization\\Assignments\\final_project\\src\\static\\js\\Team_info.csv")
     
-    print(type(word_cloud_df['hashtag'][0]))
     return json.dumps(word_cloud_df.to_dict(orient="records"))
 
 @app.route("/")
