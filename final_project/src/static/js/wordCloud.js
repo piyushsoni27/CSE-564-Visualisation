@@ -1,6 +1,6 @@
 // https://bl.ocks.org/alexb823/706a98eb9e729f0754f31cd6f4803155
 
-var outerWidthWordCloud = 700, outerHeightWordCloud = 500/960 * outerWidthWordCloud
+var outerWidthWordCloud = 800, outerHeightWordCloud = 500/960 * outerWidthWordCloud
 
 var marginWordCloud = {top: 30, right: 50, bottom: 30, left: 50};
 var innerWidthWordCloud = outerWidthWordCloud - marginWordCloud.left - marginWordCloud.right;
@@ -20,7 +20,7 @@ function createWordCloud(data){
 
         const wordScale = d3.scaleLinear()
                 .domain(d3.extent(data, function(d){ return +d['count']; }))
-                .range([10,120])
+                .range([20,120])
 
         var layout = d3.layout.cloud()
                 .size([innerWidthWordCloud, innerHeightWordCloud])
@@ -41,8 +41,6 @@ function createWordCloud(data){
                                 .attr("transform", "translate(" + innerWidthWordCloud/2 + "," + innerHeightWordCloud/2 + ")")
                                 .selectAll("text")
                                 .data(words)
-
-                console.log(words)
 
                 plotInner.append("g")
                 .attr("class", "axis")

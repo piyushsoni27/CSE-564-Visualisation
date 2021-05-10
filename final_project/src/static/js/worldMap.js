@@ -1,14 +1,13 @@
 // http://bl.ocks.org/micahstubbs/8e15870eb432a21f0bc4d3d527b2d14f
 // https://jsfiddle.net/mamounothman/04t6wmya/4/
+// https://bl.ocks.org/wboykinm/dbbe50d1023f90d4e241712395c27fb3
 
-var outerWidthWorld = 960, outerHeightWorld = 350/960 * outerWidthWorld
+var outerWidthWorld = 900, outerHeightWorld = 350/960 * outerWidthWorld
 var marginsWorld = { top: 30, bottom: 10, left: 10, right: 10 }
-var innerWidthWorld = outerWidthWorld - marginsWorld.left - marginsWorld.right - 10
+var innerWidthWorld = outerWidthWorld - marginsWorld.left - marginsWorld.right
 var innerHeightWorld = outerHeightWorld - marginsWorld.top - marginsWorld.bottom
 
 function worldMap(geoData, dataset, attr) {
-
-    var format = d3.format(",");
 
     // Set tooltips
     var tip = d3.tip()
@@ -24,7 +23,7 @@ function worldMap(geoData, dataset, attr) {
             } else if(attr === "new_vaccinates"){
                 attr_str = "New Vaccinations"
             }
-            return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>" + attr_str + ": </strong><span class='details'>" + format(+d[attr]) + "</span>";
+            return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>" + attr_str + ": </strong><span class='details'>" + d[attr] + "</span>";
         })
 
     tip.direction(function(d) {
@@ -90,32 +89,13 @@ function worldMap(geoData, dataset, attr) {
             return [-10, 0]
         })
     
-    // attr = "dataset"
     var max = d3.max(dataset, function(d){ return +d[attr] }) 
     var min = d3.min(dataset, function(d){ return +d[attr] })
-    var attr_domain = []
-
-    for(i=min; i<=max; i+=(max-min)/10){
-        attr_domain.push(i)
-    }
-    // var range_color = []
-    // for(i=0; i<=10; i++){
-    //     range_color.push(d3.schemeBlues[6][i])
-    // }
-
-    // console.log(max)
-
-    var indexToColor = d3.scaleLinear()
-                    .domain([0, 10])
-                    .range(['rgb(46,73,123)', 'rgb(71, 187, 94)']);
-    var range = d3.range(10).map(indexToColor);
-
-    // var color = d3.scaleQuantile()
-    //     .domain([0, max])
-    //     .range(["rgb(247,251,255)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)"]);
-    //     // .range(range_color);
-
-    // var color = d3.scaleSequential(d3.interpolateBlues).domain([0, max]);
+    
+    var lowColor = '#f9f9f9'
+    var highColor = '#bc2a66'
+    
+    var ramp = d3.scaleLinear().domain([min,max]).range([lowColor,highColor])
 
     var color = d3.scaleThreshold()
 	.domain([0, 10, 100, 1000, 5000, 10000, 15000, 20000, 40000, 60000, 80000])
@@ -126,8 +106,6 @@ function worldMap(geoData, dataset, attr) {
 	// .domain([min, max])
 	// // .range(["#fff7bc", "#fee391", "#fec44f", "#fe9929", "#ec7014", "#cc4c02", "#993404", "#662506"]);
     // .range(["yellow", "red"]);
-
-    var path = d3.geoPath();
 
     var plotOuter = d3.select("svg#svgWorldMap")
                     .attr("width", outerWidthWorld)
@@ -142,7 +120,7 @@ function worldMap(geoData, dataset, attr) {
                     .attr('transform', 'translate(' + marginsWorld.left + ',' + marginsWorld.top + ')')
 
     var projection = d3.geoMercator()
-        .scale(130)
+        .scale((innerWidthWorld / 850) * 100)
         .translate([innerWidthWorld / 2, innerHeightWorld / 1.5]);
 
     var path = d3.geoPath().projection(projection);
@@ -165,9 +143,7 @@ function worldMap(geoData, dataset, attr) {
         .data(geoData.features)
         .enter().append("path")
         .attr("d", path)
-        .style("fill", function(d) {
-            return color(datasetById[d.id]);
-        })
+        .style("fill", function(d) { return ramp(datasetById[d.id]) })
         .style('stroke', 'white')
         .style('stroke-width', 1.5)
         .style("opacity", 0.8)
@@ -175,7 +151,6 @@ function worldMap(geoData, dataset, attr) {
         .style("stroke", "white")
         .style('stroke-width', 0.3)
         .on('mouseover', function(d) {
-            console.log(typeof(+d[attr]))
             if(String(+d[attr]) !== "NaN") tip.show(d);
 
             d3.select(this)
@@ -199,4 +174,49 @@ function worldMap(geoData, dataset, attr) {
         // .datum(topojson.mesh(geoData.features, function(a, b) { return a !== b; }))
         .attr("class", "names")
         .attr("d", path);
+
+        // // add a legend
+		// var w = 140, h = 300;
+
+		// var key = d3.select("#worldmap")
+		// 	.append("svg")
+		// 	.attr("width", w)
+		// 	.attr("height", h)
+		// 	.attr("class", "legend");
+
+		// var legend = key.append("defs")
+		// 	.append("svg:linearGradient")
+		// 	.attr("id", "gradient")
+		// 	.attr("x1", "100%")
+		// 	.attr("y1", "0%")
+		// 	.attr("x2", "100%")
+		// 	.attr("y2", "100%")
+		// 	.attr("spreadMethod", "pad");
+
+		// legend.append("stop")
+		// 	.attr("offset", "0%")
+		// 	.attr("stop-color", highColor)
+		// 	.attr("stop-opacity", 1);
+			
+		// legend.append("stop")
+		// 	.attr("offset", "100%")
+		// 	.attr("stop-color", lowColor)
+		// 	.attr("stop-opacity", 1);
+
+		// key.append("rect")
+		// 	.attr("width", w - 100)
+		// 	.attr("height", h)
+		// 	.style("fill", "url(#gradient)")
+		// 	.attr("transform", "translate(0,10)");
+
+		// var y = d3.scaleLinear()
+		// 	.range([h, 0])
+		// 	.domain([min, max]);
+
+		// var yAxis = d3.axisRight(y);
+
+		// key.append("g")
+		// 	.attr("class", "y axis")
+		// 	.attr("transform", "translate(41,10)")
+		// 	.call(yAxis)
 }

@@ -1,0 +1,17 @@
+.dash-unit {		
+	margin-bottom: 30px;
+	padding-bottom:10px;
+	border: 1px solid #383737;
+	background-image:url('../images/sep-half.png');
+	background-color: #3d3d3d;
+	color:white;
+	height:290px;
+}
+
+.dash-unit:hover {
+	background-color: #4f4f4f;
+	-moz-box-shadow:    3px 3px 2px 0px #151515;
+    -webkit-box-shadow: 3px 3px 2px 0px #151515;
+    box-shadow:         3px 3px 2px 0px #151515;
+
+}

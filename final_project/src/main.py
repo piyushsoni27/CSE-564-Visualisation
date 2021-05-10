@@ -51,6 +51,7 @@ def preprocess():
 
 @app.route("/geo_data", methods=["GET"])
 def get_geo_data():
+    
     return gj
 
 @app.route("/worldmap", methods=["POST" , "GET"])
@@ -96,8 +97,8 @@ def get_barchart_data():
 def get_wordcloud_data():
     global hashtag_df
     
-    start_date = pd.to_datetime("2020-10-15")
-    end_date = pd.to_datetime("2020-11-10")
+    start_date = pd.to_datetime("2021-01-15")
+    end_date = pd.to_datetime("2021-01-30")
     
     hashtag_df['date'] = pd.to_datetime(hashtag_df['date'])
     
@@ -119,7 +120,7 @@ def home():
 
 if(__name__ == "__main__"):
     preprocess()
-    
+    print(gj)
     # country_codes = data.iso_code.unique()
     # world_data = pd.DataFrame(columns=("iso_code", "new_cases", "new_deaths"))
     # world_data.iso_code = country_codes
