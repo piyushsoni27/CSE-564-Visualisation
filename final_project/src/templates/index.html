@@ -53,13 +53,21 @@
     <div id="dashboard" class="container-fluid">
         <div class="row">
             <div class="col">
-                <div id="worldmap" class="dash-unit">
-                    <svg id='svgWorldMap'></svg>
+                <div class="dash-unit">
+                    <dtitle>Choropleth</dtitle>
+                    <hr>
+                    <div id="worldmap">
+                        <svg id='svgWorldMap'></svg>
+                    </div>
                 </div>
             </div>
             <div class="col">
-                <div id="linechart" class="dash-unit">
-                    <svg id='svgLineChart'></svg>
+                <div class="dash-unit">
+                    <dtitle>Line Chart</dtitle>
+                    <hr>
+                    <div id="linechart">
+                        <svg id='svgLineChart'></svg>
+                    </div>
                 </div>
             </div>
 
@@ -71,18 +79,12 @@
                 </div>
             </div> -->
             <div class="col">
-                <div id="wordcloud" class="dash-unit">
-                    <svg id='svgWordCloud'></svg>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div id="choropleth" style="--aspect-ratio:16/9;">
-
+                <div class="dash-unit">
+                    <dtitle>Word Cloud</dtitle>
+                    <hr>
+                    <div id="wordcloud">
+                        <svg id='svgWordCloud'></svg>
+                    </div>
                 </div>
             </div>
         </div>

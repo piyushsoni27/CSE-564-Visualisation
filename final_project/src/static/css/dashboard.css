@@ -19,3 +19,19 @@ body {
     -webkit-box-shadow: 3px 3px 2px 0px #151515;
     box-shadow:         3px 3px 2px 0px #151515;
 }
+
+.dash-unit dtitle {
+	font-size:11px;
+	text-transform:uppercase;
+	color:#ffffff;
+	margin:8px;
+	padding:0px;
+	height:inherit	
+	}
+	
+.dash-unit hr {
+  	border: 0;
+  	border-top: 1px solid #151515;
+  	border-top-style: dashed;
+	margin-top:3px;
+}
