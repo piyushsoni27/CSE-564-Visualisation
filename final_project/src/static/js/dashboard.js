@@ -14,8 +14,10 @@ $.ajax({
     type: "GET",
     url: "/linechart",
     success: function(response) {
-        lineData = JSON.parse(response)
-        createLineChart(lineData)
+        lineBubbleData = JSON.parse(response)
+        linedata = lineBubbleData['lined']
+        bubbledata = lineBubbleData['bubbled']
+        createLineChart(linedata, bubbledata)
     },
     error: function(err) {
         console.log(err);
