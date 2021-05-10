@@ -2,12 +2,19 @@
 // https: //observablehq.com/@connor-roche/multi-line-chart-focus-context-w-mouseover-tooltip
 //https://www.d3-graph-gallery.com/graph/bubble_template.html
 
-var outerWidthLine = 960,
-    outerHeightLine = 500 / 960 * outerWidthLine
-var marginUpperLineChart = { top: 20, right: 20, bottom: 110, left: 40 }
-var marginBottomLineChart = { top: 430, right: 20, bottom: 50, left: 40 }
+// var outerWidthLine = 960,
+//     outerHeightLine = 500 / 960 * outerWidthLine
+// var marginUpperLineChart = { top: 20, right: 20, bottom: 110, left: 40 }
+// var marginBottomLineChart = { top: 430, right: 20, bottom: 50, left: 40 }
+// var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
+// var innerHeightLine = outerHeightLine - marginBottomLineChart.top - marginBottomLineChart.bottom - 10
+
+var outerWidthLine = 760,
+    outerHeightLine = 425 / 760 * outerWidthLine
+var marginUpperLineChart = { top: 5, right: 50, bottom: 110, left: 40 }
+var marginBottomLineChart = { top: 355, right: 50, bottom: 50, left: 40 }
 var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
-var innerHeightLine = outerHeightLine - marginBottomLineChart.top - marginBottomLineChart.bottom - 10
+var innerHeightLine = outerHeightLine - marginUpperLineChart.top - marginUpperLineChart.bottom - 10
 
 var start_date
 var end_date
@@ -21,7 +28,7 @@ function createLineChart(data, bubbledata) {
         .append('g')
         .attr('id', 'inner-plot')
         .attr('width', innerWidthLine)
-        .attr('class', 'map')
+        .attr('class', 'linebubblechart')
         .attr('height', innerHeightLine)
         .attr('transform', 'translate(' + marginUpperLineChart.left + ',' + marginUpperLineChart.top + ')')
 
@@ -156,9 +163,9 @@ function createLineChart(data, bubbledata) {
         .call(yAxis);
 
     focus.append("text")
-        .attr("transform", "translate(" + width / 2 + " ," + (height + margin.top + 12) + ")")
+        .attr("transform", "translate(" + width / 2 + " ," + (height + margin.top + 28) + ")")
         .style("text-anchor", "middle")
-        .style("font-size", "18px")
+        .style("font-size", "20px")
         .text("Time");
 
     // focus chart y label
@@ -166,7 +173,7 @@ function createLineChart(data, bubbledata) {
         .attr("text-anchor", "middle")
         .attr("transform", "translate(" + (-margin.left - 10) + "," + height / 2 + ")rotate(-90)")
         .style("font-size", "18px")
-        .text("Number of Cases (Logarithmic)");
+        .text("Number of Cases");
 
     // var bucketNames = [];
     // for (let key of Object.keys(sumstat)) {
