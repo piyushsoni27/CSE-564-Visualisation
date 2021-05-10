@@ -66,6 +66,7 @@ function createLineChart(data, bubbledata) {
     //  'Returning to normal life'
 
     var linedata_max = d3.max(data, function(d) { return d.numbers; })
+    var linedata_min = d3.min(data, function(d) { return d.numbers; })
     var bubbledata_max = d3.max(bubbledata, function(d) { return d.Count; })
     var bubbledata_min = d3.min(bubbledata, function(d) { return d.Count; })
 
@@ -87,7 +88,7 @@ function createLineChart(data, bubbledata) {
 
     // Add a scale for bubble color
     var myColor = d3.scaleOrdinal()
-        .domain(["Case identification, contact tracing and related measures", "Social distancing", "Travel restriction", "Resource allocation", "Risk communication", "Healthcare and public health capacity", "Returning to normal life"])
+        .domain(["Case_identification_contact_tracing_and_related_measures", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Healthcare_and_public_health_capacity", "Returning_to_normal_life"])
         .range(d3.schemeSet1);
 
     var brush = d3.brushX()
@@ -145,6 +146,61 @@ function createLineChart(data, bubbledata) {
     var context = svg.append("g")
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+    // ---------------------------//
+    //      TOOLTIP               //
+    // ---------------------------//
+
+    // -1- Create a tooltip div that is hidden by default:
+    var tooltip = svg.append("g")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "black")
+        .style("border-radius", "5px")
+        .style("padding", "10px")
+        .style("color", "white")
+
+    // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
+    var showTooltip = function(d) {
+        console.log("here")
+        tooltip
+            .transition()
+            .duration(200)
+        tooltip
+            .style("opacity", 1)
+            .html("NPI Measure: " + d.Measure_L1)
+            .style("left", (d3.mouse(this)[0] + 30) + "px")
+            .style("top", (d3.mouse(this)[1] + 30) + "px")
+    }
+    var moveTooltip = function(d) {
+        tooltip
+            .style("left", (d3.mouse(this)[0] + 30) + "px")
+            .style("top", (d3.mouse(this)[1] + 30) + "px")
+    }
+    var hideTooltip = function(d) {
+        tooltip
+            .transition()
+            .duration(200)
+            .style("opacity", 0)
+    }
+
+
+    // ---------------------------//
+    //       HIGHLIGHT GROUP      //
+    // ---------------------------//
+
+    // What to do when one group is hovered
+    var highlight = function(d) {
+        // reduce opacity of all groups
+        d3.selectAll(".bubbles").style("opacity", .05)
+            // expect the one that is hovered
+        d3.selectAll("." + d).style("opacity", 1)
+    }
+
+    // And when it is not hovered anymore
+    var noHighlight = function(d) {
+        d3.selectAll(".bubbles").style("opacity", 1)
+    }
 
     x.domain(d3.extent(data, function(d) { return d.date; }));
     // y.domain((([1, 1000000000])
@@ -231,9 +287,12 @@ function createLineChart(data, bubbledata) {
         .append("circle")
         .attr("class", function(d) { return "bubbles " + d.Measure_L1 })
         .attr("cx", function(d) { return x(d.date); })
-        .attr("cy", function(d) { return y((d.Count / bubbledata_max) * (linedata_max / 1.1)); })
+        .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
         .attr("r", function(d) { return z(d.Count); })
         .style("fill", function(d) { return myColor(d.Measure_L1); })
+        .on("mouseover", showTooltip)
+        .on("mousemove", moveTooltip)
+        .on("mouseleave", hideTooltip)
 
     context.append("g")
         .attr("class", "axis axis--x")
@@ -252,6 +311,37 @@ function createLineChart(data, bubbledata) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(zoom);
 
+    // Add one dot in the legend for each name.
+    var size = 8
+    var allgroups = ["Case_identification_contact_tracing_and_related_measures", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Healthcare_and_public_health_capacity", "Returning_to_normal_life"]
+        // var allgroups_temp = ["Case identification, contact tracing and related measures", "Social distancing", "Travel restriction", "Resource allocation", "Risk communication", "Healthcare and public health capacity", "Returning to normal life"]
+
+    svg.selectAll("myrect")
+        .data(allgroups)
+        .enter()
+        .append("circle")
+        .attr("cx", 510)
+        .attr("cy", function(d, i) { return 210 + i * (size + 5) })
+        .attr("r", 4)
+        .style("fill", function(d) { return myColor(d) })
+        .on("mouseover", highlight)
+        .on("mouseleave", noHighlight)
+
+    // Add labels beside legend dots
+    svg.selectAll("mylabels")
+        .data(allgroups)
+        .enter()
+        .append("text")
+        .attr("x", 510 + size * .8)
+        .attr("y", function(d, i) { return i * (size + 5) + (size / 2) + 205 })
+        .style("fill", function(d) { return myColor(d) })
+        .text(function(d) { return d })
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+        .style("font-size", "8px")
+        .on("mouseover", highlight)
+        .on("mouseleave", noHighlight)
+
     function brushed() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
         var s = d3.event.selection || x2.range();
@@ -263,9 +353,12 @@ function createLineChart(data, bubbledata) {
         Line_chart.selectAll(".line").attr("d", line);
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
-            .attr("cy", function(d) { return y((d.Count / bubbledata_max) * (linedata_max / 1.1)); })
+            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
+            .on("mouseover", showTooltip)
+            .on("mousemove", moveTooltip)
+            .on("mouseleave", hideTooltip)
         focus.select(".axis--x").call(xAxis);
         focus.select(".axis--x").call(xAxis);
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
@@ -282,9 +375,12 @@ function createLineChart(data, bubbledata) {
         Line_chart.selectAll(".line").attr("d", line);
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
-            .attr("cy", function(d) { return y((d.Count / bubbledata_max) * (linedata_max / 1.1)); })
+            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
+            .on("mouseover", showTooltip)
+            .on("mousemove", moveTooltip)
+            .on("mouseleave", hideTooltip)
         focus.select(".axis--x").call(xAxis);
         // console.log("t invert ", t.invertX);
         // console.log("t " + t);

@@ -107,8 +107,10 @@ def get_linechart_data():
     # print(np.where(npi_data['Count']>40))
     npi_data['Count'] = npi_data['Count'].astype('int32')
     npi_data['Date'] = npi_data['Date'].astype('str')
+    npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace('\s+', '_') 
+    npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace(',', '')
     npi_data.rename(columns={'Date':'date'},inplace=True)
-    # print(npi_data)
+    print(npi_data)
 
     d1 = line_df_temp.to_dict(orient="records")
     d2 = npi_data.to_dict(orient="records")
