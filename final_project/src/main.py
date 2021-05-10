@@ -29,6 +29,10 @@ hashtags_data_path = os.path.join(curr_dir, os.path.join('data', "hashtags.csv")
 
 with open(geo_json_path) as f:
     gj = geojson.load(f)
+    for i in range(len(gj["features"])):
+        if(gj["features"][i]["properties"]["name"] == "Antarctica"):
+            gj["features"].remove(gj["features"][i])
+            break
 
 # Geo features for plotting world map
 geo_features = gj['features']
@@ -55,23 +59,17 @@ def get_worldmap_data():
     
     start_date = pd.to_datetime("2020-03-25")
     end_date = pd.to_datetime("2021-03-28")
-    
-    # print(data.date[0]>=pd.to_datetime(start_date))
-    
+        
     date_check = np.where((data.date>=start_date) & (data.date<=end_date))
     
-    world_data = pd.DataFrame(columns=("new_cases", "new_deaths", "new_vaccinations"))
-    world_data.new_vaccinations = data.loc[date_check].groupby(["id"]).new_vaccinations.sum().astype('int')
-    world_data.new_deaths = data.loc[date_check].groupby(["id"]).new_deaths.sum().astype('int')
-    world_data.new_cases = data.loc[date_check].groupby(["id"]).new_cases.sum().astype('int')        
-    
-    world_data.reset_index(inplace=True)
+    groupby_data = data.loc[date_check].groupby(["id"])
         
     for i in range(len(gj["features"])):
-        if(gj["features"][i]["id"] in world_data["id"].values):
-            gj["features"][i]["new_cases"] = int(world_data.loc[world_data["id"] == geo_features[i]["id"]].new_cases.sum())  
-            gj["features"][i]["new_deaths"] = int(world_data.loc[world_data["id"] == geo_features[i]["id"]].new_deaths.sum())
-            gj["features"][i]["new_vaccinations"] = int(world_data.loc[world_data["id"] == geo_features[i]["id"]].new_vaccinations.sum())  
+        id = gj["features"][i]["id"]
+        if(id in data["id"].values):
+            gj["features"][i]["new_cases"] = int(groupby_data.new_cases.mean()[id])
+            gj["features"][i]["new_deaths"] = int(groupby_data.new_deaths.mean()[id])
+            gj["features"][i]["new_vaccinations"] = int(groupby_data.new_vaccinations.mean()[id])  
 
     return gj
 
@@ -139,8 +137,6 @@ def get_wordcloud_data():
     word_cloud_df = word_cloud_df.groupby(["hashtag"])['count'].sum().astype('int64').sort_values().tail(20).reset_index()
     word_cloud_df['count'] = np.log(word_cloud_df['count'])
     
-    print(word_cloud_df)
-
     return json.dumps(word_cloud_df.to_dict(orient="records"))
 
 @app.route("/")

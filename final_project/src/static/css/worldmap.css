@@ -26,7 +26,6 @@ line-height: 1.5;
 color: rgba(0, 0, 0, 0.6);
 position: absolute;
 pointer-events: none;
-
 }
 
 /* Northward tooltips */
@@ -72,3 +71,36 @@ pointer-events:none;
 .details{
 color:white;
 }
+
+
+/* Legend Position Style */
+.legend {
+	position:absolute;
+	left:20px;
+	top:30px;
+}
+
+.axis text {
+	font: 10px sans-serif;
+}
+
+.axis line, .axis path {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+
+.countries {
+    fill: none;
+    stroke: #fff;
+    stroke-linejoin: round;
+  }
+  .legendThreshold {
+      font-size: 12px;
+      font-family: sans-serif;
+  }
+  .caption {
+      fill: #000;
+      text-anchor: start;
+      font-weight: bold;
+  }

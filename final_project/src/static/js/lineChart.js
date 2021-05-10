@@ -11,7 +11,7 @@
 
 var outerWidthLine = 760,
     outerHeightLine = 425 / 760 * outerWidthLine
-var marginUpperLineChart = { top: 5, right: 50, bottom: 110, left: 40 }
+var marginUpperLineChart = { top: 10, right: 50, bottom: 110, left: 40 }
 var marginBottomLineChart = { top: 355, right: 50, bottom: 50, left: 40 }
 var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
 var innerHeightLine = outerHeightLine - marginUpperLineChart.top - marginUpperLineChart.bottom - 10

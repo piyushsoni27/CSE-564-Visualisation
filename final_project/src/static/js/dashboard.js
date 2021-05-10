@@ -3,7 +3,7 @@ $.ajax({
     url: "/worldmap",
     success: function(response) {
         worldData = (response)
-        worldMap(worldData, "new_cases")
+        worldMap(worldData, "new_vaccinations")
     },
     error: function(err) {
         console.log(err);

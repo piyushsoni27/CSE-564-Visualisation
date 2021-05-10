@@ -2,8 +2,8 @@
 // https://jsfiddle.net/mamounothman/04t6wmya/4/
 // https://bl.ocks.org/wboykinm/dbbe50d1023f90d4e241712395c27fb3
 
-var outerWidthWorld = 900, outerHeightWorld = 450/960 * outerWidthWorld
-var marginsWorld = { top: 10, bottom: 10, left: 10, right: 10 }
+var outerWidthWorld = 760, outerHeightWorld = 450/760 * outerWidthWorld
+var marginsWorld = { top: 5, bottom: 20, left: 5, right: 20 }
 var innerWidthWorld = outerWidthWorld - marginsWorld.left - marginsWorld.right
 var innerHeightWorld = outerHeightWorld - marginsWorld.top - marginsWorld.bottom
 
@@ -20,7 +20,7 @@ function worldMap(dataset, attr) {
             }
             else if(attr === "new_deaths"){
                 attr_str = "New Deaths"
-            } else if(attr === "new_vaccinates"){
+            } else if(attr === "new_vaccinations"){
                 attr_str = "New Vaccinations"
             }
             return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>" + attr_str + ": </strong><span class='details'>" + d[attr] + "</span>";
@@ -92,25 +92,43 @@ function worldMap(dataset, attr) {
     var max = d3.max(dataset.features, function(d){ return +d[attr] }) 
     var min = d3.min(dataset.features, function(d){ return +d[attr] })
     
-    var lowColor = '#f9f9f9'
-    var highColor = '#bc2a66'
-    
-    var ramp = d3.scaleLinear().domain([min,max]).range([lowColor,highColor])
+    var lowColor = '#f18d8d'
+    var highColor = '#f30707'
 
-    // var color = d3.scaleThreshold()
-	// .domain([0, 10, 100, 1000, 5000, 10000, 15000, 20000, 40000, 60000, 80000])
-	// // .range(["#fff7bc", "#fee391", "#fec44f", "#fe9929", "#ec7014", "#cc4c02", "#993404", "#662506"]);
-    // .range(["rgb(255,251,247)", "rgb(247,235,222)", "rgb(239,219,198)", "rgb(225,202,158)", "rgb(214,174,107)", "rgb(198,146,66)", "rgb(181,113,33)", "rgb(156,81,8)", "rgb(107,48,8)", "rgb(43,19,3)"]);
-    console.log(innerWidthWorld)
-    const logScale = d3.scaleLog()
-      .domain([min, max])
-    const color = d3.scaleSequential(
-        (d) => d3.interpolateReds(logScale(d))
-      )
+    var n = max.toString().length
+
+    var step = Math.ceil((max - min)/6)
+    var legends_arr= [];
+    var labels = []
+    var num;
+    legends_arr.push(min)
+    for(i=1; i<6; i++){
+        num = min + step*i
+        legends_arr.push(num)
+        if(num>=1000000){
+            labels.push((legends_arr[i-1]+1).toString() + "-" + (num/1000000).toString()+'M')
+        }
+        else{
+            labels.push((legends_arr[i-1]+1).toString() + "-" + num.toString())
+        }
+    }
+    if(legends_arr[i-1]>=1000000){
+        labels.push("> " + (legends_arr[i-1]/1000000).toString()+'M')
+    }
+    else{
+        labels.push("> " + (legends_arr[i-1]+1).toString())
+    }
+
+    var colorScheme = d3.schemeReds[5];
+    colorScheme.unshift("#eee")
+    var colorScale = d3.scaleThreshold()
+        .domain(legends_arr)
+        .range(colorScheme);
 
     var plotOuter = d3.select("svg#svgWorldMap")
                     .attr("width", outerWidthWorld)
                     .attr("height", outerHeightWorld)
+                    .attr('transform', 'translate(20,20)')
 
     plotInner = plotOuter
                     .append('g')
@@ -119,10 +137,12 @@ function worldMap(dataset, attr) {
                     .attr('class', 'map')
                     .attr('height', innerHeightWorld)
                     .attr('transform', 'translate(' + marginsWorld.left + ',' + marginsWorld.top + ')')
+                    // .attr('transform', 'scale(' + 1 + ',' + 1.4 + ')')
+                    
 
-    var projection = d3.geoMercator()
-        .scale(150,80)
-        .translate([innerWidthWorld / 2, innerHeightWorld / 1.5]);
+    var projection = d3.geoNaturalEarth()
+        .scale(innerWidthWorld/Math.PI/1.5)
+        .translate([innerWidthWorld / 2, innerHeightWorld / 2]);
 
     var path = d3.geoPath().projection(projection);
 
@@ -134,7 +154,7 @@ function worldMap(dataset, attr) {
         .data(dataset.features)
         .enter().append("path")
         .attr("d", path)
-        .style("fill", function(d) { return ramp(d[attr]) })
+        .style("fill", function(d) { return colorScale(d[attr]) })
         .style('stroke', 'white')
         .style('stroke-width', 1.5)
         .style("opacity", 0.8)
@@ -165,48 +185,22 @@ function worldMap(dataset, attr) {
         .attr("class", "names")
         .attr("d", path);
 
-        // // add a legend
-		// var w = 140, h = 300;
+        // Legend
+        var g = plotOuter.append("g")
+        .attr("class", "legendThreshold")
+        .attr("transform", "translate(20,300)");
 
-		// var key = d3.select("#worldmap")
-		// 	.append("svg")
-		// 	.attr("width", w)
-		// 	.attr("height", h)
-		// 	.attr("class", "legend");
-
-		// var legend = key.append("defs")
-		// 	.append("svg:linearGradient")
-		// 	.attr("id", "gradient")
-		// 	.attr("x1", "100%")
-		// 	.attr("y1", "0%")
-		// 	.attr("x2", "100%")
-		// 	.attr("y2", "100%")
-		// 	.attr("spreadMethod", "pad");
-
-		// legend.append("stop")
-		// 	.attr("offset", "0%")
-		// 	.attr("stop-color", highColor)
-		// 	.attr("stop-opacity", 1);
-			
-		// legend.append("stop")
-		// 	.attr("offset", "100%")
-		// 	.attr("stop-color", lowColor)
-		// 	.attr("stop-opacity", 1);
-
-		// key.append("rect")
-		// 	.attr("width", w - 100)
-		// 	.attr("height", h)
-		// 	.style("fill", "url(#gradient)")
-		// 	.attr("transform", "translate(0,10)");
-
-		// var y = d3.scaleLinear()
-		// 	.range([h, 0])
-		// 	.domain([min, max]);
-
-		// var yAxis = d3.axisRight(y);
-
-		// key.append("g")
-		// 	.attr("class", "y axis")
-		// 	.attr("transform", "translate(41,10)")
-		// 	.call(yAxis)
+        g.append("text")
+            .attr("class", "caption")
+            .attr("x", 0)
+            .attr("y", -6)
+            .text(attr);
+        
+        var legend = d3.legendColor()
+                        .labels(function (d) { return labels[d.i]; })
+                        .shapePadding(4)
+                        .scale(colorScale);
+        
+        plotOuter.select(".legendThreshold")
+                .call(legend);
 }
