@@ -15,16 +15,14 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="static/css/worldmap.css" />
-    <link rel="stylesheet" href="static/css/lineChart.css" /> 
-    <link rel="stylesheet" href="static/css/dashboard.css" /> 
+    <link rel="stylesheet" href="static/css/lineChart.css" />
+    <link rel="stylesheet" href="static/css/dashboard.css" />
 
     <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico">
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
-    crossorigin>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin>
 
-    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
-    crossorigin></script>
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin></script>
 
     <script type="text/javascript" src="static/js/global_vars.js"></script>
     <script src="static/lib/d3.layout.cloud.js"></script>
@@ -47,19 +45,19 @@
 </head>
 
 <body>
-    <div id="dashboard" class = "container-fluid">
+    <div id="dashboard" class="container-fluid">
         <div class="row">
-            
-            <div class="col">
-                <div id="linechart" class="dash-unit">
-                    <svg id='svgLineChart'></svg>
-                </div>
-            </div>
             <div class="col">
                 <div id="worldmap" class="dash-unit">
                     <svg id='svgWorldMap'></svg>
                 </div>
             </div>
+            <div class="col">
+                <div id="linechart" class="dash-unit">
+                    <svg id='svgLineChart'></svg>
+                </div>
+            </div>
+
         </div>
         <div class="row">
             <!-- <div class="col">
@@ -74,8 +72,8 @@
             </div>
         </div>
         <div class="row">
-            
-        </div> 
+
+        </div>
         <div class="row">
             <div class="col-sm-12">
                 <div id="choropleth" style="--aspect-ratio:16/9;">
