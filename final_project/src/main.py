@@ -49,17 +49,11 @@ def preprocess():
     data.reset_index(drop=True, inplace=True)
     data.rename({"iso_code" : "id"}, axis="columns", inplace=True)
     data['date'] = pd.to_datetime(data['date'])
-    
-
-@app.route("/geo_data", methods=["GET"])
-def get_geo_data():
-    
-    return gj
 
 @app.route("/worldmap", methods=["POST" , "GET"])
 def get_worldmap_data():
     
-    start_date = pd.to_datetime("2020-10-25")
+    start_date = pd.to_datetime("2020-03-25")
     end_date = pd.to_datetime("2021-03-28")
     
     # print(data.date[0]>=pd.to_datetime(start_date))
@@ -67,17 +61,19 @@ def get_worldmap_data():
     date_check = np.where((data.date>=start_date) & (data.date<=end_date))
     
     world_data = pd.DataFrame(columns=("new_cases", "new_deaths", "new_vaccinations"))
-    world_data.new_vaccinations = data.loc[date_check].groupby(["id"]).new_vaccinations.mean().astype('int')
-    world_data.new_deaths = data.loc[date_check].groupby(["id"]).new_deaths.mean().astype('int')
-    world_data.new_cases = data.loc[date_check].groupby(["id"]).new_cases.mean().astype('int')        
+    world_data.new_vaccinations = data.loc[date_check].groupby(["id"]).new_vaccinations.sum().astype('int')
+    world_data.new_deaths = data.loc[date_check].groupby(["id"]).new_deaths.sum().astype('int')
+    world_data.new_cases = data.loc[date_check].groupby(["id"]).new_cases.sum().astype('int')        
     
     world_data.reset_index(inplace=True)
-    # print("world_data")
-    # print(world_data)
-    # pop_data = pd.read_csv("data/world_population.tsv", sep='\t')
-    # pop_data.drop("Unnamed: 3", axis=1, inplace=True)
-    
-    return json.dumps(world_data.to_dict(orient="records"))
+        
+    for i in range(len(gj["features"])):
+        if(gj["features"][i]["id"] in world_data["id"].values):
+            gj["features"][i]["new_cases"] = int(world_data.loc[world_data["id"] == geo_features[i]["id"]].new_cases.sum())  
+            gj["features"][i]["new_deaths"] = int(world_data.loc[world_data["id"] == geo_features[i]["id"]].new_deaths.sum())
+            gj["features"][i]["new_vaccinations"] = int(world_data.loc[world_data["id"] == geo_features[i]["id"]].new_vaccinations.sum())  
+
+    return gj
 
 @app.route("/linechart", methods=["POST" , "GET"])
 def get_linechart_data():
@@ -154,7 +150,6 @@ def home():
 
 if(__name__ == "__main__"):
     preprocess()
-    print(gj)
     # country_codes = data.iso_code.unique()
     # world_data = pd.DataFrame(columns=("iso_code", "new_cases", "new_deaths"))
     # world_data.iso_code = country_codes

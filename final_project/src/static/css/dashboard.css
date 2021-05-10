@@ -1,3 +1,8 @@
+body {
+	background:#1f1f1f;
+    font-family: 'Open Sans', sans-serif;
+}
+
 .dash-unit {		
 	margin-bottom: 30px;
 	padding-bottom:10px;
@@ -5,7 +10,7 @@
 	background-image:url('../images/sep-half.png');
 	background-color: #3d3d3d;
 	color:white;
-	height:290px;
+	height:auto;
 }
 
 .dash-unit:hover {
