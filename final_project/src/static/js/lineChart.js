@@ -37,8 +37,6 @@ function createLineChart(data, bubbledata) {
         width = outerWidthLine - margin.left - margin.right,
         height = outerHeightLine - margin.top - margin.bottom,
         height2 = outerHeightLine - margin2.top - margin2.bottom;
-    console.log(width)
-    console.log(height)
 
     var parseDate = d3.timeParse("%Y-%m-%d");
     var tip = d3.tip()
@@ -332,18 +330,30 @@ function createLineChart(data, bubbledata) {
         // console.log("Brush 1 " + selected_end_date)
 
         // update()
-        
+
         x.domain(s.map(x2.invert, x2));
-        
+
         Line_chart.selectAll(".line").attr("d", line);
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
             .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
-            .on("mouseover", showTooltip)
-            .on("mousemove", moveTooltip)
-            .on("mouseleave", hideTooltip)
+            .on('mouseover', function(d) {
+                tip.show(d);
+
+                d3.select(this)
+                    .style("opacity", 1)
+                    .style("stroke", "white")
+                    .style("stroke-width", 3);
+            })
+            .on('mouseout', function(d) {
+                tip.hide(d);
+                d3.select(this)
+                    .style("opacity", 0.8)
+                    .style("stroke", "white")
+                    .style("stroke-width", 0.3);
+            });
         focus.select(".axis--x").call(xAxis);
         focus.select(".axis--x").call(xAxis);
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
@@ -357,16 +367,16 @@ function createLineChart(data, bubbledata) {
         start_date = new Date(s.map(x2.invert, x2)[0])
         end_date = new Date(s.map(x2.invert, x2)[1])
 
-        selected_start_date = start_date.getFullYear()+'-' + (start_date.getMonth()+1) + '-'+start_date.getDate()
-        selected_end_date = end_date.getFullYear()+'-' + (end_date.getMonth()+1) + '-'+end_date.getDate()
+        selected_start_date = start_date.getFullYear() + '-' + (start_date.getMonth() + 1) + '-' + start_date.getDate()
+        selected_end_date = end_date.getFullYear() + '-' + (end_date.getMonth() + 1) + '-' + end_date.getDate()
 
         console.log("Brush 0 " + selected_start_date)
         console.log("Brush 1 " + selected_end_date)
 
         update()
-        
+
         x.domain(s.map(x2.invert, x2));
-        
+
         Line_chart.selectAll(".line").attr("d", line);
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
