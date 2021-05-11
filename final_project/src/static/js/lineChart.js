@@ -110,7 +110,8 @@ function createLineChart(data, bubbledata) {
             [0, 0],
             [width, height]
         ])
-        .on("zoom", zoomed);
+        .on("zoom", zoomed)
+        .on("end", zoomend);
 
     var line = d3
         .line()
@@ -318,19 +319,8 @@ function createLineChart(data, bubbledata) {
         .on("mouseleave", noHighlight)
 
     function brushed() {
-        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom" || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore brush-by-zoom
         var s = d3.event.selection || x2.range();
-        // start_date = new Date(s.map(x2.invert, x2)[0])
-        // end_date = new Date(s.map(x2.invert, x2)[1])
-
-        // selected_start_date = start_date.getFullYear()+'-' + (start_date.getMonth()+1) + '-'+start_date.getDate()
-        // selected_end_date = end_date.getFullYear()+'-' + (end_date.getMonth()+1) + '-'+end_date.getDate()
-
-        // console.log("Brush 0 " + selected_start_date)
-        // console.log("Brush 1 " + selected_end_date)
-
-        // update()
-
         x.domain(s.map(x2.invert, x2));
 
         Line_chart.selectAll(".line").attr("d", line);
@@ -362,7 +352,8 @@ function createLineChart(data, bubbledata) {
     }
 
     function brushend() {
-        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+        if ((d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore brush-by-zoom
+        // console.log(d3.event.sourceEvent.type)
         var s = d3.event.selection || x2.range();
         start_date = new Date(s.map(x2.invert, x2)[0])
         end_date = new Date(s.map(x2.invert, x2)[1])
@@ -406,8 +397,52 @@ function createLineChart(data, bubbledata) {
     }
 
     function zoomed() {
-        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush" || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore zoom-by-brush
         var t = d3.event.transform;
+        // console.log("Zoom 0 " + t.rescaleX(x2).domain()[0])
+        // console.log("Zoom 1" + t.rescaleX(x2).domain()[1])
+        x.domain(t.rescaleX(x2).domain());
+        Line_chart.selectAll(".line").attr("d", line);
+        bubble_chart.selectAll(".bubbles")
+            .attr("cx", function(d) { return x(d.date); })
+            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            .attr("r", function(d) { return z(d.Count); })
+            .style("fill", function(d) { return myColor(d.Measure_L1); })
+            .on('mouseover', function(d) {
+                tip.show(d);
+
+                d3.select(this)
+                    .style("opacity", 1)
+                    .style("stroke", "white")
+                    .style("stroke-width", 3);
+            })
+            .on('mouseout', function(d) {
+                tip.hide(d);
+                d3.select(this)
+                    .style("opacity", 0.8)
+                    .style("stroke", "white")
+                    .style("stroke-width", 0.3);
+            });
+        focus.select(".axis--x").call(xAxis);
+        // console.log("t invert ", t.invertX);
+        // console.log("t " + t);
+        context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+    }
+
+    function zoomend() {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush" || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore zoom-by-brush
+        var t = d3.event.transform;
+        start_date = new Date(t.rescaleX(x2).domain()[0])
+        end_date = new Date(t.rescaleX(x2).domain()[1])
+
+        selected_start_date = start_date.getFullYear() + '-' + (start_date.getMonth() + 1) + '-' + start_date.getDate()
+        selected_end_date = end_date.getFullYear() + '-' + (end_date.getMonth() + 1) + '-' + end_date.getDate()
+
+        console.log("Zoom 0 " + selected_start_date)
+        console.log("Zoom 1 " + selected_end_date)
+
+        update()
+
         // console.log("Zoom 0 " + t.rescaleX(x2).domain()[0])
         // console.log("Zoom 1" + t.rescaleX(x2).domain()[1])
         x.domain(t.rescaleX(x2).domain());
