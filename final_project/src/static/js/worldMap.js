@@ -7,9 +7,11 @@ var marginsWorld = { top: 5, bottom: 20, left: 5, right: 20 }
 var innerWidthWorld = outerWidthWorld - marginsWorld.left - marginsWorld.right
 var innerHeightWorld = outerHeightWorld - marginsWorld.top - marginsWorld.bottom
 
-function worldMap(dataset, attr) {
+function worldMap(dataset, attr, countries) {
     // console.log(dataset)
     // Set tooltips
+    document.getElementById("worldmap").innerHTML = "";
+
     var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
@@ -125,7 +127,10 @@ function worldMap(dataset, attr) {
         .domain(legends_arr)
         .range(colorScheme);
 
-    var plotOuter = d3.select("svg#svgWorldMap")
+    
+
+    var plotOuter = d3.select("#worldmap")
+                    .append("svg")
                     .attr("width", outerWidthWorld)
                     .attr("height", outerHeightWorld)
                     .attr('transform', 'translate(20,20)')
@@ -154,7 +159,11 @@ function worldMap(dataset, attr) {
         .data(dataset.features)
         .enter().append("path")
         .attr("d", path)
-        .style("fill", function(d) { return colorScale(d[attr]) })
+        .style("fill", function(d) { 
+            if(String(+d[attr]) === "NaN" || !checkCountry(d.properties.name)){
+                return "gray"
+            } 
+            return colorScale(d[attr]) })
         .style('stroke', 'white')
         .style('stroke-width', 1.5)
         .style("opacity", 0.8)
@@ -203,4 +212,14 @@ function worldMap(dataset, attr) {
         
         plotOuter.select(".legendThreshold")
                 .call(legend);
+
+        function checkCountry(s){
+            // console.log(s)
+            for(i=0; i<countries.length; i++){
+                if(countries[i]===s){
+                    return true;
+                }
+            }
+            return false;
+        }
 }

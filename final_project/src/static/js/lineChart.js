@@ -96,7 +96,8 @@ function createLineChart(data, bubbledata) {
             [0, 0],
             [width, height2]
         ])
-        .on("brush end", brushed);
+        .on("brush", brushed)
+        .on("end", brushend);
 
     var zoom = d3.zoom()
         .scaleExtent([1, Infinity])
@@ -345,11 +346,51 @@ function createLineChart(data, bubbledata) {
     function brushed() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
         var s = d3.event.selection || x2.range();
-        start_date = s.map(x2.invert, x2)[0]
-        end_date = s.map(x2.invert, x2)[1]
-            // console.log("Brush 0 " + start_date)
-            // console.log("Brush 1 " + end_date)
+        // start_date = new Date(s.map(x2.invert, x2)[0])
+        // end_date = new Date(s.map(x2.invert, x2)[1])
+
+        // selected_start_date = start_date.getFullYear()+'-' + (start_date.getMonth()+1) + '-'+start_date.getDate()
+        // selected_end_date = end_date.getFullYear()+'-' + (end_date.getMonth()+1) + '-'+end_date.getDate()
+
+        // console.log("Brush 0 " + selected_start_date)
+        // console.log("Brush 1 " + selected_end_date)
+
+        // update()
+        
         x.domain(s.map(x2.invert, x2));
+        
+        Line_chart.selectAll(".line").attr("d", line);
+        bubble_chart.selectAll(".bubbles")
+            .attr("cx", function(d) { return x(d.date); })
+            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            .attr("r", function(d) { return z(d.Count); })
+            .style("fill", function(d) { return myColor(d.Measure_L1); })
+            .on("mouseover", showTooltip)
+            .on("mousemove", moveTooltip)
+            .on("mouseleave", hideTooltip)
+        focus.select(".axis--x").call(xAxis);
+        focus.select(".axis--x").call(xAxis);
+        svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+            .scale(width / (s[1] - s[0]))
+            .translate(-s[0], 0));
+    }
+
+    function brushend() {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+        var s = d3.event.selection || x2.range();
+        start_date = new Date(s.map(x2.invert, x2)[0])
+        end_date = new Date(s.map(x2.invert, x2)[1])
+
+        selected_start_date = start_date.getFullYear()+'-' + (start_date.getMonth()+1) + '-'+start_date.getDate()
+        selected_end_date = end_date.getFullYear()+'-' + (end_date.getMonth()+1) + '-'+end_date.getDate()
+
+        console.log("Brush 0 " + selected_start_date)
+        console.log("Brush 1 " + selected_end_date)
+
+        update()
+        
+        x.domain(s.map(x2.invert, x2));
+        
         Line_chart.selectAll(".line").attr("d", line);
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })

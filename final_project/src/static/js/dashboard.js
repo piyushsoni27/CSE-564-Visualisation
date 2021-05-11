@@ -1,37 +1,36 @@
-$.ajax({
-    type: "GET",
-    url: "/worldmap",
-    success: function(response) {
-        worldData = (response)
-        worldMap(worldData, "new_vaccinations")
-    },
-    error: function(err) {
-        console.log(err);
-    }
-});
+function update(){
 
-$.ajax({
-    type: "GET",
-    url: "/linechart",
-    success: function(response) {
-        lineBubbleData = JSON.parse(response)
-        linedata = lineBubbleData['lined']
-        bubbledata = lineBubbleData['bubbled']
-        createLineChart(linedata, bubbledata)
-    },
-    error: function(err) {
-        console.log(err);
-    }
-});
+    dates = {}
+    dates.start = selected_start_date
+    dates.end = selected_end_date
 
-$.ajax({
-    type: "GET",
-    url: "/wordcloud",
-    success: function(response) {
-        wordCloudData = JSON.parse(response)
-        createWordCloud(wordCloudData)
-    },
-    error: function(err) {
-        console.log(err);
-    }
-});
+    $.ajax({
+        type: "POST",
+        url: "/worldmap",
+        contentType: "application/json",
+        data: JSON.stringify(dates),
+        dataType: "json",
+        success: function(response) {
+            worldData = (response)
+            worldMap(worldData, selected_attr, all_countries)
+        },
+        error: function(err) {
+            console.log(err);
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: "/wordcloud",
+        contentType: "application/json",
+        data: JSON.stringify(dates),
+        dataType: "json",
+        success: function(response) {
+            wordCloudData = (response)
+            createWordCloud(wordCloudData)
+        },
+        error: function(err) {
+            console.log(err);
+        }
+    });
+}
