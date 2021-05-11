@@ -24,6 +24,9 @@ function createLineChart(data, bubbledata, attr) {
 
     document.getElementById("linechart").innerHTML = "";
 
+    var isClicked = false
+    var clicked_bubble = ""
+
     var plotOuter = d3.select("#linechart")
         .append("svg")
         .attr("width", outerWidthLine)
@@ -261,19 +264,24 @@ function createLineChart(data, bubbledata, attr) {
         .attr("r", function(d) { return z(d.Count); })
         .style("fill", function(d) { return myColor(d.Measure_L1); })
         .on('mouseover', function(d) {
-            tip.show(d);
+            
+            if(!isClicked){
+                tip.show(d);
 
-            d3.select(this)
-                .style("opacity", 1)
-                .style("stroke", "white")
-                .style("stroke-width", 3);
+                d3.select(this)
+                    .style("opacity", 1)
+                    .style("stroke", "white")
+                    .style("stroke-width", 3);
+            }
         })
         .on('mouseout', function(d) {
-            tip.hide(d);
-            d3.select(this)
-                .style("opacity", 0.8)
-                .style("stroke", "white")
-                .style("stroke-width", 0.3);
+            if(!isClicked){
+                tip.hide(d);
+                d3.select(this)
+                    .style("opacity", 0.8)
+                    .style("stroke", "white")
+                    .style("stroke-width", 0.3);
+            }
         });
 
     context.append("g")
@@ -296,7 +304,7 @@ function createLineChart(data, bubbledata, attr) {
     // Add one dot in the legend for each name.
     var size = 8
     var allgroups = ["Case_identification_contact_tracing_and_related_measures", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Healthcare_and_public_health_capacity", "Returning_to_normal_life"]
-
+    
     svg.selectAll("myrect")
         .data(allgroups)
         .enter()
@@ -305,8 +313,25 @@ function createLineChart(data, bubbledata, attr) {
         .attr("cy", function(d, i) { return 10 + i * (size + 5) })
         .attr("r", 4)
         .style("fill", function(d) { return myColor(d) })
-        .on("mouseover", highlight)
-        .on("mouseleave", noHighlight)
+        .on("mouseover", function(d){
+            console.log(d)
+            if(!isClicked){
+                highlight(d);
+         } })
+         .on("mouseleave", function(d){
+            if(!isClicked){
+                noHighlight(d);
+         } })
+        .on("click", function(d){
+            if(!isClicked){
+                highlight(d);
+                isClicked = !isClicked
+            }else{
+                noHighlight(d)
+                isClicked = !isClicked
+            }
+        })
+        
 
     // Add labels beside legend dots
     svg.selectAll("mylabels")
@@ -320,8 +345,24 @@ function createLineChart(data, bubbledata, attr) {
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
         .style("font-size", "8px")
-        .on("mouseover", highlight)
-        .on("mouseleave", noHighlight)
+        .on("mouseover", function(d){
+            if(!isClicked){
+                highlight(d);
+         } })
+        .on("mouseleave", function(d){
+            if(!isClicked){
+                noHighlight(d);
+         } })
+        .on("click", function(d){
+            if(!isClicked){
+                highlight(d);
+                isClicked = !isClicked
+                console.log(isClicked)
+            }else{
+                noHighlight(d)
+                isClicked = !isClicked
+            }
+        })
 
     function brushed() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom" || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore brush-by-zoom
@@ -335,19 +376,24 @@ function createLineChart(data, bubbledata, attr) {
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .on('mouseover', function(d) {
-                tip.show(d);
+                console.log(isClicked)
+                if(!isClicked){
+                    tip.show(d);
 
-                d3.select(this)
-                    .style("opacity", 1)
-                    .style("stroke", "white")
-                    .style("stroke-width", 3);
+                    d3.select(this)
+                        .style("opacity", 1)
+                        .style("stroke", "white")
+                        .style("stroke-width", 3);
+                    }
             })
             .on('mouseout', function(d) {
-                tip.hide(d);
-                d3.select(this)
-                    .style("opacity", 0.8)
-                    .style("stroke", "white")
-                    .style("stroke-width", 0.3);
+                if(!isClicked){
+                    tip.hide(d);
+                    d3.select(this)
+                        .style("opacity", 0.8)
+                        .style("stroke", "white")
+                        .style("stroke-width", 0.3);
+                }
             });
         focus.select(".axis--x").call(xAxis);
         focus.select(".axis--x").call(xAxis);
@@ -380,19 +426,23 @@ function createLineChart(data, bubbledata, attr) {
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .on('mouseover', function(d) {
-                tip.show(d);
+                if(!isClicked){
+                    tip.show(d);
 
-                d3.select(this)
-                    .style("opacity", 1)
-                    .style("stroke", "white")
-                    .style("stroke-width", 3);
+                    d3.select(this)
+                        .style("opacity", 1)
+                        .style("stroke", "white")
+                        .style("stroke-width", 3);
+                }
             })
             .on('mouseout', function(d) {
-                tip.hide(d);
-                d3.select(this)
-                    .style("opacity", 0.8)
-                    .style("stroke", "white")
-                    .style("stroke-width", 0.3);
+                if(!isClicked){
+                    tip.hide(d);
+                    d3.select(this)
+                        .style("opacity", 0.8)
+                        .style("stroke", "white")
+                        .style("stroke-width", 0.3);
+                }
             });
         focus.select(".axis--x").call(xAxis);
         focus.select(".axis--x").call(xAxis);
@@ -414,19 +464,23 @@ function createLineChart(data, bubbledata, attr) {
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .on('mouseover', function(d) {
-                tip.show(d);
+                if(!isClicked){
+                    tip.show(d);
 
-                d3.select(this)
-                    .style("opacity", 1)
-                    .style("stroke", "white")
-                    .style("stroke-width", 3);
+                    d3.select(this)
+                        .style("opacity", 1)
+                        .style("stroke", "white")
+                        .style("stroke-width", 3);
+                }
             })
             .on('mouseout', function(d) {
-                tip.hide(d);
-                d3.select(this)
-                    .style("opacity", 0.8)
-                    .style("stroke", "white")
-                    .style("stroke-width", 0.3);
+                if(!isClicked){
+                    tip.hide(d);
+                    d3.select(this)
+                        .style("opacity", 0.8)
+                        .style("stroke", "white")
+                        .style("stroke-width", 0.3);
+                }
             });
         focus.select(".axis--x").call(xAxis);
         // console.log("t invert ", t.invertX);
@@ -458,19 +512,23 @@ function createLineChart(data, bubbledata, attr) {
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .on('mouseover', function(d) {
-                tip.show(d);
+                if(!isClicked){
+                    tip.show(d);
 
-                d3.select(this)
-                    .style("opacity", 1)
-                    .style("stroke", "white")
-                    .style("stroke-width", 3);
+                    d3.select(this)
+                        .style("opacity", 1)
+                        .style("stroke", "white")
+                        .style("stroke-width", 3);
+                }
             })
             .on('mouseout', function(d) {
-                tip.hide(d);
-                d3.select(this)
-                    .style("opacity", 0.8)
-                    .style("stroke", "white")
-                    .style("stroke-width", 0.3);
+                if(!isClicked){
+                    tip.hide(d);
+                    d3.select(this)
+                        .style("opacity", 0.8)
+                        .style("stroke", "white")
+                        .style("stroke-width", 0.3);
+                }
             });
         focus.select(".axis--x").call(xAxis);
         // console.log("t invert ", t.invertX);
