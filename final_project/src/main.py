@@ -65,20 +65,23 @@ def get_worldmap_data():
         print(dates)
         start_date = pd.to_datetime(dates["start"])
         end_date = pd.to_datetime(dates["end"])
-        
-    print(start_date)
-        
+                
     date_check = np.where((data.date>=start_date) & (data.date<=end_date))
-    print(data.loc[date_check])
     
-    groupby_data = data.loc[date_check].groupby(["id"])
+    filtered_data = data.loc[date_check]
+    
+    groupby_data = filtered_data.groupby(["id"])
+    
+    mean_new_cases = groupby_data.new_cases.mean()
+    mean_new_deaths = groupby_data.new_deaths.mean()
+    mean_new_vaccinations = groupby_data.new_vaccinations.mean()
         
     for i in range(len(gj["features"])):
         id = gj["features"][i]["id"]
-        if(id in data["id"].values):
-            gj["features"][i]["new_cases"] = int(groupby_data.new_cases.mean()[id])
-            gj["features"][i]["new_deaths"] = int(groupby_data.new_deaths.mean()[id])
-            gj["features"][i]["new_vaccinations"] = int(groupby_data.new_vaccinations.mean()[id])  
+        if(id in filtered_data["id"].values):
+            gj["features"][i]["new_cases"] = int(mean_new_cases[id])
+            gj["features"][i]["new_deaths"] = int(mean_new_deaths[id])
+            gj["features"][i]["new_vaccinations"] = int(mean_new_vaccinations[id])  
 
     return gj
 

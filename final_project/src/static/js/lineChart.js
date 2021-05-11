@@ -361,8 +361,8 @@ function createLineChart(data, bubbledata) {
         selected_start_date = start_date.getFullYear() + '-' + (start_date.getMonth() + 1) + '-' + start_date.getDate()
         selected_end_date = end_date.getFullYear() + '-' + (end_date.getMonth() + 1) + '-' + end_date.getDate()
 
-        console.log("Brush 0 " + selected_start_date)
-        console.log("Brush 1 " + selected_end_date)
+        // console.log("Brush 0 " + selected_start_date)
+        // console.log("Brush 1 " + selected_end_date)
 
         update()
 

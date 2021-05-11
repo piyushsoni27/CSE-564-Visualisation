@@ -108,26 +108,27 @@ function worldMap(dataset, attr, countries) {
         num = min + step*i
         legends_arr.push(num)
         if(num>=1000000){
-            labels.push((legends_arr[i-1]+1).toString() + "-" + (num/1000000).toString()+'M')
+            labels.push((legends_arr[i-1]+1).toString() + "-" + Math.ceil(num/1000000).toString()+'M')
         }
         else{
             labels.push((legends_arr[i-1]+1).toString() + "-" + num.toString())
         }
     }
     if(legends_arr[i-1]>=1000000){
-        labels.push("> " + (legends_arr[i-1]/1000000).toString()+'M')
+        labels.push("> " + Math.ceil(legends_arr[i-1]/1000000).toString()+'M')
     }
     else{
         labels.push("> " + (legends_arr[i-1]+1).toString())
     }
 
+    console.log(legends_arr)
+
     var colorScheme = d3.schemeReds[5];
-    colorScheme.unshift("#eee")
-    var colorScale = d3.scaleThreshold()
+    console.log(colorScheme)
+    // colorScheme.unshift("#eee")
+    var colorScale = d3.scaleSqrt()
         .domain(legends_arr)
         .range(colorScheme);
-
-    
 
     var plotOuter = d3.select("#worldmap")
                     .append("svg")
@@ -185,6 +186,10 @@ function worldMap(dataset, attr, countries) {
                 .style("opacity", 0.8)
                 .style("stroke", "white")
                 .style("stroke-width", 0.3);
+        })
+        .on('click', function(d) {
+            if(String(+d[attr]) !== "NaN" && !checkCountry(d.properties.name)) selected_countries.push(d.properties.name);
+            console.log(selected_countries)
         });
 
         plotInner.append("path")
