@@ -283,9 +283,9 @@ function createLineChart(data, bubbledata) {
 
     svg.append("rect")
         .attr("class", "zoom")
-        .attr("width", width / 3)
+        .attr("width", width / 2)
         .attr("height", height / 2)
-        .attr("transform", "translate(" + (margin.left + 400) + "," + margin.top + ")")
+        .attr("transform", "translate(" + (margin.left + 200) + "," + margin.top + ")")
         .call(zoom);
 
     // Add one dot in the legend for each name.
@@ -296,8 +296,8 @@ function createLineChart(data, bubbledata) {
         .data(allgroups)
         .enter()
         .append("circle")
-        .attr("cx", 510)
-        .attr("cy", function(d, i) { return 210 + i * (size + 5) })
+        .attr("cx", 310)
+        .attr("cy", function(d, i) { return 10 + i * (size + 5) })
         .attr("r", 4)
         .style("fill", function(d) { return myColor(d) })
         .on("mouseover", highlight)
@@ -308,8 +308,8 @@ function createLineChart(data, bubbledata) {
         .data(allgroups)
         .enter()
         .append("text")
-        .attr("x", 510 + size * .8)
-        .attr("y", function(d, i) { return i * (size + 5) + (size / 2) + 205 })
+        .attr("x", 310 + size * .8)
+        .attr("y", function(d, i) { return i * (size + 5) + (size / 2) + 5 })
         .style("fill", function(d) { return myColor(d) })
         .text(function(d) { return d })
         .attr("text-anchor", "left")
