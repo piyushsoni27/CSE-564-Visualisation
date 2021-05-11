@@ -97,7 +97,7 @@ function createLineChart(data, bubbledata, attr) {
 
     // Add a scale for bubble color
     var myColor = d3.scaleOrdinal()
-        .domain(["Case_identification_contact_tracing_and_related_measures", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Healthcare_and_public_health_capacity", "Returning_to_normal_life"])
+        .domain(["Contact_tracing", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Public_healthcare", "Returning_to_normal_life"])
         .range(d3.schemeSet2);
 
     var brush = d3.brushX()
@@ -264,8 +264,8 @@ function createLineChart(data, bubbledata, attr) {
         .attr("r", function(d) { return z(d.Count); })
         .style("fill", function(d) { return myColor(d.Measure_L1); })
         .on('mouseover', function(d) {
-            
-            if(!isClicked){
+
+            if (!isClicked) {
                 tip.show(d);
 
                 d3.select(this)
@@ -275,7 +275,7 @@ function createLineChart(data, bubbledata, attr) {
             }
         })
         .on('mouseout', function(d) {
-            if(!isClicked){
+            if (!isClicked) {
                 tip.hide(d);
                 d3.select(this)
                     .style("opacity", 0.8)
@@ -303,8 +303,8 @@ function createLineChart(data, bubbledata, attr) {
 
     // Add one dot in the legend for each name.
     var size = 8
-    var allgroups = ["Case_identification_contact_tracing_and_related_measures", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Healthcare_and_public_health_capacity", "Returning_to_normal_life"]
-    
+    var allgroups = ["Contact_tracing", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Public_healthcare", "Returning_to_normal_life"]
+
     svg.selectAll("myrect")
         .data(allgroups)
         .enter()
@@ -313,25 +313,27 @@ function createLineChart(data, bubbledata, attr) {
         .attr("cy", function(d, i) { return 10 + i * (size + 5) })
         .attr("r", 4)
         .style("fill", function(d) { return myColor(d) })
-        .on("mouseover", function(d){
+        .on("mouseover", function(d) {
             console.log(d)
-            if(!isClicked){
+            if (!isClicked) {
                 highlight(d);
-         } })
-         .on("mouseleave", function(d){
-            if(!isClicked){
+            }
+        })
+        .on("mouseleave", function(d) {
+            if (!isClicked) {
                 noHighlight(d);
-         } })
-        .on("click", function(d){
-            if(!isClicked){
+            }
+        })
+        .on("click", function(d) {
+            if (!isClicked) {
                 highlight(d);
                 isClicked = !isClicked
-            }else{
+            } else {
                 noHighlight(d)
                 isClicked = !isClicked
             }
         })
-        
+
 
     // Add labels beside legend dots
     svg.selectAll("mylabels")
@@ -345,20 +347,22 @@ function createLineChart(data, bubbledata, attr) {
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
         .style("font-size", "8px")
-        .on("mouseover", function(d){
-            if(!isClicked){
+        .on("mouseover", function(d) {
+            if (!isClicked) {
                 highlight(d);
-         } })
-        .on("mouseleave", function(d){
-            if(!isClicked){
+            }
+        })
+        .on("mouseleave", function(d) {
+            if (!isClicked) {
                 noHighlight(d);
-         } })
-        .on("click", function(d){
-            if(!isClicked){
+            }
+        })
+        .on("click", function(d) {
+            if (!isClicked) {
                 highlight(d);
                 isClicked = !isClicked
                 console.log(isClicked)
-            }else{
+            } else {
                 noHighlight(d)
                 isClicked = !isClicked
             }
@@ -377,17 +381,17 @@ function createLineChart(data, bubbledata, attr) {
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .on('mouseover', function(d) {
                 console.log(isClicked)
-                if(!isClicked){
+                if (!isClicked) {
                     tip.show(d);
 
                     d3.select(this)
                         .style("opacity", 1)
                         .style("stroke", "white")
                         .style("stroke-width", 3);
-                    }
+                }
             })
             .on('mouseout', function(d) {
-                if(!isClicked){
+                if (!isClicked) {
                     tip.hide(d);
                     d3.select(this)
                         .style("opacity", 0.8)
@@ -426,7 +430,7 @@ function createLineChart(data, bubbledata, attr) {
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .on('mouseover', function(d) {
-                if(!isClicked){
+                if (!isClicked) {
                     tip.show(d);
 
                     d3.select(this)
@@ -436,7 +440,7 @@ function createLineChart(data, bubbledata, attr) {
                 }
             })
             .on('mouseout', function(d) {
-                if(!isClicked){
+                if (!isClicked) {
                     tip.hide(d);
                     d3.select(this)
                         .style("opacity", 0.8)
@@ -464,7 +468,7 @@ function createLineChart(data, bubbledata, attr) {
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .on('mouseover', function(d) {
-                if(!isClicked){
+                if (!isClicked) {
                     tip.show(d);
 
                     d3.select(this)
@@ -474,7 +478,7 @@ function createLineChart(data, bubbledata, attr) {
                 }
             })
             .on('mouseout', function(d) {
-                if(!isClicked){
+                if (!isClicked) {
                     tip.hide(d);
                     d3.select(this)
                         .style("opacity", 0.8)
@@ -512,7 +516,7 @@ function createLineChart(data, bubbledata, attr) {
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .on('mouseover', function(d) {
-                if(!isClicked){
+                if (!isClicked) {
                     tip.show(d);
 
                     d3.select(this)
@@ -522,7 +526,7 @@ function createLineChart(data, bubbledata, attr) {
                 }
             })
             .on('mouseout', function(d) {
-                if(!isClicked){
+                if (!isClicked) {
                     tip.hide(d);
                     d3.select(this)
                         .style("opacity", 0.8)

@@ -19,4 +19,9 @@ save_path = os.path.join(data_folder, "bubble_npi.csv")
 df = pd.read_csv(open_path)
 df_new = df[['iso3','Country','Date','Measure_L1','Measure_L2','Measure_L3']]
 df_new['Date'] = pd.to_datetime(df_new.Date)
+df_new.rename(columns={'iso3':'id'},inplace=True)
+df_new.replace("Case identification, contact tracing and related measures","Contact tracing",inplace=True)
+df_new.replace("Healthcare and public health capacity","Public Healthcare",inplace=True)
+
+print(df_new['Measure_L1'])
 df_new.to_csv(save_path, index=False, encoding='utf-8-sig')
