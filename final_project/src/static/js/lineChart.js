@@ -37,8 +37,16 @@ function createLineChart(data, bubbledata) {
         width = outerWidthLine - margin.left - margin.right,
         height = outerHeightLine - margin.top - margin.bottom,
         height2 = outerHeightLine - margin2.top - margin2.bottom;
+    console.log(width)
+    console.log(height)
 
     var parseDate = d3.timeParse("%Y-%m-%d");
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return d.Measure_L1;
+        })
 
     data.forEach(d => {
         d.date = parseDate(d.date)
@@ -59,11 +67,6 @@ function createLineChart(data, bubbledata) {
     //     let bucket = sumstat[key];
     //     console.log(bucket.key)
     // }
-
-    //     'Case identification, contact tracing and related measures'
-    //  'Social distancing' 'Travel restriction' 'Resource allocation'
-    //  'Risk communication' 'Healthcare and public health capacity'
-    //  'Returning to normal life'
 
     var linedata_max = d3.max(data, function(d) { return d.numbers; })
     var linedata_min = d3.min(data, function(d) { return d.numbers; })
@@ -89,7 +92,7 @@ function createLineChart(data, bubbledata) {
     // Add a scale for bubble color
     var myColor = d3.scaleOrdinal()
         .domain(["Case_identification_contact_tracing_and_related_measures", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Healthcare_and_public_health_capacity", "Returning_to_normal_life"])
-        .range(d3.schemeSet1);
+        .range(d3.schemeSet2);
 
     var brush = d3.brushX()
         .extent([
@@ -121,6 +124,7 @@ function createLineChart(data, bubbledata) {
         .x(d => x2(d.date))
         .y(d => y2(d.numbers));
 
+    svg.call(tip)
     var clip = svg.append("defs").append("svg:clipPath")
         .attr("id", "clip")
         .append("svg:rect")
@@ -136,7 +140,7 @@ function createLineChart(data, bubbledata) {
 
     var bubble_chart = svg.append("g")
         .attr("class", "focus")
-        .attr("transform", "translate(" + (margin.left + 0) + "," + (margin.top + 0) + ")")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("clip-path", "url(#clip)");
 
     var focus = svg.append("g")
@@ -146,44 +150,6 @@ function createLineChart(data, bubbledata) {
     var context = svg.append("g")
         .attr("class", "context")
         .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
-
-    // ---------------------------//
-    //      TOOLTIP               //
-    // ---------------------------//
-
-    // -1- Create a tooltip div that is hidden by default:
-    var tooltip = svg.append("g")
-        .style("opacity", 0)
-        .attr("class", "tooltip")
-        .style("background-color", "black")
-        .style("border-radius", "5px")
-        .style("padding", "10px")
-        .style("color", "white")
-
-    // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
-    var showTooltip = function(d) {
-        console.log("here")
-        tooltip
-            .transition()
-            .duration(200)
-        tooltip
-            .style("opacity", 1)
-            .html("NPI Measure: " + d.Measure_L1)
-            .style("left", (d3.mouse(this)[0] + 30) + "px")
-            .style("top", (d3.mouse(this)[1] + 30) + "px")
-    }
-    var moveTooltip = function(d) {
-        tooltip
-            .style("left", (d3.mouse(this)[0] + 30) + "px")
-            .style("top", (d3.mouse(this)[1] + 30) + "px")
-    }
-    var hideTooltip = function(d) {
-        tooltip
-            .transition()
-            .duration(200)
-            .style("opacity", 0)
-    }
-
 
     // ---------------------------//
     //       HIGHLIGHT GROUP      //
@@ -280,8 +246,7 @@ function createLineChart(data, bubbledata) {
         .attr("stroke-width", 1.5)
         .attr("d", line2);
 
-    bubble_chart.append("g")
-        .selectAll("dot")
+    bubble_chart.selectAll("dot")
         .data(bubbledata)
         .enter()
         .append("circle")
@@ -290,9 +255,21 @@ function createLineChart(data, bubbledata) {
         .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
         .attr("r", function(d) { return z(d.Count); })
         .style("fill", function(d) { return myColor(d.Measure_L1); })
-        .on("mouseover", showTooltip)
-        .on("mousemove", moveTooltip)
-        .on("mouseleave", hideTooltip)
+        .on('mouseover', function(d) {
+            tip.show(d);
+
+            d3.select(this)
+                .style("opacity", 1)
+                .style("stroke", "white")
+                .style("stroke-width", 3);
+        })
+        .on('mouseout', function(d) {
+            tip.hide(d);
+            d3.select(this)
+                .style("opacity", 0.8)
+                .style("stroke", "white")
+                .style("stroke-width", 0.3);
+        });
 
     context.append("g")
         .attr("class", "axis axis--x")
@@ -306,15 +283,14 @@ function createLineChart(data, bubbledata) {
 
     svg.append("rect")
         .attr("class", "zoom")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr("width", width / 3)
+        .attr("height", height / 2)
+        .attr("transform", "translate(" + (margin.left + 400) + "," + margin.top + ")")
         .call(zoom);
 
     // Add one dot in the legend for each name.
     var size = 8
     var allgroups = ["Case_identification_contact_tracing_and_related_measures", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Healthcare_and_public_health_capacity", "Returning_to_normal_life"]
-        // var allgroups_temp = ["Case identification, contact tracing and related measures", "Social distancing", "Travel restriction", "Resource allocation", "Risk communication", "Healthcare and public health capacity", "Returning to normal life"]
 
     svg.selectAll("myrect")
         .data(allgroups)
@@ -356,9 +332,21 @@ function createLineChart(data, bubbledata) {
             .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
-            .on("mouseover", showTooltip)
-            .on("mousemove", moveTooltip)
-            .on("mouseleave", hideTooltip)
+            .on('mouseover', function(d) {
+                tip.show(d);
+
+                d3.select(this)
+                    .style("opacity", 1)
+                    .style("stroke", "white")
+                    .style("stroke-width", 3);
+            })
+            .on('mouseout', function(d) {
+                tip.hide(d);
+                d3.select(this)
+                    .style("opacity", 0.8)
+                    .style("stroke", "white")
+                    .style("stroke-width", 0.3);
+            });
         focus.select(".axis--x").call(xAxis);
         focus.select(".axis--x").call(xAxis);
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
@@ -378,9 +366,21 @@ function createLineChart(data, bubbledata) {
             .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
-            .on("mouseover", showTooltip)
-            .on("mousemove", moveTooltip)
-            .on("mouseleave", hideTooltip)
+            .on('mouseover', function(d) {
+                tip.show(d);
+
+                d3.select(this)
+                    .style("opacity", 1)
+                    .style("stroke", "white")
+                    .style("stroke-width", 3);
+            })
+            .on('mouseout', function(d) {
+                tip.hide(d);
+                d3.select(this)
+                    .style("opacity", 0.8)
+                    .style("stroke", "white")
+                    .style("stroke-width", 0.3);
+            });
         focus.select(".axis--x").call(xAxis);
         // console.log("t invert ", t.invertX);
         // console.log("t " + t);
