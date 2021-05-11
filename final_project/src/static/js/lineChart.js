@@ -19,8 +19,13 @@ var innerHeightLine = outerHeightLine - marginUpperLineChart.top - marginUpperLi
 var start_date
 var end_date
 
-function createLineChart(data, bubbledata) {
-    var plotOuter = d3.select("svg#svgLineChart")
+function createLineChart(data, bubbledata, attr) {
+    console.log(attr)
+
+    document.getElementById("linechart").innerHTML = "";
+
+    var plotOuter = d3.select("#linechart")
+        .append("svg")
         .attr("width", outerWidthLine)
         .attr("height", outerHeightLine)
 
@@ -48,7 +53,7 @@ function createLineChart(data, bubbledata) {
 
     data.forEach(d => {
         d.date = parseDate(d.date)
-        d.numbers = +d.numbers
+        d[attr] = +d[attr]
     });
 
     bubbledata.forEach(d => {
@@ -66,8 +71,8 @@ function createLineChart(data, bubbledata) {
     //     console.log(bucket.key)
     // }
 
-    var linedata_max = d3.max(data, function(d) { return d.numbers; })
-    var linedata_min = d3.min(data, function(d) { return d.numbers; })
+    var linedata_max = d3.max(data, function(d) { return +d[attr]; })
+    var linedata_min = d3.min(data, function(d) { return +d[attr]; })
     var bubbledata_max = d3.max(bubbledata, function(d) { return d.Count; })
     var bubbledata_min = d3.min(bubbledata, function(d) { return d.Count; })
 
@@ -116,13 +121,13 @@ function createLineChart(data, bubbledata) {
     var line = d3
         .line()
         .x(d => x(d.date))
-        .y(d => y(d.numbers));
+        .y(d => y(+d[attr]));
 
     // create line for context chart
     var line2 = d3
         .line()
         .x(d => x2(d.date))
-        .y(d => y2(d.numbers));
+        .y(d => y2(+d[attr]));
 
     svg.call(tip)
     var clip = svg.append("defs").append("svg:clipPath")
@@ -170,7 +175,7 @@ function createLineChart(data, bubbledata) {
 
     x.domain(d3.extent(data, function(d) { return d.date; }));
     // y.domain((([1, 1000000000])
-    y.domain([0, d3.max(data, function(d) { return d.numbers; })]);
+    y.domain([0, d3.max(data, function(d) { return d[attr]; })]);
     // y.domain([0, 10000]);
     x2.domain(x.domain());
     y2.domain(y.domain());

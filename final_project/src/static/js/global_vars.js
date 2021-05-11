@@ -1,6 +1,7 @@
 var all_countries = []
 
-var selected_countries = ["United States of America", "India"]
+var pcp_countries = ["United States of America", "India"]
+var worldmap_country;
 
 var selected_attr = "new_cases"
 var selected_start_date = "2020-01-23"
@@ -14,7 +15,7 @@ $.ajax({
         for(var i in worldData.features)
             all_countries.push(worldData.features[i].properties.name);
         
-        worldMap(worldData, selected_attr, selected_countries)
+        worldMap(worldData, selected_attr, all_countries)
     },
     error: function(err) {
         console.log(err);
@@ -28,7 +29,7 @@ $.ajax({
         lineBubbleData = JSON.parse(response)
         linedata = lineBubbleData['lined']
         bubbledata = lineBubbleData['bubbled']
-        createLineChart(linedata, bubbledata)
+        createLineChart(linedata, bubbledata, selected_attr)
     },
     error: function(err) {
         console.log(err);

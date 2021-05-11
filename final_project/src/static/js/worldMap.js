@@ -188,8 +188,51 @@ function worldMap(dataset, attr, countries) {
                 .style("stroke-width", 0.3);
         })
         .on('click', function(d) {
-            if(String(+d[attr]) !== "NaN" && !checkCountry(d.properties.name)) selected_countries.push(d.properties.name);
-            console.log(selected_countries)
+            if(String(+d[attr]) !== "NaN") {
+                worldmap_country = d.properties.name;
+                console.log(worldmap_country)
+
+                d3.select(this)
+                .style("opacity", 1)
+                .style("stroke", "white")
+                .style("stroke-width", 3);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/linechart",
+                    contentType: "application/json",
+                    data: JSON.stringify(worldmap_country),
+                    dataType: "json",
+                    success: function(response) {
+                        lineBubbleData = (response)
+                        linedata = lineBubbleData['lined']
+                        bubbledata = lineBubbleData['bubbled']
+                        createLineChart(linedata, bubbledata, selected_attr)
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    }
+                });
+            }
+            else{
+                $.ajax({
+                    type: "POST",
+                    url: "/linechart",
+                    contentType: "application/json",
+                    data: JSON.stringify("world"),
+                    dataType: "json",
+                    success: function(response) {
+                        lineBubbleData = (response)
+                        linedata = lineBubbleData['lined']
+                        bubbledata = lineBubbleData['bubbled']
+                        createLineChart(linedata, bubbledata, selected_attr)
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    }
+                });
+            }
+            tip.hide()
         });
 
         plotInner.append("path")
@@ -208,7 +251,8 @@ function worldMap(dataset, attr, countries) {
             .attr("class", "caption")
             .attr("x", 0)
             .attr("y", -6)
-            .text(attr);
+            .text(attr)
+            .attr("fill", "white")
         
         var legend = d3.legendColor()
                         .labels(function (d) { return labels[d.i]; })

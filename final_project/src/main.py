@@ -22,7 +22,7 @@ curr_dir = os.path.dirname(__file__)
 data_path = os.path.join(curr_dir, os.path.join('data', "owid-covid-data.csv"))
 geo_json_path = os.path.join(curr_dir, os.path.join('data', 'countries.geo.json'))
 covid_geo_json_path = os.path.join(curr_dir, os.path.join('data', 'covid_geo.json'))
-line_data_path = os.path.join(curr_dir, os.path.join('data', "world-data.csv"))
+world_line_data_path = os.path.join(curr_dir, os.path.join('data', "world-data.csv"))
 bubble_data_path = os.path.join(curr_dir, os.path.join('data', "bubble_npi.csv"))
 barchart_data_path = os.path.join(curr_dir, os.path.join('data', "world-seasonal-data.csv"))
 hashtags_data_path = os.path.join(curr_dir, os.path.join('data', "hashtags.csv"))
@@ -42,7 +42,7 @@ data = pd.read_csv(data_path)
 data_original = data.copy()
 
 bar_df = pd.read_csv(barchart_data_path)
-line_df = pd.read_csv(line_data_path)
+world_line_df = pd.read_csv(world_line_data_path)
 bubble_df = pd.read_csv(bubble_data_path)
 hashtag_df = pd.read_csv(hashtags_data_path)
 
@@ -87,44 +87,49 @@ def get_worldmap_data():
 
 @app.route("/linechart", methods=["POST" , "GET"])
 def get_linechart_data():
-    global line_df
+    global world_line_df
     global bubble_df
     
-    # line_df = line_df.fillna(0)
-    # line_df['numbers'] =  line_df['numbers'].replace(0,1)
-    # linedf.drop(linedf.loc[linedf['covidattr']=='new_vaccinations'].index, inplace=True)
-    # print(linedf)
-
-    line_df =  line_df.fillna(0)
-    line_df = line_df[['date','new_cases']]
-    line_df_temp = line_df
-    line_df_temp['numbers'] = line_df_temp['new_cases']
-    line_df_temp = line_df_temp.drop(line_df_temp.columns[[1]], axis = 1) 
-    line_df_temp['numbers'] = line_df_temp['numbers'].astype('int32')
-    line_df_temp['numbers'] =  line_df_temp['numbers'].replace(0,1)
-    # print(line_df)
-
-    start_date = pd.to_datetime("2019-03-06")
-    end_date = pd.to_datetime("2021-08-03")
+    line_df = pd.DataFrame()
+    country_bubble_df = pd.DataFrame()
+    
+    country = "world"
+    
+    if(request.method == 'POST'):
+        country = request.get_json()
+        print(country)
+    
+    
+    if(country == "world"):        
+        line_df = world_line_df
+    
+    else:
+        line_df = data.loc[data.location == country, ["date", "new_cases_smoothed", "new_deaths_smoothed", "new_vaccinations_smoothed"]]
+        line_df.date = line_df.date.astype("str")
+        line_df.rename(columns={'new_cases_smoothed': 'new_cases', 'new_deaths_smoothed': 'new_deaths', "new_vaccinations_smoothed" : "new_vaccinations"}, inplace=True)
+    
+    print(line_df)
+    
+    if(country != "world"):
+        country_bubble_df = bubble_df.loc[bubble_df['Country']==country]
+    else:
+        country_bubble_df = bubble_df
         
-    df1 = bubble_df[bubble_df['Country']=='Germany']
-    df1['Date'] = pd.to_datetime(df1.Date)
-    # date_check = np.where((df1.Date>=start_date) & (df1.Date<=end_date))
-    # npi_data = df1.loc[date_check]
-    # npi_data = pd.DataFrame(columns=("count"))
-    # npi_data = df1.loc[date_check].groupby(["Date"]).agg(['count'])
-    # npi_data = df1.loc[date_check].groupby(['Measure_L1'])['Date'].count()
-    npi_data =  df1.loc[(df1.Date>=start_date) & (df1.Date<=end_date)].groupby('Date')['Measure_L1'].value_counts().unstack().stack(dropna=True).reset_index(name="Count") 
-    # npi_data.groupby(['Date', 'Measure_L1'])['Count'].sum().to_frame()
-    # print(np.where(npi_data['Count']>40))
+    country_bubble_df['Date'] = pd.to_datetime(country_bubble_df.Date)
+
+    npi_data =  country_bubble_df.groupby('Date')['Measure_L1'].value_counts().unstack().stack(dropna=True).reset_index(name="Count") 
+
     npi_data['Count'] = npi_data['Count'].astype('int32')
     npi_data['Date'] = npi_data['Date'].astype('str')
     npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace('\s+', '_') 
     npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace(',', '')
     npi_data.rename(columns={'Date':'date'},inplace=True)
     # print(npi_data)
+    
+    # print(world_line_df)
 
-    d1 = line_df_temp.to_dict(orient="records")
+    
+    d1 = line_df.to_dict(orient="records")
     d2 = npi_data.to_dict(orient="records")
     D = {'lined':d1,'bubbled':d2}
     return json.dumps(D)
