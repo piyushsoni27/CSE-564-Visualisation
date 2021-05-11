@@ -11,9 +11,12 @@ function createWordCloud(data){
 
         var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-        var plotOuter = d3.select("svg#svgWordCloud")
-                                .attr("width", outerWidthWordCloud)
-                                .attr("height", outerHeightWordCloud)
+        document.getElementById("wordcloud").innerHTML = "";
+
+        var plotOuter = d3.select("#wordcloud")
+                        .append("svg")
+                        .attr("width", outerWidthWordCloud)
+                        .attr("height", outerHeightWordCloud)
 
         var plotInner = plotOuter.append("g")
                 .attr("transform", "translate(" + marginWordCloud.left + "," + marginWordCloud.top + ")");

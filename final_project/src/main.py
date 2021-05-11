@@ -59,8 +59,17 @@ def get_worldmap_data():
     
     start_date = pd.to_datetime("2020-03-25")
     end_date = pd.to_datetime("2021-03-28")
+    
+    if(request.method == 'POST'):
+        dates = request.get_json()
+        print(dates)
+        start_date = pd.to_datetime(dates["start"])
+        end_date = pd.to_datetime(dates["end"])
+        
+    print(start_date)
         
     date_check = np.where((data.date>=start_date) & (data.date<=end_date))
+    print(data.loc[date_check])
     
     groupby_data = data.loc[date_check].groupby(["id"])
         
@@ -110,7 +119,7 @@ def get_linechart_data():
     npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace('\s+', '_') 
     npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace(',', '')
     npi_data.rename(columns={'Date':'date'},inplace=True)
-    print(npi_data)
+    # print(npi_data)
 
     d1 = line_df_temp.to_dict(orient="records")
     d2 = npi_data.to_dict(orient="records")
@@ -123,12 +132,20 @@ def get_barchart_data():
     
     return json.dumps(bar_df.to_dict(orient="records"))
 
-@app.route("/wordcloud", methods=["POST", "GET"])
+@app.route("/wordcloud", methods=["POST" , "GET"])
 def get_wordcloud_data():
     global hashtag_df
     
     start_date = pd.to_datetime("2021-01-15")
     end_date = pd.to_datetime("2021-01-30")
+
+    
+    if(request.method == 'POST'):
+        dates = request.get_json()
+        print(dates)
+        start_date = pd.to_datetime(dates["start"])
+        end_date = pd.to_datetime(dates["end"])
+    
     
     hashtag_df['date'] = pd.to_datetime(hashtag_df['date'])
     
@@ -148,6 +165,7 @@ def home():
 
 if(__name__ == "__main__"):
     preprocess()
+    print(data)
     # country_codes = data.iso_code.unique()
     # world_data = pd.DataFrame(columns=("iso_code", "new_cases", "new_deaths"))
     # world_data.iso_code = country_codes
@@ -164,7 +182,7 @@ if(__name__ == "__main__"):
         
     # get_worldmap_data()
     
-    get_wordcloud_data()
+    # get_wordcloud_data()
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
     app.run(debug=True)
