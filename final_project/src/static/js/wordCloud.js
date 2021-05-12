@@ -15,7 +15,7 @@ function createWordCloud(data){
 
         const wordScale = d3.scaleLinear()
                 .domain(d3.extent(data, function(d){ return +d['count']; }))
-                .range([20,70])
+                .range([20,90])
 
         var plotOuter = d3.select("#wordcloud")
                         .append("svg")
@@ -31,7 +31,8 @@ function createWordCloud(data){
                 .size([innerWidthWordCloud, innerHeightWordCloud])
                 .timeInterval(20)
                 .words(data)
-                .rotate(function() { return ~~(Math.random() * 2)*90; })
+                // .rotate(function() { return ~~(Math.random() * 2)*90; })
+                .rotate(0)
                 .fontSize(d=>wordScale(d.count))
                 .fontWeight(["bold"])
                 .text(function(d) { return d.hashtag; })

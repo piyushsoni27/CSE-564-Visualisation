@@ -1,6 +1,9 @@
 $('#covidattr').change('change', function() {
     covidattrvalue = document.getElementById('covidattr').value
     selected_attr = covidattrvalue
+    
+    // lineChartTrigger.a = covidattrvalue
+    
     $.ajax({
         type: "POST",
         url: "/linechart",

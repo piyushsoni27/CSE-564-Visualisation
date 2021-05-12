@@ -4,8 +4,8 @@ function createChoropleth(data, attr, countries) {
     var width = 650;
     var height = 425;
 
-    var lowColor = 'White'
-    var highColor = 'Red'
+    var lowColor = 'rgb(250, 197, 173)'
+    var highColor = 'rgb(85, 28, 1)'
 
     var clicked_countries = []
     var clicked_ptr = []
@@ -196,7 +196,10 @@ function createChoropleth(data, attr, countries) {
                 if (String(+d[attr]) === "NaN") {
                     return "black"
                 }
-                return ramp(+d[attr])
+                if(worldmap_country === "world" || d.id === worldmap_country)
+                    return ramp(+d[attr])
+
+                return "gray"
             });
 
         let div = d3.select("body").append("div")
@@ -315,7 +318,7 @@ function createChoropleth(data, attr, countries) {
         dates = {}
         dates.start = selected_start_date
         dates.end = selected_end_date
-        
+
         $(document).ready(function() {
             console.log(dates)
             $.ajax({

@@ -81,6 +81,7 @@ def get_pcp_data():
     
     # print(pcp_data.location.unique())
     
+    ## countries in npi data
     countries = ['ALB', 'AUT', 'BEL', 'BIH', 'BRA', 'CAN', 'HKG', 'HRV', 'CZE',
        'DNK', 'ECU', 'EGY', 'SLV', 'EST', 'FIN', 'FRA', 'DEU', 'GHA',
        'GRC', 'HND', 'HUN', 'ISL', 'IND', 'IDN', 'ITA', 'JPN', 'KAZ',
@@ -89,9 +90,17 @@ def get_pcp_data():
        'SGP', 'SVK', 'SVN', 'KOR', 'ESP', 'SWE', 'CHE', 'SYR', 'TWN',
        'THA', 'GBR', 'USA']
     
+    to_remove = ["SEN", "SLV", "BIH"]
+    
     pcp_data = pcp_data.loc[pcp_data.id.isin(countries)].reset_index(drop=True)
     
-    pcp_axis = ["location", 'gdp_per_capita', 'stringency_index', 'human_development_index', 'median_age', 'hospital_beds_per_thousand', 'new_cases', 'new_deaths', 'new_vaccinations']
+    pcp_data = pcp_data.loc[~pcp_data.id.isin(to_remove)].reset_index(drop=True)    
+    
+    pcp_data = pcp_data.loc[(pcp_data.stringency_index != 0) & (pcp_data.new_cases_per_million != 0) & (pcp_data.new_deaths_per_million != 0) & (pcp_data.new_vaccinations_smoothed_per_million != 0)].reset_index(drop=True)
+    
+    print(min(pcp_data.stringency_index))
+    
+    pcp_axis = ["location", 'gdp_per_capita', 'stringency_index', 'human_development_index', 'median_age', 'hospital_beds_per_thousand', 'positive_rate', 'new_cases_per_million', 'new_deaths_per_million', 'new_vaccinations_smoothed_per_million']
     pcp_data = pcp_data[pcp_axis].groupby("location")[pcp_axis[1:]].mean().reset_index()
     
     # pcp_data_top = pcp_data.sort_values(by = "new_cases").tail(40)

@@ -86,7 +86,7 @@ color:white;
 
 .axis line, .axis path {
 	fill: none;
-	stroke: #000;
+	stroke: rgb(0, 0, 0);
 	shape-rendering: crispEdges;
 }
 
