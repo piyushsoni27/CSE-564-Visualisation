@@ -1,38 +1,20 @@
-function update() {
-    // console.log("update called!!")
-    dates = {}
-    dates.start = selected_start_date
-    dates.end = selected_end_date
-
-    // console.log(dates)
-
+$('#covidattr').change('change', function() {
+    covidattrvalue = document.getElementById('covidattr').value
+    selected_attr = covidattrvalue
     $.ajax({
         type: "POST",
-        url: "/worldmap",
+        url: "/linechart",
         contentType: "application/json",
-        data: JSON.stringify(dates),
+        data: JSON.stringify(worldmap_country),
         dataType: "json",
         success: function(response) {
-            worldData = (response)
-            worldMap(worldData, selected_attr, all_countries)
+            lineBubbleData = (response)
+            linedata = lineBubbleData['lined']
+            bubbledata = lineBubbleData['bubbled']
+            createLineChart(linedata, bubbledata, selected_attr)
         },
         error: function(err) {
             console.log(err);
         }
     });
-
-    $.ajax({
-        type: "POST",
-        url: "/wordcloud",
-        contentType: "application/json",
-        data: JSON.stringify(dates),
-        dataType: "json",
-        success: function(response) {
-            wordCloudData = (response)
-            createWordCloud(wordCloudData)
-        },
-        error: function(err) {
-            console.log(err);
-        }
-    });
-}
+});

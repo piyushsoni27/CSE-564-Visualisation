@@ -1,7 +1,7 @@
 var all_countries = []
 
 var pcp_countries = ["United States of America", "India"]
-var worldmap_country;
+var worldmap_country = "world";
 
 var selected_attr = "new_cases"
 var selected_start_date = "2020-01-23"
@@ -9,7 +9,7 @@ var selected_end_date = "2021-04-17"
 
 var lineChartTrigger = {
     aInternal: null,
-    aListener: function (val) { },
+    aListener: function(val) {},
     set a(val) {
         this.aInternal = val;
         this.aListener(val);
@@ -17,14 +17,14 @@ var lineChartTrigger = {
     get a() {
         return this.aInternal;
     },
-    registerListener: function (listener) {
+    registerListener: function(listener) {
         this.aListener = listener;
     }
 }
 
-var worldMapTrigger =  {
+var worldMapTrigger = {
     aInternal: null,
-    aListener: function (val) { },
+    aListener: function(val) {},
     set a(val) {
         this.aInternal = val;
         this.aListener(val);
@@ -32,7 +32,7 @@ var worldMapTrigger =  {
     get a() {
         return this.aInternal;
     },
-    registerListener: function (listener) {
+    registerListener: function(listener) {
         this.aListener = listener;
     }
 }
@@ -42,9 +42,9 @@ $.ajax({
     url: "/worldmap",
     success: function(response) {
         worldData = response
-        for(var i in worldData.features)
+        for (var i in worldData.features)
             all_countries.push(worldData.features[i].properties.name);
-        
+
         worldMap(worldData, selected_attr, all_countries)
     },
     error: function(err) {
