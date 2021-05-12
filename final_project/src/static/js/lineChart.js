@@ -599,4 +599,26 @@ function createLineChart(data, bubbledata, attr) {
         d.new_cases = +d.new_cases;
         return d;
     }
+
+    worldmaptrigger.registerListener(function (val) {
+        // console.log(Array.from(states))
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                url: "/linechart",
+                contentType: "application/json",
+                data: JSON.stringify(worldmapvar),
+                dataType: "json",
+                success: function(response) {
+                    lineBubbleData = (response)
+                    linedata = lineBubbleData['lined']
+                    bubbledata = lineBubbleData['bubbled']
+                    updatelinechart(linedata, bubbledata, selected_attr)
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
+    });
 }
