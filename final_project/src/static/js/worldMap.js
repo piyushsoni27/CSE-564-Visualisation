@@ -258,6 +258,24 @@ function worldMap(dataset, attr, countries) {
                 }
             });
         });
+
+        $(document).ready(function() {
+            $.ajax({
+                type: "POST",
+                url: "/wordcloud",
+                contentType: "application/json",
+                data: JSON.stringify(dates),
+                dataType: "json",
+                success: function(response) {
+                    wordCloudData = (response)
+
+                    createWordCloud(wordCloudData)
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
     });
 
 }
