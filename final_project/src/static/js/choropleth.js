@@ -27,81 +27,81 @@ function createChoropleth(data, attr, countries) {
             return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>" + attr_str + ": </strong><span class='details'>" + d[attr] + "</span>";
         })
 
-        tip.direction(function(d) {
-            if (d.properties.name === 'Antarctica') return 'n'
-                // Americas
-            if (d.properties.name === 'Greenland') return 's'
-            if (d.properties.name === 'Canada') return 'e'
-            if (d.properties.name === 'United States of America') return 'e'
-            if (d.properties.name === 'Mexico') return 'e'
-                // Europe
-            if (d.properties.name === 'Iceland') return 's'
-            if (d.properties.name === 'Norway') return 's'
-            if (d.properties.name === 'Sweden') return 's'
-            if (d.properties.name === 'Finland') return 's'
-            if (d.properties.name === 'Russia') return 'w'
-                // Asia
-            if (d.properties.name === 'China') return 'w'
-            if (d.properties.name === 'Japan') return 's'
-                // Oceania
-            if (d.properties.name === 'Indonesia') return 'w'
-            if (d.properties.name === 'Papua New Guinea') return 'w'
-            if (d.properties.name === 'Australia') return 'w'
-            if (d.properties.name === 'New Zealand') return 'w'
-                // otherwise if not specified
-            return 'n'
-        })
-    
-        tip.offset(function(d) {
-            // [top, left]
-            if (d.properties.name === 'Antarctica') return [0, 0]
-                // Americas
-            if (d.properties.name === 'Greenland') return [10, -10]
-            if (d.properties.name === 'Canada') return [24, -28]
-            if (d.properties.name === 'USA') return [-5, 8]
-            if (d.properties.name === 'Mexico') return [12, 10]
-            if (d.properties.name === 'Chile') return [0, -15]
-                // Europe
-            if (d.properties.name === 'Iceland') return [15, 0]
-            if (d.properties.name === 'Norway') return [10, -28]
-            if (d.properties.name === 'Sweden') return [10, -8]
-            if (d.properties.name === 'Finland') return [10, 0]
-            if (d.properties.name === 'France') return [-9, 66]
-            if (d.properties.name === 'Italy') return [-8, -6]
-            if (d.properties.name === 'Russia') return [5, 385]
-                // Africa
-            if (d.properties.name === 'Madagascar') return [-10, 10]
-                // Asia
-            if (d.properties.name === 'China') return [-16, -8]
-            if (d.properties.name === 'Mongolia') return [-5, 0]
-            if (d.properties.name === 'Pakistan') return [-10, 13]
-            if (d.properties.name === 'India') return [-11, -18]
-            if (d.properties.name === 'Nepal') return [-8, 1]
-            if (d.properties.name === 'Myanmar') return [-12, 0]
-            if (d.properties.name === 'Laos') return [-12, -8]
-            if (d.properties.name === 'Vietnam') return [-12, -4]
-            if (d.properties.name === 'Japan') return [5, 5]
-                // Oceania
-            if (d.properties.name === 'Indonesia') return [0, -5]
-            if (d.properties.name === 'Papua New Guinea') return [-5, -10]
-            if (d.properties.name === 'Australia') return [-15, 0]
-            if (d.properties.name === 'New Zealand') return [-15, 0]
-                // otherwise if not specified
-            return [-10, 0]
-        })
+    tip.direction(function(d) {
+        if (d.properties.name === 'Antarctica') return 'n'
+            // Americas
+        if (d.properties.name === 'Greenland') return 's'
+        if (d.properties.name === 'Canada') return 'e'
+        if (d.properties.name === 'United States of America') return 'e'
+        if (d.properties.name === 'Mexico') return 'e'
+            // Europe
+        if (d.properties.name === 'Iceland') return 's'
+        if (d.properties.name === 'Norway') return 's'
+        if (d.properties.name === 'Sweden') return 's'
+        if (d.properties.name === 'Finland') return 's'
+        if (d.properties.name === 'Russia') return 'w'
+            // Asia
+        if (d.properties.name === 'China') return 'w'
+        if (d.properties.name === 'Japan') return 's'
+            // Oceania
+        if (d.properties.name === 'Indonesia') return 'w'
+        if (d.properties.name === 'Papua New Guinea') return 'w'
+        if (d.properties.name === 'Australia') return 'w'
+        if (d.properties.name === 'New Zealand') return 'w'
+            // otherwise if not specified
+        return 'n'
+    })
+
+    tip.offset(function(d) {
+        // [top, left]
+        if (d.properties.name === 'Antarctica') return [0, 0]
+            // Americas
+        if (d.properties.name === 'Greenland') return [10, -10]
+        if (d.properties.name === 'Canada') return [24, -28]
+        if (d.properties.name === 'USA') return [-5, 8]
+        if (d.properties.name === 'Mexico') return [12, 10]
+        if (d.properties.name === 'Chile') return [0, -15]
+            // Europe
+        if (d.properties.name === 'Iceland') return [15, 0]
+        if (d.properties.name === 'Norway') return [10, -28]
+        if (d.properties.name === 'Sweden') return [10, -8]
+        if (d.properties.name === 'Finland') return [10, 0]
+        if (d.properties.name === 'France') return [-9, 66]
+        if (d.properties.name === 'Italy') return [-8, -6]
+        if (d.properties.name === 'Russia') return [5, 385]
+            // Africa
+        if (d.properties.name === 'Madagascar') return [-10, 10]
+            // Asia
+        if (d.properties.name === 'China') return [-16, -8]
+        if (d.properties.name === 'Mongolia') return [-5, 0]
+        if (d.properties.name === 'Pakistan') return [-10, 13]
+        if (d.properties.name === 'India') return [-11, -18]
+        if (d.properties.name === 'Nepal') return [-8, 1]
+        if (d.properties.name === 'Myanmar') return [-12, 0]
+        if (d.properties.name === 'Laos') return [-12, -8]
+        if (d.properties.name === 'Vietnam') return [-12, -4]
+        if (d.properties.name === 'Japan') return [5, 5]
+            // Oceania
+        if (d.properties.name === 'Indonesia') return [0, -5]
+        if (d.properties.name === 'Papua New Guinea') return [-5, -10]
+        if (d.properties.name === 'Australia') return [-15, 0]
+        if (d.properties.name === 'New Zealand') return [-15, 0]
+            // otherwise if not specified
+        return [-10, 0]
+    })
 
     // D3 Projection
     var projection = d3.geoMercator()
-        .translate([(width) / 2, height / 2]) 
-        .scale([100]); 
+        .translate([(width) / 2, height / 2])
+        .scale([100]);
 
     var zoom = d3.zoom()
         .scaleExtent([1, 9])
         .on("zoom", zoomed);
 
     // Define path generator
-    var path = d3.geoPath() 
-        .projection(projection); 
+    var path = d3.geoPath()
+        .projection(projection);
 
     //Create SVG element and append map to the SVG
     var svg = d3.select("#worldmap")
@@ -204,7 +204,7 @@ function createChoropleth(data, attr, countries) {
             .style("opacity", 0);
 
         function mouseover(d) {
-            if (String(+d[attr]) !== "NaN"){
+            if (String(+d[attr]) !== "NaN") {
                 tip.show(d);
 
                 d3.select(this)
@@ -225,7 +225,7 @@ function createChoropleth(data, attr, countries) {
 
         function click(d) {
             if (String(+d[attr]) !== "NaN") {
-                clicked_ptr.push({ptr: this, color: ramp(+d[attr])})
+                clicked_ptr.push({ ptr: this, color: ramp(+d[attr]) })
                 clicked_countries.push(d.id)
 
                 worldmap_country = d.id;
@@ -238,14 +238,14 @@ function createChoropleth(data, attr, countries) {
                 //     .style("stroke-width", 3)
                 //     .style("fill", "red")
                 // console.log(paths._groups[0])
-                
 
-                for(i=0; i<countries_path_arr.length; i++){
+
+                for (i = 0; i < countries_path_arr.length; i++) {
                     d3.select(countries_path_arr[i]).style("fill", function(p) {
                         if (String(+p[attr]) === "NaN") {
                             return "black"
                         }
-                        if(p.id === d.id) return ramp(+d[attr])
+                        if (p.id === d.id) return ramp(+d[attr])
                         return "gray"
                     })
                 }
@@ -255,12 +255,12 @@ function createChoropleth(data, attr, countries) {
                 worldmap_country = "world"
                 worldMapTrigger.a = "world"
 
-                for(i=0; i<countries_path_arr.length; i++){
+                for (i = 0; i < countries_path_arr.length; i++) {
                     d3.select(countries_path_arr[i])
                         .style("opacity", 1)
                         .style("stroke", "white")
                         .style("stroke-width", 1)
-                        .style("fill", function(p){
+                        .style("fill", function(p) {
                             if (String(+p[attr]) === "NaN") {
                                 return "black"
                             }
@@ -315,7 +315,7 @@ function createChoropleth(data, attr, countries) {
         dates = {}
         dates.start = selected_start_date
         dates.end = selected_end_date
-        
+
         $(document).ready(function() {
             console.log(dates)
             $.ajax({
@@ -346,6 +346,24 @@ function createChoropleth(data, attr, countries) {
                     wordCloudData = (response)
 
                     createWordCloud(wordCloudData)
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            console.log(dates)
+            $.ajax({
+                type: "POST",
+                url: "/pcp",
+                contentType: "application/json",
+                data: JSON.stringify(dates),
+                dataType: "json",
+                success: function(response) {
+                    pcpData = (response)
+                    plot_pcp(pcpData)
                 },
                 error: function(err) {
                     console.log(err);

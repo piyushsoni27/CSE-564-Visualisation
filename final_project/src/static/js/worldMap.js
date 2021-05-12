@@ -145,18 +145,18 @@ function worldMap(dataset, attr, countries) {
         return false;
     }
 
-    function updateWorldMap(dataset){
+    function updateWorldMap(dataset) {
 
         var max = d3.max(dataset.features, function(d) { return +d[attr] })
         var min = d3.min(dataset.features, function(d) { return +d[attr] })
-    
+
         var step = Math.ceil((max - min) / 6)
         var legends_arr = [];
         var labels = []
         var num;
 
         legends_arr.push(min)
-        
+
         for (i = 1; i < 6; i++) {
             num = min + step * i
             legends_arr.push(num)
@@ -166,7 +166,7 @@ function worldMap(dataset, attr, countries) {
                 labels.push((legends_arr[i - 1] + 1).toString() + "-" + num.toString())
             }
         }
-        
+
         if (legends_arr[i - 1] >= 1000000) {
             labels.push("> " + Math.ceil(legends_arr[i - 1] / 1000000).toString() + 'M')
         } else {
@@ -179,13 +179,13 @@ function worldMap(dataset, attr, countries) {
             .range(colorScheme);
 
         var legend = d3.legendColor()
-                        .labels(function(d) { return labels[d.i]; })
-                        .shapePadding(4)
-                        .scale(colorScale);
+            .labels(function(d) { return labels[d.i]; })
+            .shapePadding(4)
+            .scale(colorScale);
 
         plotOuter.select(".legendThreshold")
             .call(legend);
-        
+
         plotInner.selectAll("path")
             .data(dataset.features)
             .style("fill", function(d) {
@@ -239,7 +239,7 @@ function worldMap(dataset, attr, countries) {
         dates = {}
         dates.start = selected_start_date
         dates.end = selected_end_date
-        
+
         $(document).ready(function() {
             console.log(dates)
             $.ajax({
@@ -260,6 +260,7 @@ function worldMap(dataset, attr, countries) {
         });
 
         $(document).ready(function() {
+            console.log(dates)
             $.ajax({
                 type: "POST",
                 url: "/wordcloud",
@@ -276,7 +277,24 @@ function worldMap(dataset, attr, countries) {
                 }
             });
         });
+
+        $(document).ready(function() {
+            console.log(dates)
+            $.ajax({
+                type: "POST",
+                url: "/pcp",
+                contentType: "application/json",
+                data: JSON.stringify(dates),
+                dataType: "json",
+                success: function(response) {
+                    pcpData = (response)
+                    plot_pcp(pcpData)
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
     });
 
 }
-

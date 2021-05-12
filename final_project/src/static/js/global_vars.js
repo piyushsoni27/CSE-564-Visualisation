@@ -45,7 +45,7 @@ $.ajax({
         worldData = response
         for (var i in worldData.features)
             all_countries.push(worldData.features[i].properties.name);
-        
+
         createChoropleth(worldData, selected_attr)
     },
     error: function(err) {

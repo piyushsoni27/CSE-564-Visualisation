@@ -503,7 +503,7 @@ function createLineChart(data1, bubbledata1, attr) {
     }
 
     function updateLineChart(data1, bubbledata1, attr_new) {
-        console.log("update")
+        // console.log("update")
         data = data1
         bubbledata = bubbledata1
             // console.log(bubbledata.length)
@@ -540,7 +540,10 @@ function createLineChart(data1, bubbledata1, attr) {
         d3.select(".axis--yright").transition().duration(1000).call(yAxisright);
 
         d3.select('.line').datum(data).transition().duration(1000).attr('d', line)
-            // d3.select('.brush').call(brush.move, x.range())
+            // console.log(d3.select('.brush').selection)
+            // d3.select('.selection').selection = x.range()
+            // d3.select('.brush').move(d3.brushSelection, x.range())
+            // d3.select('.brush').click()
 
         var bubblepoints = bubble_chart.selectAll(".bubbles").data(bubbledata)
         bubblepoints.enter()
@@ -584,7 +587,6 @@ function createLineChart(data1, bubbledata1, attr) {
             d3.selectAll("." + currMeasure).style("opacity", 1)
         }
 
-        console.log(d3.selectAll(".myrect"))
         if (bubbledata.length == 0) {
             d3.selectAll(".textlegend").transition().duration(1000).style("visibility", "hidden");
             d3.selectAll(".circlelegend").transition().duration(1000).style("visibility", "hidden");

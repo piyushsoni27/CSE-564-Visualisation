@@ -78,6 +78,23 @@ def get_pcp_data():
     global data
     
     pcp_data = data
+
+    start_date = pd.to_datetime("2020-03-25")
+    end_date = pd.to_datetime("2021-03-28")
+    
+    if(request.method == 'POST'):
+        dates = request.get_json()
+        print("pcp dates")
+        print(dates)
+        start_date = pd.to_datetime(dates["start"])
+        end_date = pd.to_datetime(dates["end"])
+
+    pcp_data['date'] = pd.to_datetime(pcp_data['date'])
+    print(start_date)
+    print(end_date)
+    
+    pcp_data = pcp_data.loc[(pcp_data.date>=start_date) & (pcp_data.date<=end_date)]
+    # print(filtered_data)
     
     # print(pcp_data.location.unique())
     
@@ -90,10 +107,10 @@ def get_pcp_data():
        'THA', 'GBR', 'USA']
     
     pcp_data = pcp_data.loc[pcp_data.id.isin(countries)].reset_index(drop=True)
-    
-    pcp_axis = ["location", 'gdp_per_capita', 'stringency_index', 'human_development_index', 'median_age', 'hospital_beds_per_thousand', 'new_cases', 'new_deaths', 'new_vaccinations']
-    pcp_data = pcp_data[pcp_axis].groupby("location")[pcp_axis[1:]].mean().reset_index()
-    
+    pcp_axis = ["id","location", 'gdp_per_capita', 'stringency_index', 'human_development_index', 'median_age', 'hospital_beds_per_thousand', 'new_cases', 'new_deaths', 'new_vaccinations']
+    pcp_data_temp = pcp_data[pcp_axis].groupby("location")[pcp_axis[2:]].mean().reset_index()
+    pcp_data_temp["id"] = pcp_data["id"].unique()
+    pcp_data = pcp_data_temp
     # pcp_data_top = pcp_data.sort_values(by = "new_cases").tail(40)
     # pcp_data_bottom = pcp_data.sort_values(by = "new_cases").tail(20)
     
@@ -220,7 +237,7 @@ def home():
 
 if(__name__ == "__main__"):
     preprocess()
-    get_pcp_data()
+    # get_pcp_data()
     # country_codes = data.iso_code.unique()
     # world_data = pd.DataFrame(columns=("iso_code", "new_cases", "new_deaths"))
     # world_data.iso_code = country_codes
