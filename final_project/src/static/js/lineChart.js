@@ -11,8 +11,8 @@
 
 var outerWidthLine = 760,
     outerHeightLine = 425 / 760 * outerWidthLine
-var marginUpperLineChart = { top: 10, right: 50, bottom: 110, left: 40 }
-var marginBottomLineChart = { top: 355, right: 50, bottom: 50, left: 40 }
+var marginUpperLineChart = { top: 10, right: 70, bottom: 110, left: 40 }
+var marginBottomLineChart = { top: 355, right: 70, bottom: 50, left: 40 }
 var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
 var innerHeightLine = outerHeightLine - marginUpperLineChart.top - marginUpperLineChart.bottom - 10
 
@@ -98,7 +98,7 @@ function createLineChart(data1, bubbledata1, attr) {
     var xAxis = d3.axisBottom(x),
         xAxis2 = d3.axisBottom(x2),
         yAxis = d3.axisLeft(y),
-        yAxisright = d3.axisLeft(yright);
+        yAxisright = d3.axisRight(yright);
 
     // Add a scale for bubble size
     var z = d3.scaleSqrt()
@@ -194,7 +194,7 @@ function createLineChart(data1, bubbledata1, attr) {
     x2.domain(x.domain());
     y2.domain(y.domain());
 
-    yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 30]);
+    yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 20]);
 
     focus.append("g")
         .attr("class", "axis axis--x")
@@ -221,38 +221,6 @@ function createLineChart(data1, bubbledata1, attr) {
         .attr("transform", "translate(" + (-margin.left - 10) + "," + height / 2 + ")rotate(-90)")
         .style("font-size", "18px")
         .text("Number of Cases");
-
-    // var bucketNames = [];
-    // for (let key of Object.keys(sumstat)) {
-    //     bucketNames.push(sumstat[key].key);
-    // }
-
-    // match colors to bucket name
-    // var colors = d3
-    //     .scaleOrdinal()
-    //     .domain(bucketNames)
-    //     .range(["#3498db", "#3cab4b", "#e74c3c", "#73169e", "#2ecc71"]);
-
-    // // go through data and create/append lines to both charts
-    // for (let key of Object.keys(sumstat)) {
-    //     let bucket = sumstat[key].values;
-    //     Line_chart
-    //         .append("path")
-    //         .datum(bucket)
-    //         .attr("class", "line")
-    //         .attr("fill", "none")
-    //         .attr("stroke", d => colors(sumstat[key].key))
-    //         .attr("stroke-width", 4.5)
-    //         .attr("d", line);
-    //     context
-    //         .append("path")
-    //         .datum(bucket)
-    //         .attr("class", "line")
-    //         .attr("fill", "none")
-    //         .attr("stroke", d => colors(sumstat[key].key))
-    //         .attr("stroke-width", 1.5)
-    //         .attr("d", line2);
-    // }
 
     bubble_chart.selectAll("dot")
         .data(bubbledata)
@@ -474,7 +442,6 @@ function createLineChart(data1, bubbledata1, attr) {
 
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
-            // .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
@@ -495,7 +462,6 @@ function createLineChart(data1, bubbledata1, attr) {
         x.domain(t.rescaleX(x2).domain());
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
-            // .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
@@ -503,8 +469,6 @@ function createLineChart(data1, bubbledata1, attr) {
 
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
-        // console.log("t invert ", t.invertX);
-        // console.log("t " + t);
         context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
     }
 
@@ -526,7 +490,6 @@ function createLineChart(data1, bubbledata1, attr) {
 
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
-            // .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
@@ -534,8 +497,6 @@ function createLineChart(data1, bubbledata1, attr) {
 
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
-        // console.log("t invert ", t.invertX);
-        // console.log("t " + t);
         context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
     }
 
@@ -569,6 +530,7 @@ function createLineChart(data1, bubbledata1, attr) {
         y.domain([0, d3.max(data, function(d) { return d[attr]; })]);
         x2.domain(x.domain());
         y2.domain(y.domain());
+        yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 5]);
 
         d3.select(".axis--x").transition().duration(1000).call(xAxis);
         d3.select(".axis--y").transition().duration(1000).call(yAxis);
