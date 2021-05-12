@@ -540,7 +540,7 @@ function createLineChart(data1, bubbledata1, attr) {
         d3.select(".axis--yright").transition().duration(1000).call(yAxisright);
 
         d3.select('.line').datum(data).transition().duration(1000).attr('d', line)
-        d3.select('.brush').call(brush.move, x.range())
+            // d3.select('.brush').call(brush.move, x.range())
 
         var bubblepoints = bubble_chart.selectAll(".bubbles").data(bubbledata)
         bubblepoints.enter()
@@ -586,11 +586,11 @@ function createLineChart(data1, bubbledata1, attr) {
 
         console.log(d3.selectAll(".myrect"))
         if (bubbledata.length == 0) {
-            d3.selectAll(".textlegend").transition().duration(500).style("visibility", "hidden");
-            d3.selectAll(".circlelegend").transition().duration(500).style("visibility", "hidden");
+            d3.selectAll(".textlegend").transition().duration(1000).style("visibility", "hidden");
+            d3.selectAll(".circlelegend").transition().duration(1000).style("visibility", "hidden");
         } else {
-            d3.selectAll(".textlegend").transition().duration(500).style("visibility", "visible");
-            d3.selectAll(".circlelegend").transition().duration(500).style("visibility", "visible");
+            d3.selectAll(".textlegend").transition().duration(1000).style("visibility", "visible");
+            d3.selectAll(".circlelegend").transition().duration(1000).style("visibility", "visible");
         }
         d3.select('.line_mini').datum(data).transition().duration(1000).attr('d', line2)
     }
