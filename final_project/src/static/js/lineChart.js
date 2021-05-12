@@ -107,7 +107,7 @@ function createLineChart(data1, bubbledata1, attr) {
 
     // Add a scale for bubble color
     var myColor = d3.scaleOrdinal()
-        .domain(["Contact_tracing", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Public_healthcare", "Returning_to_normal_life"])
+        .domain(["Contact_tracing", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Public_Healthcare", "Returning_to_normal_life"])
         .range(d3.schemeSet2);
 
     var brush = d3.brushX()
@@ -161,7 +161,6 @@ function createLineChart(data1, bubbledata1, attr) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("clip-path", "url(#clip)");
 
-
     var focus = svg.append("g")
         .attr("class", "focus")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -194,7 +193,11 @@ function createLineChart(data1, bubbledata1, attr) {
     x2.domain(x.domain());
     y2.domain(y.domain());
 
-    yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 20]);
+    if (bubbledata_max > 160) {
+        yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 20]);
+    } else {
+        yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 5]);
+    }
 
     focus.append("g")
         .attr("class", "axis axis--x")
@@ -249,7 +252,6 @@ function createLineChart(data1, bubbledata1, attr) {
         })
         .transition().duration(1000)
         .attr("cx", function(d) { return x(d.date); })
-        // .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
         .attr("cy", function(d) { return yright(d.Count); })
         .attr("r", function(d) { return z(d.Count); })
         .style("fill", function(d) { return myColor(d.Measure_L1); })
@@ -291,13 +293,13 @@ function createLineChart(data1, bubbledata1, attr) {
 
     // Add one dot in the legend for each name.
     var size = 8
-    var allgroups = ["Contact_tracing", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Public_healthcare", "Returning_to_normal_life"]
+    var allgroups = ["Contact_tracing", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Public_Healthcare", "Returning_to_normal_life"]
 
     svg.selectAll("myrect")
         .data(allgroups)
         .enter()
         .append("circle")
-        .attr("class", function(d) { return "legend_circle_" + d })
+        .attr("class", function(d) { return "circlelegend legend_circle_" + d })
         .attr("cx", 310)
         .attr("cy", function(d, i) { return 10 + i * (size + 5) })
         .attr("r", 4)
@@ -317,6 +319,7 @@ function createLineChart(data1, bubbledata1, attr) {
         })
         .on("click", function(d) {
             if (!isClicked) {
+                d3.selectAll(".circlelegend").attr("r", 4)
                 d3.select("." + "legend_circle_" + d).attr("r", 7)
                 highlight(d);
                 isClicked = !isClicked
@@ -333,7 +336,7 @@ function createLineChart(data1, bubbledata1, attr) {
         .data(allgroups)
         .enter()
         .append("text")
-        .attr("class", function(d) { return "legend_text_" + d })
+        .attr("class", function(d) { return "textlegend legend_text_" + d })
         .attr("x", 310 + size * .8)
         .attr("y", function(d, i) { return i * (size + 5) + (size / 2) + 5 })
         .style("fill", function(d) { return myColor(d) })
@@ -355,6 +358,7 @@ function createLineChart(data1, bubbledata1, attr) {
         })
         .on("click", function(d) {
             if (!isClicked) {
+                d3.selectAll(".textlegend").style("font-size", "8px")
                 d3.select("." + "legend_text_" + d).style("font-size", "14px")
                 highlight(d);
                 isClicked = !isClicked
@@ -491,7 +495,11 @@ function createLineChart(data1, bubbledata1, attr) {
         y.domain([0, d3.max(data, function(d) { return d[attr]; })]);
         x2.domain(x.domain());
         y2.domain(y.domain());
-        yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 5]);
+        if (bubbledata_max > 160) {
+            yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 20]);
+        } else {
+            yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 5]);
+        }
 
         d3.select(".axis--x").transition().duration(1000).call(xAxis);
         d3.select(".axis--y").transition().duration(1000).call(yAxis);
