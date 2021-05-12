@@ -53,16 +53,21 @@
 <body>
     <div id="dashboard" class="container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col-sm-5">
                 <div class="dash-unit">
-                    <dtitle>Choropleth</dtitle>
-                    <hr>
-                    <div id="worldmap">
-                        <svg id='svgWorldMap'></svg>
+                    <!-- <dtitle>Choropleth</dtitle>
+                    <hr> -->
+                    <div class='row'>
+                        <h2>Average daily cases between 10 - 12</h1>
                     </div>
+                    <div class="row" title="Choropleth">
+                        <div id="worldmap-legend-svg" class="col-sm-1"></div>
+                        <div id="worldmap" class="col-sm-11"></div>
+                    </div>
+                    
                 </div>
             </div>
-            <div class="col">
+            <div class="col-sm-7">
                 <div class="dash-unit">
                     <dtitle>Line Chart</dtitle>
                     <select id='covidattr'>
@@ -86,26 +91,28 @@
             </div> -->
             <div class="col">
                 <div class="dash-unit">
-                    <dtitle>Word Cloud</dtitle>
-                    <hr>
-                    <div id="wordcloud">
-                        <svg id='svgWordCloud'></svg>
-                    </div>
-                </div>
-                <div class="dash-unit">
                     <dtitle>PCP</dtitle>
                     <hr>
                     <div id="pcp">
                         <svg id='svgpcplot'></svg>
                     </div>
                 </div>
+                <div class="dash-unit">
+                    <dtitle>Word Cloud</dtitle>
+                    <hr>
+                    <div id="wordcloud">
+                        <svg id='svgWordCloud'></svg>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
 
     <script type="text/javascript" src="static/js/dashboard.js"></script>
 
-    <script type="text/javascript" src="static/js/worldMap.js"></script>
+    <!-- <script type="text/javascript" src="static/js/worldMap.js"></script> -->
+    <script type="text/javascript" src="static/js/choropleth.js"></script>
     <script type="text/javascript" src="static/js/lineChart.js"></script>
     <script type="text/javascript" src="static/js/barChart.js"></script>
     <script type="text/javascript" src="static/js/wordCloud.js"></script>

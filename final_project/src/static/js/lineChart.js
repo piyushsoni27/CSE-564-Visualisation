@@ -375,6 +375,7 @@ function createLineChart(data1, bubbledata1, attr) {
     function brushed(d) {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom" || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore brush-by-zoom
         var s = d3.event.selection || x2.range();
+        
         x.domain(s.map(x2.invert, x2));
 
         bubble_chart.selectAll(".bubbles")
