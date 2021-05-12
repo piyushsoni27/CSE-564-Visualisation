@@ -1,4 +1,5 @@
 function createChoropleth(data, attr, countries) {
+    attr = selected_attr
 
     var width = 650;
     var height = 425;
@@ -14,6 +15,8 @@ function createChoropleth(data, attr, countries) {
         .offset([-10, 0])
         .html(function(d) {
             var attr_str = "";
+            attr = selected_attr
+
             if (attr === "new_cases") {
                 attr_str = "New Cases"
             } else if (attr === "new_deaths") {
@@ -176,6 +179,8 @@ function createChoropleth(data, attr, countries) {
         .call(yAxis)
 
     function updateChoropleth(data, attr, countries) {
+        attr = selected_attr
+
         maxVal = d3.max(data.features, function(d) { return +d[attr] })
         minVal = d3.min(data.features, function(d) { return +d[attr] })
         var ramp = d3.scaleSqrt().domain([minVal, maxVal]).range([lowColor, highColor])
@@ -232,7 +237,7 @@ function createChoropleth(data, attr, countries) {
                 //     .style("stroke", "white")
                 //     .style("stroke-width", 3)
                 //     .style("fill", "red")
-                console.log(paths._groups[0])
+                // console.log(paths._groups[0])
                 
 
                 for(i=0; i<countries_path_arr.length; i++){
@@ -245,7 +250,7 @@ function createChoropleth(data, attr, countries) {
                     })
                 }
 
-                console.log(clicked_countries)
+                // console.log(clicked_countries)
             } else {
                 worldmap_country = "world"
                 worldMapTrigger.a = "world"

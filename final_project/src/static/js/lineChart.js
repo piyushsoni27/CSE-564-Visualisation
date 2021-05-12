@@ -503,6 +503,7 @@ function createLineChart(data1, bubbledata1, attr) {
     }
 
     function updateLineChart(data1, bubbledata1, attr_new) {
+        console.log("update")
         data = data1
         bubbledata = bubbledata1
             // console.log(bubbledata.length)
