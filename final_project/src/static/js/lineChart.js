@@ -18,8 +18,16 @@ var innerHeightLine = outerHeightLine - marginUpperLineChart.top - marginUpperLi
 
 var start_date
 var end_date
+var data
+var bubbledata
+var linedata_max
+var linedata_min
+var bubbledata_max
+var bubbledata_min
 
-function createLineChart(data, bubbledata, attr) {
+function createLineChart(data1, bubbledata1, attr) {
+    data = data1
+    bubbledata = bubbledata1
     console.log(attr)
 
     document.getElementById("linechart").innerHTML = "";
@@ -74,10 +82,10 @@ function createLineChart(data, bubbledata, attr) {
     //     console.log(bucket.key)
     // }
 
-    var linedata_max = d3.max(data, function(d) { return +d[attr]; })
-    var linedata_min = d3.min(data, function(d) { return +d[attr]; })
-    var bubbledata_max = d3.max(bubbledata, function(d) { return d.Count; })
-    var bubbledata_min = d3.min(bubbledata, function(d) { return d.Count; })
+    linedata_max = d3.max(data, function(d) { return +d[attr]; })
+    linedata_min = d3.min(data, function(d) { return +d[attr]; })
+    bubbledata_max = d3.max(bubbledata, function(d) { return d.Count; })
+    bubbledata_min = d3.min(bubbledata, function(d) { return d.Count; })
 
     var x = d3.scaleTime().range([0, width]),
         x2 = d3.scaleTime().range([0, width]),
@@ -528,7 +536,9 @@ function createLineChart(data, bubbledata, attr) {
         return d;
     }
 
-    function updateLineChart(data, bubbledata, attr_new) {
+    function updateLineChart(data1, bubbledata1, attr_new) {
+        data = data1
+        bubbledata = bubbledata1
         var parseDate = d3.timeParse("%Y-%m-%d");
 
         data.forEach(d => {
@@ -541,10 +551,10 @@ function createLineChart(data, bubbledata, attr) {
             d.Count = +d.Count
         });
 
-        var linedata_max = d3.max(data, function(d) { return +d[attr]; })
-        var linedata_min = d3.min(data, function(d) { return +d[attr]; })
-        var bubbledata_max = d3.max(bubbledata, function(d) { return d.Count; })
-        var bubbledata_min = d3.min(bubbledata, function(d) { return d.Count; })
+        linedata_max = d3.max(data, function(d) { return +d[attr]; })
+        linedata_min = d3.min(data, function(d) { return +d[attr]; })
+        bubbledata_max = d3.max(bubbledata, function(d) { return d.Count; })
+        bubbledata_min = d3.min(bubbledata, function(d) { return d.Count; })
 
         x.domain(d3.extent(data, function(d) { return d.date; }));
         y.domain([0, d3.max(data, function(d) { return d[attr]; })]);
