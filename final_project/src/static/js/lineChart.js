@@ -28,7 +28,7 @@ var bubbledata_min
 function createLineChart(data1, bubbledata1, attr) {
     data = data1
     bubbledata = bubbledata1
-    console.log(attr)
+        // console.log(bubbledata)
 
     document.getElementById("linechart").innerHTML = "";
 
@@ -185,6 +185,7 @@ function createLineChart(data1, bubbledata1, attr) {
 
     // And when it is not hovered anymore
     var noHighlight = function(d) {
+        currMeasure = "None"
         d3.selectAll(".bubbles").style("opacity", 0.5)
     }
 
@@ -383,7 +384,14 @@ function createLineChart(data1, bubbledata1, attr) {
             .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
-            .style("opacity", .5)
+            // .style("opacity", .5)
+        if (currMeasure == "None") {
+            d3.selectAll(".bubbles").style("opacity", .5)
+        } else {
+            d3.selectAll(".bubbles").style("opacity", .05)
+                // expect the one that is hovered
+            d3.selectAll("." + currMeasure).style("opacity", 1)
+        }
 
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
@@ -412,7 +420,14 @@ function createLineChart(data1, bubbledata1, attr) {
             .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
-            .style("opacity", .5)
+            // .style("opacity", .5)
+        if (currMeasure == "None") {
+            d3.selectAll(".bubbles").style("opacity", .5)
+        } else {
+            d3.selectAll(".bubbles").style("opacity", .05)
+                // expect the one that is hovered
+            d3.selectAll("." + currMeasure).style("opacity", 1)
+        }
 
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
@@ -432,7 +447,14 @@ function createLineChart(data1, bubbledata1, attr) {
             .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
-            .style("opacity", .5)
+            // .style("opacity", .5)
+        if (currMeasure == "None") {
+            d3.selectAll(".bubbles").style("opacity", .5)
+        } else {
+            d3.selectAll(".bubbles").style("opacity", .05)
+                // expect the one that is hovered
+            d3.selectAll("." + currMeasure).style("opacity", 1)
+        }
 
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
@@ -460,7 +482,14 @@ function createLineChart(data1, bubbledata1, attr) {
             .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
-            .style("opacity", .5)
+            // .style("opacity", .5)
+        if (currMeasure == "None") {
+            d3.selectAll(".bubbles").style("opacity", .5)
+        } else {
+            d3.selectAll(".bubbles").style("opacity", .05)
+                // expect the one that is hovered
+            d3.selectAll("." + currMeasure).style("opacity", 1)
+        }
 
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
@@ -476,6 +505,8 @@ function createLineChart(data1, bubbledata1, attr) {
     function updateLineChart(data1, bubbledata1, attr_new) {
         data = data1
         bubbledata = bubbledata1
+            // console.log(bubbledata.length)
+
         var parseDate = d3.timeParse("%Y-%m-%d");
 
         data.forEach(d => {
@@ -541,10 +572,25 @@ function createLineChart(data1, bubbledata1, attr) {
             .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
-            .style("opacity", .5);
+            // .style("opacity", .5)
 
         bubblepoints.exit().remove()
+        if (currMeasure == "None") {
+            d3.selectAll(".bubbles").style("opacity", .5)
+        } else {
+            d3.selectAll(".bubbles").style("opacity", .05)
+                // expect the one that is hovered
+            d3.selectAll("." + currMeasure).style("opacity", 1)
+        }
 
+        console.log(d3.selectAll(".myrect"))
+        if (bubbledata.length == 0) {
+            d3.selectAll(".textlegend").transition().duration(500).style("visibility", "hidden");
+            d3.selectAll(".circlelegend").transition().duration(500).style("visibility", "hidden");
+        } else {
+            d3.selectAll(".textlegend").transition().duration(500).style("visibility", "visible");
+            d3.selectAll(".circlelegend").transition().duration(500).style("visibility", "visible");
+        }
         d3.select('.line_mini').datum(data).transition().duration(1000).attr('d', line2)
     }
 
