@@ -6,6 +6,7 @@ var worldmap_country;
 var selected_attr = "new_cases"
 var selected_start_date = "2020-01-23"
 var selected_end_date = "2021-04-17"
+var selected_countries = []
 
 var lineChartTrigger = {
     aInternal: null,
@@ -45,7 +46,7 @@ $.ajax({
         for(var i in worldData.features)
             all_countries.push(worldData.features[i].properties.name);
         
-        worldMap(worldData, selected_attr, all_countries)
+        createChoropleth(worldData, selected_attr)
     },
     error: function(err) {
         console.log(err);

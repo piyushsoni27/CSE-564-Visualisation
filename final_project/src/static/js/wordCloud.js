@@ -1,8 +1,8 @@
 // https://bl.ocks.org/alexb823/706a98eb9e729f0754f31cd6f4803155
 
-var outerWidthWordCloud = 800, outerHeightWordCloud = 500/960 * outerWidthWordCloud
+var outerWidthWordCloud = 700, outerHeightWordCloud = 500/760 * outerWidthWordCloud
 
-var marginWordCloud = {top: 30, right: 50, bottom: 30, left: 50};
+var marginWordCloud = {top: 10, right: 10, bottom: 10, left: 10};
 var innerWidthWordCloud = outerWidthWordCloud - marginWordCloud.left - marginWordCloud.right;
 var innerHeightWordCloud = outerHeightWordCloud - marginWordCloud.top - marginWordCloud.bottom;
 
@@ -13,6 +13,10 @@ function createWordCloud(data){
 
         document.getElementById("wordcloud").innerHTML = "";
 
+        const wordScale = d3.scaleLinear()
+                .domain(d3.extent(data, function(d){ return +d['count']; }))
+                .range([20,70])
+
         var plotOuter = d3.select("#wordcloud")
                         .append("svg")
                         .attr("width", outerWidthWordCloud)
@@ -21,9 +25,7 @@ function createWordCloud(data){
         var plotInner = plotOuter.append("g")
                 .attr("transform", "translate(" + marginWordCloud.left + "," + marginWordCloud.top + ")");
 
-                const wordScale = d3.scaleLinear()
-                .domain(d3.extent(data, function(d){ return +d['count']; }))
-                .range([20,120])
+                
 
         var layout = d3.layout.cloud()
                 .size([innerWidthWordCloud, innerHeightWordCloud])
@@ -44,9 +46,6 @@ function createWordCloud(data){
                                 .selectAll("text")
                                 .data(words)
 
-                // wordcloud.exit().transition()
-                // .duration(1000).remove();
-
                 wordcloud.enter().append("text")
                         .attr('class','word')
                         .style("font-size", function(d) { return d.size  + "px"; })
@@ -54,7 +53,7 @@ function createWordCloud(data){
                         .attr("text-anchor", "middle")
                         .text(function(d) { return d.hashtag; })
                         .transition()
-                        .duration(600)
+                        .duration(500)
                         .style("font-size", function(d) { return d.size + "px"; })
                         .attr("transform", function(d) { return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")"; })
                         .style("fill-opacity", 1)
@@ -68,15 +67,4 @@ function createWordCloud(data){
 
         };
 
-
-        }  
-
-        // createWordCloud(data)
-
-        // lineChartTrigger.registerListener(function(val) {
-        //         dates = {}
-        //         dates.start = selected_start_date
-        //         dates.end = selected_end_date
-                
-                
-        //     });
+}  
