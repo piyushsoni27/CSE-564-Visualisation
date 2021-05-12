@@ -7,9 +7,22 @@ var selected_attr = "new_cases"
 var selected_start_date = "2020-01-23"
 var selected_end_date = "2021-04-17"
 
-var worldmapvar
+var lineChartTrigger = {
+    aInternal: null,
+    aListener: function (val) { },
+    set a(val) {
+        this.aInternal = val;
+        this.aListener(val);
+    },
+    get a() {
+        return this.aInternal;
+    },
+    registerListener: function (listener) {
+        this.aListener = listener;
+    }
+}
 
-var worldmaptrigger =  {
+var worldMapTrigger =  {
     aInternal: null,
     aListener: function (val) { },
     set a(val) {

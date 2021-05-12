@@ -449,10 +449,7 @@ function createLineChart(data, bubbledata, attr) {
         selected_start_date = start_date.getFullYear() + '-' + (start_date.getMonth() + 1) + '-' + start_date.getDate()
         selected_end_date = end_date.getFullYear() + '-' + (end_date.getMonth() + 1) + '-' + end_date.getDate()
 
-        // console.log("Brush 0 " + selected_start_date)
-        // console.log("Brush 1 " + selected_end_date)
-
-        update()
+        lineChartTrigger = selected_start_date
 
         x.domain(s.map(x2.invert, x2));
 
@@ -591,17 +588,16 @@ function createLineChart(data, bubbledata, attr) {
         bubblepoints.exit().remove()
 
         d3.select('.line_mini').datum(data).attr('d', line2)
-            // d3.select('.line2-mini').datum(data.line_chart_data_disaster).attr('d', line2_mini)
     }
 
-    worldmaptrigger.registerListener(function(val) {
-        // console.log(Array.from(states))
+    worldMapTrigger.registerListener(function(val) {
+        console.log(worldmap_country)
         $(document).ready(function() {
             $.ajax({
                 type: "POST",
                 url: "/linechart",
                 contentType: "application/json",
-                data: JSON.stringify(worldmapvar),
+                data: JSON.stringify(worldmap_country),
                 dataType: "json",
                 success: function(response) {
                     lineBubbleData = (response)

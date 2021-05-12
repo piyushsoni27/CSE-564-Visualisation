@@ -149,87 +149,6 @@ function worldMap(dataset, attr, countries) {
         .enter()
         .append("path")
         .attr("d", path)
-        // .style("fill", function(d) {
-        //     if (String(+d[attr]) === "NaN" || !checkCountry(d.properties.name)) {
-        //         return "gray"
-        //     }
-        //     return colorScale(d[attr])
-        // })
-        // .style('stroke', 'white')
-        // .style('stroke-width', 1.5)
-        // .style("opacity", 0.8)
-        // // tooltips
-        // .style("stroke", "white")
-        // .style('stroke-width', 0.3)
-        // .on('mouseover', function(d) {
-        //     if (String(+d[attr]) !== "NaN") tip.show(d);
-
-        //     d3.select(this)
-        //         .style("opacity", 1)
-        //         .style("stroke", "white")
-        //         .style("stroke-width", 3);
-        // })
-        // .on('mouseout', function(d) {
-        //     tip.hide(d);
-
-        //     d3.select(this)
-        //         .style("opacity", 0.8)
-        //         .style("stroke", "white")
-        //         .style("stroke-width", 0.3);
-        // })
-        // .on('click', function(d) {
-        //     if (String(+d[attr]) !== "NaN") {
-        //         worldmap_country = d.id;
-        //         console.log(worldmap_country)
-
-        //         d3.select(this)
-        //             .style("opacity", 1)
-        //             .style("stroke", "white")
-        //             .style("stroke-width", 3);
-
-        //         $.ajax({
-        //             type: "POST",
-        //             url: "/linechart",
-        //             contentType: "application/json",
-        //             data: JSON.stringify(worldmap_country),
-        //             dataType: "json",
-        //             success: function(response) {
-        //                 lineBubbleData = (response)
-        //                 linedata = lineBubbleData['lined']
-        //                 bubbledata = lineBubbleData['bubbled']
-        //                 createLineChart(linedata, bubbledata, selected_attr)
-        //             },
-        //             error: function(err) {
-        //                 console.log(err);
-        //             }
-        //         });
-        //     } else {
-        //         $.ajax({
-        //             type: "POST",
-        //             url: "/linechart",
-        //             contentType: "application/json",
-        //             data: JSON.stringify("world"),
-        //             dataType: "json",
-        //             success: function(response) {
-        //                 lineBubbleData = (response)
-        //                 linedata = lineBubbleData['lined']
-        //                 bubbledata = lineBubbleData['bubbled']
-        //                 createLineChart(linedata, bubbledata, selected_attr)
-        //             },
-        //             error: function(err) {
-        //                 console.log(err);
-        //             }
-        //         });
-        //     }
-        //     tip.hide()
-        // });
-
-    // plotInner.append("path")
-    //     .datum(topojson.mesh(dataset.features, function(a, b) {
-    //         return a.id !== b.id;
-    //     }))
-    //     .attr("class", "names")
-    //     .attr("d", path);
 
     // Legend
     var g = plotOuter.append("g")
@@ -261,7 +180,7 @@ function worldMap(dataset, attr, countries) {
         return false;
     }
 
-    function update(dataset){
+    function updateWorldMap(dataset){
         
         plotInner.selectAll("path")
         .data(dataset.features)
@@ -296,54 +215,45 @@ function worldMap(dataset, attr, countries) {
         .on('click', function(d) {
             if (String(+d[attr]) !== "NaN") {
                 worldmap_country = d.id;
-                console.log(worldmap_country)
 
-                worldmapvar = d.id
-                worldmaptrigger.a = d.id
+                worldMapTrigger.a = d.id
 
                 d3.select(this)
                     .style("opacity", 1)
                     .style("stroke", "white")
                     .style("stroke-width", 3);
-
-                // $.ajax({
-                //     type: "POST",
-                //     url: "/linechart",
-                //     contentType: "application/json",
-                //     data: JSON.stringify(worldmap_country),
-                //     dataType: "json",
-                //     success: function(response) {
-                //         lineBubbleData = (response)
-                //         linedata = lineBubbleData['lined']
-                //         bubbledata = lineBubbleData['bubbled']
-                //         createLineChart(linedata, bubbledata, selected_attr)
-                //     },
-                //     error: function(err) {
-                //         console.log(err);
-                //     }
-                // });
             } else {
-                // $.ajax({
-                //     type: "POST",
-                //     url: "/linechart",
-                //     contentType: "application/json",
-                //     data: JSON.stringify("world"),
-                //     dataType: "json",
-                //     success: function(response) {
-                //         lineBubbleData = (response)
-                //         linedata = lineBubbleData['lined']
-                //         bubbledata = lineBubbleData['bubbled']
-                //         createLineChart(linedata, bubbledata, selected_attr)
-                //     },
-                //     error: function(err) {
-                //         console.log(err);
-                //     }
-                // });
+                worldmap_country = "world"
+                worldMapTrigger.a = "world"
             }
             tip.hide()
         });
     }
 
-    update(dataset)
+    worldMapTrigger.registerListener(function(val) {
+        dates = {}
+        dates.start = selected_start_date
+        dates.end = selected_end_date
+        
+        $(document).ready(function() {
+            $.ajax({
+                type: "POST",
+                url: "/worldmap",
+                contentType: "application/json",
+                data: JSON.stringify(dates),
+                dataType: "json",
+                success: function(response) {
+                    worldData = (response)
+
+                    updateWorldMap(worlddata)
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
+    });
+
+    updateWorldMap(dataset)
 }
 
