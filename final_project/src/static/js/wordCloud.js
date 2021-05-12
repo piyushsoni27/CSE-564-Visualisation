@@ -21,46 +21,77 @@ function createWordCloud(data){
         var plotInner = plotOuter.append("g")
                 .attr("transform", "translate(" + marginWordCloud.left + "," + marginWordCloud.top + ")");
 
-        const wordScale = d3.scaleLinear()
-                .domain(d3.extent(data, function(d){ return +d['count']; }))
-                .range([20,120])
+        function updateWordCloud(data){
+                const wordScale = d3.scaleLinear()
+                        .domain(d3.extent(data, function(d){ return +d['count']; }))
+                        .range([20,120])
 
-        var layout = d3.layout.cloud()
-                .size([innerWidthWordCloud, innerHeightWordCloud])
-                .timeInterval(20)
-                .words(data)
-                .rotate(function() { return ~~(Math.random() * 2)*90; })
-                .fontSize(d=>wordScale(d.count))
-                .fontWeight(["bold"])
-                .text(function(d) { return d.hashtag; })
-                .spiral("rectangular") // "archimedean" or "rectangular"
-                .on("end", draw)
-                .start();
-
-
-        function draw(words) {
-                var wordcloud = plotInner.append("g")
-                                .attr('class','wordcloud')
-                                .attr("transform", "translate(" + innerWidthWordCloud/2 + "," + innerHeightWordCloud/2 + ")")
-                                .selectAll("text")
-                                .data(words)
-
-                plotInner.append("g")
-                .attr("class", "axis")
-                .attr("transform", "translate(0," + innerHeightWordCloud + ")")
-                .selectAll('text')
+                var layout = d3.layout.cloud()
+                        .size([innerWidthWordCloud, innerHeightWordCloud])
+                        .timeInterval(20)
+                        .words(data)
+                        .rotate(function() { return ~~(Math.random() * 2)*90; })
+                        .fontSize(d=>wordScale(d.count))
+                        .fontWeight(["bold"])
+                        .text(function(d) { return d.hashtag; })
+                        .spiral("rectangular") // "archimedean" or "rectangular"
+                        .on("end", draw)
+                        .start();
 
 
-                wordcloud.exit().transition()
-                .duration(1000).remove();
+                function draw(words) {
+                        var wordcloud = plotInner.append("g")
+                                        .attr('class','wordcloud')
+                                        .attr("transform", "translate(" + innerWidthWordCloud/2 + "," + innerHeightWordCloud/2 + ")")
+                                        .selectAll("text")
+                                        .data(words)
 
-                wordcloud.enter().append("text")
-                .attr('class','word')
-                .style("font-size", function(d) { return d.size  + "px"; })
-                .style("fill", function(d, i) { return color(i); })
+                        // plotInner.append("g")
+                        // .attr("class", "axis")
+                        // .attr("transform", "translate(0," + innerHeightWordCloud + ")")
+                        // .selectAll('text')
 
-                .attr("text-anchor", "middle")
-                .attr("transform", function(d) { return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")"; })
-                .text(function(d) { return d.hashtag; });
-        };
+
+                        wordcloud.exit().transition()
+                        .duration(1000).remove();
+
+                        wordcloud.enter().append("text")
+                                .merge(wordcloud)
+                                .attr('class','word')
+                                .transition().duration(1000)
+                                .style("font-size", function(d) { return d.size  + "px"; })
+                                .style("fill", function(d, i) { return color(i); })
+                                .attr("text-anchor", "middle")
+                                .attr("transform", function(d) { return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")"; })
+                                .text(function(d) { return d.hashtag; });
+
+                        wordcloud.exit().remove()
+                };
+        }  
+
+        updateWordCloud(data)
+
+        lineChartTrigger.registerListener(function(val) {
+                dates = {}
+                dates.start = selected_start_date
+                dates.end = selected_end_date
+                
+                $(document).ready(function() {
+                    $.ajax({
+                        type: "POST",
+                        url: "/wordcloud",
+                        contentType: "application/json",
+                        data: JSON.stringify(dates),
+                        dataType: "json",
+                        success: function(response) {
+                            wordCloudData = (response)
+        
+                            updateWordCloud(wordCloudData)
+                        },
+                        error: function(err) {
+                            console.log(err);
+                        }
+                    });
+                });
+            });
 }

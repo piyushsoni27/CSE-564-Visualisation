@@ -111,35 +111,6 @@ function worldMap(dataset, attr, countries) {
         return [-10, 0]
     })
 
-    var max = d3.max(dataset.features, function(d) { return +d[attr] })
-    var min = d3.min(dataset.features, function(d) { return +d[attr] })
-
-    var step = Math.ceil((max - min) / 6)
-    var legends_arr = [];
-    var labels = []
-    var num;
-    legends_arr.push(min)
-    for (i = 1; i < 6; i++) {
-        num = min + step * i
-        legends_arr.push(num)
-        if (num >= 1000000) {
-            labels.push((legends_arr[i - 1] + 1).toString() + "-" + Math.ceil(num / 1000000).toString() + 'M')
-        } else {
-            labels.push((legends_arr[i - 1] + 1).toString() + "-" + num.toString())
-        }
-    }
-    if (legends_arr[i - 1] >= 1000000) {
-        labels.push("> " + Math.ceil(legends_arr[i - 1] / 1000000).toString() + 'M')
-    } else {
-        labels.push("> " + (legends_arr[i - 1] + 1).toString())
-    }
-
-
-    var colorScheme = d3.schemeReds[5];
-    var colorScale = d3.scaleSqrt()
-        .domain(legends_arr)
-        .range(colorScheme);
-
     plotInner.call(tip);
 
     plotInner.append("g")
@@ -162,13 +133,7 @@ function worldMap(dataset, attr, countries) {
         .text(attr)
         .attr("fill", "white")
 
-    var legend = d3.legendColor()
-        .labels(function(d) { return labels[d.i]; })
-        .shapePadding(4)
-        .scale(colorScale);
 
-    plotOuter.select(".legendThreshold")
-        .call(legend);
 
     function checkCountry(s) {
         // console.log(s)
@@ -181,61 +146,102 @@ function worldMap(dataset, attr, countries) {
     }
 
     function updateWorldMap(dataset){
+
+        var max = d3.max(dataset.features, function(d) { return +d[attr] })
+        var min = d3.min(dataset.features, function(d) { return +d[attr] })
+    
+        var step = Math.ceil((max - min) / 6)
+        var legends_arr = [];
+        var labels = []
+        var num;
+
+        legends_arr.push(min)
+        
+        for (i = 1; i < 6; i++) {
+            num = min + step * i
+            legends_arr.push(num)
+            if (num >= 1000000) {
+                labels.push((legends_arr[i - 1] + 1).toString() + "-" + Math.ceil(num / 1000000).toString() + 'M')
+            } else {
+                labels.push((legends_arr[i - 1] + 1).toString() + "-" + num.toString())
+            }
+        }
+        
+        if (legends_arr[i - 1] >= 1000000) {
+            labels.push("> " + Math.ceil(legends_arr[i - 1] / 1000000).toString() + 'M')
+        } else {
+            labels.push("> " + (legends_arr[i - 1] + 1).toString())
+        }
+
+        var colorScheme = d3.schemeReds[5];
+        var colorScale = d3.scaleSqrt()
+            .domain(legends_arr)
+            .range(colorScheme);
+
+        var legend = d3.legendColor()
+                        .labels(function(d) { return labels[d.i]; })
+                        .shapePadding(4)
+                        .scale(colorScale);
+
+        plotOuter.select(".legendThreshold")
+            .call(legend);
         
         plotInner.selectAll("path")
-        .data(dataset.features)
-        .style("fill", function(d) {
-            if (String(+d[attr]) === "NaN" || !checkCountry(d.properties.name)) {
-                return "gray"
-            }
-            return colorScale(d[attr])
-        })
-        .style('stroke', 'white')
-        .style('stroke-width', 1.5)
-        .style("opacity", 0.8)
-        // tooltips
-        .style("stroke", "white")
-        .style('stroke-width', 0.3)
-        .on('mouseover', function(d) {
-            if (String(+d[attr]) !== "NaN") tip.show(d);
-
-            d3.select(this)
-                .style("opacity", 1)
-                .style("stroke", "white")
-                .style("stroke-width", 3);
-        })
-        .on('mouseout', function(d) {
-            tip.hide(d);
-
-            d3.select(this)
-                .style("opacity", 0.8)
-                .style("stroke", "white")
-                .style("stroke-width", 0.3);
-        })
-        .on('click', function(d) {
-            if (String(+d[attr]) !== "NaN") {
-                worldmap_country = d.id;
-
-                worldMapTrigger.a = d.id
+            .data(dataset.features)
+            .style("fill", function(d) {
+                if (String(+d[attr]) === "NaN" || !checkCountry(d.properties.name)) {
+                    return "gray"
+                }
+                return colorScale(d[attr])
+            })
+            .style('stroke', 'white')
+            .style('stroke-width', 1.5)
+            .style("opacity", 0.8)
+            // tooltips
+            .style("stroke", "white")
+            .style('stroke-width', 0.3)
+            .on('mouseover', function(d) {
+                if (String(+d[attr]) !== "NaN") tip.show(d);
 
                 d3.select(this)
                     .style("opacity", 1)
                     .style("stroke", "white")
                     .style("stroke-width", 3);
-            } else {
-                worldmap_country = "world"
-                worldMapTrigger.a = "world"
-            }
-            tip.hide()
-        });
-    }
+            })
+            .on('mouseout', function(d) {
+                tip.hide(d);
 
-    worldMapTrigger.registerListener(function(val) {
+                d3.select(this)
+                    .style("opacity", 0.8)
+                    .style("stroke", "white")
+                    .style("stroke-width", 0.3);
+            })
+            .on('click', function(d) {
+                if (String(+d[attr]) !== "NaN") {
+                    worldmap_country = d.id;
+
+                    worldMapTrigger.a = d.id
+
+                    d3.select(this)
+                        .style("opacity", 1)
+                        .style("stroke", "white")
+                        .style("stroke-width", 3);
+                } else {
+                    worldmap_country = "world"
+                    worldMapTrigger.a = "world"
+                }
+                tip.hide()
+            });
+    }
+    updateWorldMap(dataset)
+
+    lineChartTrigger.registerListener(function(val) {
         dates = {}
         dates.start = selected_start_date
         dates.end = selected_end_date
         
         $(document).ready(function() {
+            console.log(dates)
             $.ajax({
                 type: "POST",
                 url: "/worldmap",
@@ -245,7 +251,7 @@ function worldMap(dataset, attr, countries) {
                 success: function(response) {
                     worldData = (response)
 
-                    updateWorldMap(worlddata)
+                    updateWorldMap(worldData)
                 },
                 error: function(err) {
                     console.log(err);
@@ -254,6 +260,5 @@ function worldMap(dataset, attr, countries) {
         });
     });
 
-    updateWorldMap(dataset)
 }
 
