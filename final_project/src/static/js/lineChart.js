@@ -174,8 +174,10 @@ function createLineChart(data1, bubbledata1, attr) {
     // ---------------------------//
 
     // What to do when one group is hovered
+    var currMeasure = "None"
     var highlight = function(d) {
-        // reduce opacity of all groups
+        currMeasure = d
+            // reduce opacity of all groups
         d3.selectAll(".bubbles").style("opacity", .05)
             // expect the one that is hovered
         d3.selectAll("." + d).style("opacity", 1)
@@ -377,7 +379,6 @@ function createLineChart(data1, bubbledata1, attr) {
 
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
-            // .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
@@ -506,6 +507,7 @@ function createLineChart(data1, bubbledata1, attr) {
         d3.select(".axis--yright").transition().duration(1000).call(yAxisright);
 
         d3.select('.line').datum(data).attr('d', line)
+        d3.select('.brush').call(brush.move, x.range())
 
         var bubblepoints = bubble_chart.selectAll(".bubbles").data(bubbledata)
         bubblepoints.enter()
@@ -546,7 +548,7 @@ function createLineChart(data1, bubbledata1, attr) {
     }
 
     worldMapTrigger.registerListener(function(val) {
-        console.log(worldmap_country)
+        // console.log(worldmap_country)
         $(document).ready(function() {
             $.ajax({
                 type: "POST",
