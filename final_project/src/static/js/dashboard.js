@@ -1,10 +1,10 @@
-function update(){
-    console.log("update called!!")
+function update() {
+    // console.log("update called!!")
     dates = {}
     dates.start = selected_start_date
     dates.end = selected_end_date
 
-    console.log(dates)
+    // console.log(dates)
 
     $.ajax({
         type: "POST",
