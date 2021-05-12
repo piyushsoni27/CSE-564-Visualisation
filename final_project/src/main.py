@@ -146,16 +146,15 @@ def get_linechart_data():
     if(request.method == 'POST'):
         country = request.get_json()
         print(country)
-    
-    
-    if(country == "world"):        
+
+    if(country == "world" or country==""):        
         line_df = world_line_df
     else:
         line_df = data.loc[data.id == country, ["date", "new_cases_smoothed", "new_deaths_smoothed", "new_vaccinations_smoothed"]]
         line_df.date = line_df.date.astype("str")
         line_df.rename(columns={'new_cases_smoothed': 'new_cases', 'new_deaths_smoothed': 'new_deaths', "new_vaccinations_smoothed" : "new_vaccinations"}, inplace=True)
     
-    print(line_df)
+    # print(line_df)
     
     if(country != "world"):
         npi_data = bubble_df.loc[bubble_df['id']==country]

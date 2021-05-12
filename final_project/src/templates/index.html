@@ -70,6 +70,11 @@
             <div class="col-sm-7">
                 <div class="dash-unit">
                     <dtitle>Line Chart</dtitle>
+                    <select id='covidattr'>
+                        <option value="new_cases">Daily Cases</option>
+                        <option value="new_deaths">Daily Deaths</option>
+                        <option value="new_vaccinations">Daily Vaccinations</option>
+                    </select>
                     <hr>
                     <div id="linechart">
                         <svg id='svgLineChart'></svg>
