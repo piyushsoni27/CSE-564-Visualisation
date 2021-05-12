@@ -90,18 +90,20 @@ function createLineChart(data1, bubbledata1, attr) {
     var x = d3.scaleTime().range([0, width]),
         x2 = d3.scaleTime().range([0, width]),
         y = d3.scaleLinear().range([height, 0]),
-        y2 = d3.scaleLinear().range([height2, 0]);
+        y2 = d3.scaleLinear().range([height2, 0]),
+        yright = d3.scaleLinear().range([height, 0]);
     // y = d3.scaleLog().range([height, 0]),
     // y2 = d3.scaleLog().range([height2, 0]);
 
     var xAxis = d3.axisBottom(x),
         xAxis2 = d3.axisBottom(x2),
-        yAxis = d3.axisLeft(y);
+        yAxis = d3.axisLeft(y),
+        yAxisright = d3.axisLeft(yright);
 
     // Add a scale for bubble size
     var z = d3.scaleSqrt()
         .domain([bubbledata_min, bubbledata_max])
-        .range([3, 30]);
+        .range([5, 20]);
 
     // Add a scale for bubble color
     var myColor = d3.scaleOrdinal()
@@ -192,6 +194,8 @@ function createLineChart(data1, bubbledata1, attr) {
     x2.domain(x.domain());
     y2.domain(y.domain());
 
+    yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 30]);
+
     focus.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + height + ")")
@@ -200,6 +204,10 @@ function createLineChart(data1, bubbledata1, attr) {
     focus.append("g")
         .attr("class", "axis axis--y")
         .call(yAxis);
+    focus.append("g")
+        .attr("class", "axis axis--yright")
+        .attr("transform", "translate(" + width + ",0)")
+        .call(yAxisright);
 
     focus.append("text")
         .attr("transform", "translate(" + width / 2 + " ," + (height + margin.top + 28) + ")")
@@ -273,7 +281,8 @@ function createLineChart(data1, bubbledata1, attr) {
         })
         .transition().duration(1000)
         .attr("cx", function(d) { return x(d.date); })
-        .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+        // .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+        .attr("cy", function(d) { return yright(d.Count); })
         .attr("r", function(d) { return z(d.Count); })
         .style("fill", function(d) { return myColor(d.Measure_L1); })
         .style("opacity", .5);
@@ -435,7 +444,8 @@ function createLineChart(data1, bubbledata1, attr) {
 
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
-            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            // .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .style("opacity", .5)
@@ -443,6 +453,7 @@ function createLineChart(data1, bubbledata1, attr) {
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
         focus.select(".axis--y").call(yAxis);
+        focus.select(".axis--yright").call(yAxisright);
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
             .scale(width / (s[1] - s[0]))
             .translate(-s[0], 0));
@@ -463,7 +474,8 @@ function createLineChart(data1, bubbledata1, attr) {
 
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
-            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            // .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .style("opacity", .5)
@@ -483,7 +495,8 @@ function createLineChart(data1, bubbledata1, attr) {
         x.domain(t.rescaleX(x2).domain());
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
-            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            // .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .style("opacity", .5)
@@ -515,7 +528,8 @@ function createLineChart(data1, bubbledata1, attr) {
 
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
-            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            // .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .style("opacity", .5)
@@ -560,10 +574,11 @@ function createLineChart(data1, bubbledata1, attr) {
 
         d3.select(".axis--x").transition().duration(1000).call(xAxis);
         d3.select(".axis--y").transition().duration(1000).call(yAxis);
+        d3.select(".axis--yright").transition().duration(1000).call(yAxisright);
 
         d3.select('.line').datum(data).attr('d', line)
 
-        bubblepoints = bubble_chart.selectAll(".bubbles").data(bubbledata)
+        var bubblepoints = bubble_chart.selectAll(".bubbles").data(bubbledata)
         bubblepoints.enter()
             .append("circle")
             .merge(bubblepoints)
@@ -590,7 +605,8 @@ function createLineChart(data1, bubbledata1, attr) {
             })
             .transition().duration(1000)
             .attr("cx", function(d) { return x(d.date); })
-            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            // .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            .attr("cy", function(d) { return yright(d.Count); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .style("opacity", .5);
