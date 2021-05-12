@@ -528,7 +528,7 @@ function createLineChart(data, bubbledata, attr) {
         return d;
     }
 
-    function updateLineChart(data, bubbledata) {
+    function updateLineChart(data, bubbledata, attr_new) {
         var parseDate = d3.timeParse("%Y-%m-%d");
 
         data.forEach(d => {
@@ -550,32 +550,17 @@ function createLineChart(data, bubbledata, attr) {
         y.domain([0, d3.max(data, function(d) { return d[attr]; })]);
         x2.domain(x.domain());
         y2.domain(y.domain());
-        // x.domain(d3.extent(data.line_chart_data_crime, d => xValue(d)))
-        // y.domain([0, d3.max(data.line_chart_data_crime, d => yValue(d))]).nice()
-        // yR.domain([0, d3.max(data.line_chart_data_disaster, d => yValueR(d))]).nice()
-
-        // x2.domain(x.domain());
-        // y2.domain(y.domain());
-        // y2R.domain(yR.domain());
 
         d3.select(".axis--x").transition().duration(1000).call(xAxis);
         d3.select(".axis--y").transition().duration(1000).call(yAxis);
-        // d3.select(".axis--y-R").transition().duration(1000).call(yAxisR);
 
         d3.select('.line').datum(data).attr('d', line)
-            // d3.select('.line2').datum(data.line_chart_data_disaster).attr('d', line2)
 
-        bubblepoints = bubble_chart.selectAll(".dot").data(bubbledata)
-
+        bubblepoints = bubble_chart.selectAll(".bubbles").data(bubbledata)
         bubblepoints.enter()
             .append("circle")
             .merge(bubblepoints)
             .attr("class", function(d) { return "bubbles " + d.Measure_L1 })
-            .attr("cx", function(d) { return x(d.date); })
-            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
-            .attr("r", function(d) { return z(d.Count); })
-            .style("fill", function(d) { return myColor(d.Measure_L1); })
-            .style("opacity", .5)
             .on('mouseover', function(d) {
 
                 if (!isClicked) {
@@ -596,7 +581,12 @@ function createLineChart(data, bubbledata, attr) {
                         .style("stroke-width", 0.3);
                 }
             })
-            .transition().duration(1000);
+            .transition().duration(1000)
+            .attr("cx", function(d) { return x(d.date); })
+            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            .attr("r", function(d) { return z(d.Count); })
+            .style("fill", function(d) { return myColor(d.Measure_L1); })
+            .style("opacity", .5);
 
         bubblepoints.exit().remove()
 
@@ -604,9 +594,9 @@ function createLineChart(data, bubbledata, attr) {
             // d3.select('.line2-mini').datum(data.line_chart_data_disaster).attr('d', line2_mini)
     }
 
-    worldmaptrigger.registerListener(function (val) {
+    worldmaptrigger.registerListener(function(val) {
         // console.log(Array.from(states))
-        $(document).ready(function () {
+        $(document).ready(function() {
             $.ajax({
                 type: "POST",
                 url: "/linechart",
@@ -617,7 +607,7 @@ function createLineChart(data, bubbledata, attr) {
                     lineBubbleData = (response)
                     linedata = lineBubbleData['lined']
                     bubbledata = lineBubbleData['bubbled']
-                    updatelinechart(linedata, bubbledata, selected_attr)
+                    updateLineChart(linedata, bubbledata, selected_attr)
                 },
                 error: function(err) {
                     console.log(err);
