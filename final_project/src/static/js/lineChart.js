@@ -375,7 +375,7 @@ function createLineChart(data1, bubbledata1, attr) {
     function brushed(d) {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom" || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore brush-by-zoom
         var s = d3.event.selection || x2.range();
-        
+
         x.domain(s.map(x2.invert, x2));
 
         bubble_chart.selectAll(".bubbles")
@@ -507,7 +507,7 @@ function createLineChart(data1, bubbledata1, attr) {
         d3.select(".axis--y").transition().duration(1000).call(yAxis);
         d3.select(".axis--yright").transition().duration(1000).call(yAxisright);
 
-        d3.select('.line').datum(data).attr('d', line)
+        d3.select('.line').datum(data).transition().duration(1000).attr('d', line)
         d3.select('.brush').call(brush.move, x.range())
 
         var bubblepoints = bubble_chart.selectAll(".bubbles").data(bubbledata)
@@ -545,7 +545,7 @@ function createLineChart(data1, bubbledata1, attr) {
 
         bubblepoints.exit().remove()
 
-        d3.select('.line_mini').datum(data).attr('d', line2)
+        d3.select('.line_mini').datum(data).transition().duration(1000).attr('d', line2)
     }
 
     worldMapTrigger.registerListener(function(val) {
