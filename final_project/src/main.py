@@ -54,6 +54,14 @@ def preprocess():
     data.rename({"iso_code" : "id"}, axis="columns", inplace=True)
     data['date'] = pd.to_datetime(data['date'])
     
+    # countries = ['ALB', 'AUT', 'BEL', 'BIH', 'BRA', 'CAN', 'HKG', 'HRV', 'CZE',
+    #    'DNK', 'ECU', 'EGY', 'SLV', 'EST', 'FIN', 'FRA', 'DEU', 'GHA',
+    #    'GRC', 'HND', 'HUN', 'ISL', 'IND', 'IDN', 'ITA', 'JPN', 'KAZ',
+    #    'RKS', 'KWT', 'LIE', 'LTU', 'MYS', 'MUS', 'MEX', 'MNE', 'NLD',
+    #    'NZL', 'MKD', 'NOR', 'POL', 'PRT', 'IRL', 'ROU', 'SEN', 'SRB',
+    #    'SGP', 'SVK', 'SVN', 'KOR', 'ESP', 'SWE', 'CHE', 'SYR', 'TWN',
+    #    'THA', 'GBR', 'USA']
+    
     countries = []
     
     for i in range(len(gj["features"])):
@@ -73,13 +81,23 @@ def get_pcp_data():
     
     # print(pcp_data.location.unique())
     
+    countries = ['ALB', 'AUT', 'BEL', 'BIH', 'BRA', 'CAN', 'HKG', 'HRV', 'CZE',
+       'DNK', 'ECU', 'EGY', 'SLV', 'EST', 'FIN', 'FRA', 'DEU', 'GHA',
+       'GRC', 'HND', 'HUN', 'ISL', 'IND', 'IDN', 'ITA', 'JPN', 'KAZ',
+       'RKS', 'KWT', 'LIE', 'LTU', 'MYS', 'MUS', 'MEX', 'MNE', 'NLD',
+       'NZL', 'MKD', 'NOR', 'POL', 'PRT', 'IRL', 'ROU', 'SEN', 'SRB',
+       'SGP', 'SVK', 'SVN', 'KOR', 'ESP', 'SWE', 'CHE', 'SYR', 'TWN',
+       'THA', 'GBR', 'USA']
+    
+    pcp_data = pcp_data.loc[pcp_data.id.isin(countries)].reset_index(drop=True)
+    
     pcp_axis = ["location", 'gdp_per_capita', 'stringency_index', 'human_development_index', 'median_age', 'hospital_beds_per_thousand', 'new_cases', 'new_deaths', 'new_vaccinations']
     pcp_data = pcp_data[pcp_axis].groupby("location")[pcp_axis[1:]].mean().reset_index()
     
-    pcp_data_top = pcp_data.sort_values(by = "new_cases").tail(40)
-    pcp_data_bottom = pcp_data.sort_values(by = "new_cases").tail(20)
+    # pcp_data_top = pcp_data.sort_values(by = "new_cases").tail(40)
+    # pcp_data_bottom = pcp_data.sort_values(by = "new_cases").tail(20)
     
-    pcp_data = pd.concat([pcp_data_top, pcp_data_bottom],ignore_index=True)
+    # pcp_data = pd.concat([pcp_data_top, pcp_data_bottom],ignore_index=True)
     # print(len(pcp_data.id.unique()))
     
     return json.dumps(pcp_data.to_dict(orient="records"))
@@ -121,7 +139,7 @@ def get_linechart_data():
     global bubble_df
     
     line_df = pd.DataFrame()
-    country_bubble_df = pd.DataFrame()
+    npi_data = pd.DataFrame()
     
     country = "world"
     
@@ -133,26 +151,27 @@ def get_linechart_data():
     if(country == "world"):        
         line_df = world_line_df
     else:
-        line_df = data.loc[data.location == country, ["date", "new_cases_smoothed", "new_deaths_smoothed", "new_vaccinations_smoothed"]]
+        line_df = data.loc[data.id == country, ["date", "new_cases_smoothed", "new_deaths_smoothed", "new_vaccinations_smoothed"]]
         line_df.date = line_df.date.astype("str")
         line_df.rename(columns={'new_cases_smoothed': 'new_cases', 'new_deaths_smoothed': 'new_deaths', "new_vaccinations_smoothed" : "new_vaccinations"}, inplace=True)
     
     print(line_df)
     
     if(country != "world"):
-        country_bubble_df = bubble_df.loc[bubble_df['Country']==country]
+        npi_data = bubble_df.loc[bubble_df['id']==country]
     else:
-        country_bubble_df = bubble_df
-        
-    country_bubble_df['Date'] = pd.to_datetime(country_bubble_df.Date)
-
-    npi_data =  country_bubble_df.groupby('Date')['Measure_L1'].value_counts().unstack().stack(dropna=True).reset_index(name="Count") 
-
-    npi_data['Count'] = npi_data['Count'].astype('int32')
-    npi_data['Date'] = npi_data['Date'].astype('str')
-    npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace('\s+', '_') 
-    npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace(',', '')
-    npi_data.rename(columns={'Date':'date'},inplace=True)
+        npi_data = bubble_df
+    
+    if(npi_data.shape[0] != 0):
+        npi_data['Date'] = pd.to_datetime(npi_data.Date)
+    
+        npi_data =  npi_data.groupby('Date')['Measure_L1'].value_counts().reset_index(name="Count") 
+    
+        npi_data['Count'] = npi_data['Count'].astype('int32')
+        npi_data['Date'] = npi_data['Date'].astype('str')
+        npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace('\s+', '_') 
+        npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace(',', '')
+        npi_data.rename(columns={'Date':'date'},inplace=True)
     # print(npi_data.Measure_L1)
     
     # print(world_line_df)

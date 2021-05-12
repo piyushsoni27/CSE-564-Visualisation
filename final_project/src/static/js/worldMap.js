@@ -13,6 +13,26 @@ function worldMap(dataset, attr, countries) {
     // Set tooltips
     document.getElementById("worldmap").innerHTML = "";
 
+    var plotOuter = d3.select("#worldmap")
+        .append("svg")
+        .attr("width", outerWidthWorld)
+        .attr("height", outerHeightWorld)
+        .attr('transform', 'translate(20,20)')
+
+    plotInner = plotOuter
+        .append('g')
+        .attr('id', 'inner-plot')
+        .attr('width', innerWidthWorld)
+        .attr('class', 'map')
+        .attr('height', innerHeightWorld)
+        .attr('transform', 'translate(' + marginsWorld.left + ',' + marginsWorld.top + ')')
+
+    var projection = d3.geoNaturalEarth()
+        .scale(innerWidthWorld / Math.PI / 1.5)
+        .translate([innerWidthWorld / 2, innerHeightWorld / 2]);
+
+    var path = d3.geoPath().projection(projection);
+
     var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
@@ -94,11 +114,6 @@ function worldMap(dataset, attr, countries) {
     var max = d3.max(dataset.features, function(d) { return +d[attr] })
     var min = d3.min(dataset.features, function(d) { return +d[attr] })
 
-    var lowColor = '#f18d8d'
-    var highColor = '#f30707'
-
-    var n = max.toString().length
-
     var step = Math.ceil((max - min) / 6)
     var legends_arr = [];
     var labels = []
@@ -119,36 +134,11 @@ function worldMap(dataset, attr, countries) {
         labels.push("> " + (legends_arr[i - 1] + 1).toString())
     }
 
-    // console.log(legends_arr)
 
     var colorScheme = d3.schemeReds[5];
-    // console.log(colorScheme)
-    // colorScheme.unshift("#eee")
     var colorScale = d3.scaleSqrt()
         .domain(legends_arr)
         .range(colorScheme);
-
-    var plotOuter = d3.select("#worldmap")
-        .append("svg")
-        .attr("width", outerWidthWorld)
-        .attr("height", outerHeightWorld)
-        .attr('transform', 'translate(20,20)')
-
-    plotInner = plotOuter
-        .append('g')
-        .attr('id', 'inner-plot')
-        .attr('width', innerWidthWorld)
-        .attr('class', 'map')
-        .attr('height', innerHeightWorld)
-        .attr('transform', 'translate(' + marginsWorld.left + ',' + marginsWorld.top + ')')
-        // .attr('transform', 'scale(' + 1 + ',' + 1.4 + ')')
-
-
-    var projection = d3.geoNaturalEarth()
-        .scale(innerWidthWorld / Math.PI / 1.5)
-        .translate([innerWidthWorld / 2, innerHeightWorld / 2]);
-
-    var path = d3.geoPath().projection(projection);
 
     plotInner.call(tip);
 
@@ -156,89 +146,90 @@ function worldMap(dataset, attr, countries) {
         .attr("class", "countries")
         .selectAll("path")
         .data(dataset.features)
-        .enter().append("path")
+        .enter()
+        .append("path")
         .attr("d", path)
-        .style("fill", function(d) {
-            if (String(+d[attr]) === "NaN" || !checkCountry(d.properties.name)) {
-                return "gray"
-            }
-            return colorScale(d[attr])
-        })
-        .style('stroke', 'white')
-        .style('stroke-width', 1.5)
-        .style("opacity", 0.8)
-        // tooltips
-        .style("stroke", "white")
-        .style('stroke-width', 0.3)
-        .on('mouseover', function(d) {
-            if (String(+d[attr]) !== "NaN") tip.show(d);
+        // .style("fill", function(d) {
+        //     if (String(+d[attr]) === "NaN" || !checkCountry(d.properties.name)) {
+        //         return "gray"
+        //     }
+        //     return colorScale(d[attr])
+        // })
+        // .style('stroke', 'white')
+        // .style('stroke-width', 1.5)
+        // .style("opacity", 0.8)
+        // // tooltips
+        // .style("stroke", "white")
+        // .style('stroke-width', 0.3)
+        // .on('mouseover', function(d) {
+        //     if (String(+d[attr]) !== "NaN") tip.show(d);
 
-            d3.select(this)
-                .style("opacity", 1)
-                .style("stroke", "white")
-                .style("stroke-width", 3);
-        })
-        .on('mouseout', function(d) {
-            tip.hide(d);
+        //     d3.select(this)
+        //         .style("opacity", 1)
+        //         .style("stroke", "white")
+        //         .style("stroke-width", 3);
+        // })
+        // .on('mouseout', function(d) {
+        //     tip.hide(d);
 
-            d3.select(this)
-                .style("opacity", 0.8)
-                .style("stroke", "white")
-                .style("stroke-width", 0.3);
-        })
-        .on('click', function(d) {
-            if (String(+d[attr]) !== "NaN") {
-                worldmap_country = d.properties.name;
-                console.log(worldmap_country)
+        //     d3.select(this)
+        //         .style("opacity", 0.8)
+        //         .style("stroke", "white")
+        //         .style("stroke-width", 0.3);
+        // })
+        // .on('click', function(d) {
+        //     if (String(+d[attr]) !== "NaN") {
+        //         worldmap_country = d.id;
+        //         console.log(worldmap_country)
 
-                d3.select(this)
-                    .style("opacity", 1)
-                    .style("stroke", "white")
-                    .style("stroke-width", 3);
+        //         d3.select(this)
+        //             .style("opacity", 1)
+        //             .style("stroke", "white")
+        //             .style("stroke-width", 3);
 
-                $.ajax({
-                    type: "POST",
-                    url: "/linechart",
-                    contentType: "application/json",
-                    data: JSON.stringify(worldmap_country),
-                    dataType: "json",
-                    success: function(response) {
-                        lineBubbleData = (response)
-                        linedata = lineBubbleData['lined']
-                        bubbledata = lineBubbleData['bubbled']
-                        createLineChart(linedata, bubbledata, selected_attr)
-                    },
-                    error: function(err) {
-                        console.log(err);
-                    }
-                });
-            } else {
-                $.ajax({
-                    type: "POST",
-                    url: "/linechart",
-                    contentType: "application/json",
-                    data: JSON.stringify("world"),
-                    dataType: "json",
-                    success: function(response) {
-                        lineBubbleData = (response)
-                        linedata = lineBubbleData['lined']
-                        bubbledata = lineBubbleData['bubbled']
-                        createLineChart(linedata, bubbledata, selected_attr)
-                    },
-                    error: function(err) {
-                        console.log(err);
-                    }
-                });
-            }
-            tip.hide()
-        });
+        //         $.ajax({
+        //             type: "POST",
+        //             url: "/linechart",
+        //             contentType: "application/json",
+        //             data: JSON.stringify(worldmap_country),
+        //             dataType: "json",
+        //             success: function(response) {
+        //                 lineBubbleData = (response)
+        //                 linedata = lineBubbleData['lined']
+        //                 bubbledata = lineBubbleData['bubbled']
+        //                 createLineChart(linedata, bubbledata, selected_attr)
+        //             },
+        //             error: function(err) {
+        //                 console.log(err);
+        //             }
+        //         });
+        //     } else {
+        //         $.ajax({
+        //             type: "POST",
+        //             url: "/linechart",
+        //             contentType: "application/json",
+        //             data: JSON.stringify("world"),
+        //             dataType: "json",
+        //             success: function(response) {
+        //                 lineBubbleData = (response)
+        //                 linedata = lineBubbleData['lined']
+        //                 bubbledata = lineBubbleData['bubbled']
+        //                 createLineChart(linedata, bubbledata, selected_attr)
+        //             },
+        //             error: function(err) {
+        //                 console.log(err);
+        //             }
+        //         });
+        //     }
+        //     tip.hide()
+        // });
 
-    plotInner.append("path")
-        .datum(topojson.mesh(dataset.features, function(a, b) {
-            return a.id !== b.id;
-        }))
-        .attr("class", "names")
-        .attr("d", path);
+    // plotInner.append("path")
+    //     .datum(topojson.mesh(dataset.features, function(a, b) {
+    //         return a.id !== b.id;
+    //     }))
+    //     .attr("class", "names")
+    //     .attr("d", path);
 
     // Legend
     var g = plotOuter.append("g")
@@ -269,4 +260,90 @@ function worldMap(dataset, attr, countries) {
         }
         return false;
     }
+
+    function update(dataset){
+        
+        plotInner.selectAll("path")
+        .data(dataset.features)
+        .style("fill", function(d) {
+            if (String(+d[attr]) === "NaN" || !checkCountry(d.properties.name)) {
+                return "gray"
+            }
+            return colorScale(d[attr])
+        })
+        .style('stroke', 'white')
+        .style('stroke-width', 1.5)
+        .style("opacity", 0.8)
+        // tooltips
+        .style("stroke", "white")
+        .style('stroke-width', 0.3)
+        .on('mouseover', function(d) {
+            if (String(+d[attr]) !== "NaN") tip.show(d);
+
+            d3.select(this)
+                .style("opacity", 1)
+                .style("stroke", "white")
+                .style("stroke-width", 3);
+        })
+        .on('mouseout', function(d) {
+            tip.hide(d);
+
+            d3.select(this)
+                .style("opacity", 0.8)
+                .style("stroke", "white")
+                .style("stroke-width", 0.3);
+        })
+        .on('click', function(d) {
+            if (String(+d[attr]) !== "NaN") {
+                worldmap_country = d.id;
+                console.log(worldmap_country)
+
+                worldmapvar = d.id
+                worldmaptrigger.a = d.id
+
+                d3.select(this)
+                    .style("opacity", 1)
+                    .style("stroke", "white")
+                    .style("stroke-width", 3);
+
+                // $.ajax({
+                //     type: "POST",
+                //     url: "/linechart",
+                //     contentType: "application/json",
+                //     data: JSON.stringify(worldmap_country),
+                //     dataType: "json",
+                //     success: function(response) {
+                //         lineBubbleData = (response)
+                //         linedata = lineBubbleData['lined']
+                //         bubbledata = lineBubbleData['bubbled']
+                //         createLineChart(linedata, bubbledata, selected_attr)
+                //     },
+                //     error: function(err) {
+                //         console.log(err);
+                //     }
+                // });
+            } else {
+                // $.ajax({
+                //     type: "POST",
+                //     url: "/linechart",
+                //     contentType: "application/json",
+                //     data: JSON.stringify("world"),
+                //     dataType: "json",
+                //     success: function(response) {
+                //         lineBubbleData = (response)
+                //         linedata = lineBubbleData['lined']
+                //         bubbledata = lineBubbleData['bubbled']
+                //         createLineChart(linedata, bubbledata, selected_attr)
+                //     },
+                //     error: function(err) {
+                //         console.log(err);
+                //     }
+                // });
+            }
+            tip.hide()
+        });
+    }
+
+    update(dataset)
 }
+
