@@ -366,45 +366,6 @@ function createLineChart(data1, bubbledata1, attr) {
             }
         })
 
-    var sizemeasures = 8
-    var sizegroups = ["40", "20", "10", "4", "2", "1"]
-    svg.selectAll("mymeasurecircle")
-        .data(sizegroups)
-        .enter()
-        .append("circle")
-        .attr("class", function(d) { return "legend_circle_" + d })
-        .attr("cx", 600)
-        .attr("cy", function(d, i) { return 210 + i * (size + 5) })
-        .attr("r", function(d, i) { return (6.5 - i) })
-        .style("fill", "black")
-
-    var myheading = ["Government measures", "per day"]
-    svg.selectAll("mymeasureheading")
-        .data(myheading)
-        .enter()
-        .append("text")
-        .attr("class", function(d) { return "legend_text_" + d })
-        .attr("x", 590)
-        .attr("y", function(d, i) { return i * (size + 5) + (size / 2) - 10 + 190 })
-        .style("fill", "green")
-        .text(function(d) { return d })
-        .attr("text-anchor", "left")
-        .style("alignment-baseline", "middle")
-        .style("font-size", "11px")
-
-    svg.selectAll("mymeasuretext")
-        .data(sizegroups)
-        .enter()
-        .append("text")
-        .attr("class", function(d) { return "legend_text_" + d })
-        .attr("x", 600 + size * .9)
-        .attr("y", function(d, i) { return i * (size + 5) + (size / 2) + 5 + 200 })
-        .style("fill", "white")
-        .text(function(d) { return d })
-        .attr("text-anchor", "left")
-        .style("alignment-baseline", "middle")
-        .style("font-size", "11px")
-
     function brushed(d) {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom" || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore brush-by-zoom
         var s = d3.event.selection || x2.range();
