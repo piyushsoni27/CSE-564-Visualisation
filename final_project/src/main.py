@@ -124,7 +124,7 @@ def get_linechart_data():
     npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace('\s+', '_') 
     npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace(',', '')
     npi_data.rename(columns={'Date':'date'},inplace=True)
-    print(npi_data.Measure_L1)
+    # print(npi_data.Measure_L1)
     
     # print(world_line_df)
 

@@ -141,15 +141,16 @@ function createLineChart(data, bubbledata, attr) {
         .attr("x", 0)
         .attr("y", 0);
 
+    var bubble_chart = svg.append("g")
+        .attr("class", "focus")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr("clip-path", "url(#clip)");
+
     var Line_chart = svg.append("g")
         .attr("class", "focus")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr("clip-path", "url(#clip)");
 
-    var bubble_chart = svg.append("g")
-        .attr("class", "focus")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .attr("clip-path", "url(#clip)");
 
     var focus = svg.append("g")
         .attr("class", "focus")
@@ -173,7 +174,7 @@ function createLineChart(data, bubbledata, attr) {
 
     // And when it is not hovered anymore
     var noHighlight = function(d) {
-        d3.selectAll(".bubbles").style("opacity", 1)
+        d3.selectAll(".bubbles").style("opacity", 0.5)
     }
 
     x.domain(d3.extent(data, function(d) { return d.date; }));
@@ -237,23 +238,6 @@ function createLineChart(data, bubbledata, attr) {
     //         .attr("d", line2);
     // }
 
-    Line_chart
-        .append("path")
-        .datum(data)
-        .attr("class", "line")
-        .attr("fill", "none")
-        .attr("stroke", 'black')
-        .attr("stroke-width", 4.5)
-        .attr("d", line);
-    context
-        .append("path")
-        .datum(data)
-        .attr("class", "line")
-        .attr("fill", "none")
-        .attr("stroke", 'black')
-        .attr("stroke-width", 1.5)
-        .attr("d", line2);
-
     bubble_chart.selectAll("dot")
         .data(bubbledata)
         .enter()
@@ -263,6 +247,7 @@ function createLineChart(data, bubbledata, attr) {
         .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
         .attr("r", function(d) { return z(d.Count); })
         .style("fill", function(d) { return myColor(d.Measure_L1); })
+        .style("opacity", .5)
         .on('mouseover', function(d) {
 
             if (!isClicked) {
@@ -283,6 +268,23 @@ function createLineChart(data, bubbledata, attr) {
                     .style("stroke-width", 0.3);
             }
         });
+
+    Line_chart
+        .append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("fill", "none")
+        .attr("stroke", 'black')
+        .attr("stroke-width", 4.5)
+        .attr("d", line);
+    context
+        .append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("fill", "none")
+        .attr("stroke", 'black')
+        .attr("stroke-width", 1.5)
+        .attr("d", line2);
 
     context.append("g")
         .attr("class", "axis axis--x")
@@ -309,26 +311,31 @@ function createLineChart(data, bubbledata, attr) {
         .data(allgroups)
         .enter()
         .append("circle")
+        .attr("class", function(d) { return "legend_circle_" + d })
         .attr("cx", 310)
         .attr("cy", function(d, i) { return 10 + i * (size + 5) })
         .attr("r", 4)
         .style("fill", function(d) { return myColor(d) })
         .on("mouseover", function(d) {
-            console.log(d)
+            // console.log(d)
             if (!isClicked) {
+                d3.select("." + "legend_circle_" + d).attr("r", 7)
                 highlight(d);
             }
         })
         .on("mouseleave", function(d) {
             if (!isClicked) {
+                d3.select("." + "legend_circle_" + d).attr("r", 4)
                 noHighlight(d);
             }
         })
         .on("click", function(d) {
             if (!isClicked) {
+                d3.select("." + "legend_circle_" + d).attr("r", 7)
                 highlight(d);
                 isClicked = !isClicked
             } else {
+                d3.select("." + "legend_circle_" + d).attr("r", 4)
                 noHighlight(d)
                 isClicked = !isClicked
             }
@@ -340,6 +347,7 @@ function createLineChart(data, bubbledata, attr) {
         .data(allgroups)
         .enter()
         .append("text")
+        .attr("class", function(d) { return "legend_text_" + d })
         .attr("x", 310 + size * .8)
         .attr("y", function(d, i) { return i * (size + 5) + (size / 2) + 5 })
         .style("fill", function(d) { return myColor(d) })
@@ -349,38 +357,42 @@ function createLineChart(data, bubbledata, attr) {
         .style("font-size", "8px")
         .on("mouseover", function(d) {
             if (!isClicked) {
+                d3.select("." + "legend_text_" + d).style("font-size", "14px")
                 highlight(d);
             }
         })
         .on("mouseleave", function(d) {
             if (!isClicked) {
+                d3.select("." + "legend_text_" + d).style("font-size", "8px")
                 noHighlight(d);
             }
         })
         .on("click", function(d) {
             if (!isClicked) {
+                d3.select("." + "legend_text_" + d).style("font-size", "14px")
                 highlight(d);
                 isClicked = !isClicked
-                console.log(isClicked)
+                    // console.log(isClicked)
             } else {
+                d3.select("." + "legend_text_" + d).style("font-size", "8px")
                 noHighlight(d)
                 isClicked = !isClicked
             }
         })
 
-    function brushed() {
+    function brushed(d) {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom" || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore brush-by-zoom
         var s = d3.event.selection || x2.range();
         x.domain(s.map(x2.invert, x2));
 
-        Line_chart.selectAll(".line").attr("d", line);
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
             .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
+            .style("opacity", .5)
             .on('mouseover', function(d) {
-                console.log(isClicked)
+                // console.log(isClicked)
                 if (!isClicked) {
                     tip.show(d);
 
@@ -399,16 +411,16 @@ function createLineChart(data, bubbledata, attr) {
                         .style("stroke-width", 0.3);
                 }
             });
+        Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
-        focus.select(".axis--x").call(xAxis);
+        focus.select(".axis--y").call(yAxis);
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
             .scale(width / (s[1] - s[0]))
             .translate(-s[0], 0));
     }
 
-    function brushend() {
+    function brushend(d) {
         if ((d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore brush-by-zoom
-        // console.log(d3.event.sourceEvent.type)
         var s = d3.event.selection || x2.range();
         start_date = new Date(s.map(x2.invert, x2)[0])
         end_date = new Date(s.map(x2.invert, x2)[1])
@@ -423,12 +435,12 @@ function createLineChart(data, bubbledata, attr) {
 
         x.domain(s.map(x2.invert, x2));
 
-        Line_chart.selectAll(".line").attr("d", line);
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
             .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
+            .style("opacity", .5)
             .on('mouseover', function(d) {
                 if (!isClicked) {
                     tip.show(d);
@@ -448,7 +460,7 @@ function createLineChart(data, bubbledata, attr) {
                         .style("stroke-width", 0.3);
                 }
             });
-        focus.select(".axis--x").call(xAxis);
+        Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
             .scale(width / (s[1] - s[0]))
@@ -461,12 +473,12 @@ function createLineChart(data, bubbledata, attr) {
         // console.log("Zoom 0 " + t.rescaleX(x2).domain()[0])
         // console.log("Zoom 1" + t.rescaleX(x2).domain()[1])
         x.domain(t.rescaleX(x2).domain());
-        Line_chart.selectAll(".line").attr("d", line);
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
             .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
+            .style("opacity", .5)
             .on('mouseover', function(d) {
                 if (!isClicked) {
                     tip.show(d);
@@ -486,6 +498,7 @@ function createLineChart(data, bubbledata, attr) {
                         .style("stroke-width", 0.3);
                 }
             });
+        Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
         // console.log("t invert ", t.invertX);
         // console.log("t " + t);
@@ -509,12 +522,13 @@ function createLineChart(data, bubbledata, attr) {
         // console.log("Zoom 0 " + t.rescaleX(x2).domain()[0])
         // console.log("Zoom 1" + t.rescaleX(x2).domain()[1])
         x.domain(t.rescaleX(x2).domain());
-        Line_chart.selectAll(".line").attr("d", line);
+
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
             .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
+            .style("opacity", .5)
             .on('mouseover', function(d) {
                 if (!isClicked) {
                     tip.show(d);
@@ -534,6 +548,7 @@ function createLineChart(data, bubbledata, attr) {
                         .style("stroke-width", 0.3);
                 }
             });
+        Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
         // console.log("t invert ", t.invertX);
         // console.log("t " + t);
