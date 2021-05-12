@@ -92,7 +92,7 @@ color:white;
 
 .countries {
     fill: none;
-    stroke: #fff;
+    stroke: rgb(177, 173, 173);
     stroke-linejoin: round;
   }
   .legendThreshold {

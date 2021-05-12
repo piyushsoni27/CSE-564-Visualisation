@@ -53,6 +53,36 @@ def preprocess():
     data.reset_index(drop=True, inplace=True)
     data.rename({"iso_code" : "id"}, axis="columns", inplace=True)
     data['date'] = pd.to_datetime(data['date'])
+    
+    countries = []
+    
+    for i in range(len(gj["features"])):
+        id = gj["features"][i]["id"]
+        if(id in data["id"].values):
+            countries.append(id)
+            
+    data = data.loc[data.id.isin(countries)].reset_index(drop=True)
+    data = data.loc[(data.human_development_index != 0) & (data.median_age != 0) & (data.gdp_per_capita != 0)].reset_index(drop=True)
+    
+    
+@app.route("/pcp", methods=["POST" , "GET"])
+def get_pcp_data():
+    global data
+    
+    pcp_data = data
+    
+    # print(pcp_data.location.unique())
+    
+    pcp_axis = ["location", 'gdp_per_capita', 'stringency_index', 'human_development_index', 'median_age', 'hospital_beds_per_thousand', 'new_cases', 'new_deaths', 'new_vaccinations']
+    pcp_data = pcp_data[pcp_axis].groupby("location")[pcp_axis[1:]].mean().reset_index()
+    
+    pcp_data_top = pcp_data.sort_values(by = "new_cases").tail(40)
+    pcp_data_bottom = pcp_data.sort_values(by = "new_cases").tail(20)
+    
+    pcp_data = pd.concat([pcp_data_top, pcp_data_bottom],ignore_index=True)
+    # print(len(pcp_data.id.unique()))
+    
+    return json.dumps(pcp_data.to_dict(orient="records"))
 
 @app.route("/worldmap", methods=["POST" , "GET"])
 def get_worldmap_data():
@@ -66,9 +96,9 @@ def get_worldmap_data():
         start_date = pd.to_datetime(dates["start"])
         end_date = pd.to_datetime(dates["end"])
                 
-    date_check = np.where((data.date>=start_date) & (data.date<=end_date))
+    # date_check = np.where((data.date>=start_date) & (data.date<=end_date))
     
-    filtered_data = data.loc[date_check]
+    filtered_data = data.loc[(data.date>=start_date) & (data.date<=end_date)]
     
     groupby_data = filtered_data.groupby(["id"])
     
@@ -102,7 +132,6 @@ def get_linechart_data():
     
     if(country == "world"):        
         line_df = world_line_df
-    
     else:
         line_df = data.loc[data.location == country, ["date", "new_cases_smoothed", "new_deaths_smoothed", "new_vaccinations_smoothed"]]
         line_df.date = line_df.date.astype("str")
@@ -173,7 +202,7 @@ def home():
 
 if(__name__ == "__main__"):
     preprocess()
-    print(data)
+    get_pcp_data()
     # country_codes = data.iso_code.unique()
     # world_data = pd.DataFrame(columns=("iso_code", "new_cases", "new_deaths"))
     # world_data.iso_code = country_codes

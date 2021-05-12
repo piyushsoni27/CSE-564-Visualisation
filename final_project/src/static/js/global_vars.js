@@ -47,3 +47,15 @@ $.ajax({
         console.log(err);
     }
 });
+
+$.ajax({
+    type: "GET",
+    url: "/pcp",
+    success: function(response) {
+        pcpData = JSON.parse(response)
+        plot_pcp(pcpData)
+    },
+    error: function(err) {
+        console.log(err);
+    }
+});
