@@ -468,7 +468,7 @@ function createLineChart(data1, bubbledata1, attr) {
         selected_start_date = start_date.getFullYear() + '-' + (start_date.getMonth() + 1) + '-' + start_date.getDate()
         selected_end_date = end_date.getFullYear() + '-' + (end_date.getMonth() + 1) + '-' + end_date.getDate()
 
-        lineChartTrigger = selected_start_date
+        lineChartTrigger.a = selected_start_date
 
         x.domain(s.map(x2.invert, x2));
 
@@ -520,10 +520,8 @@ function createLineChart(data1, bubbledata1, attr) {
         console.log("Zoom 0 " + selected_start_date)
         console.log("Zoom 1 " + selected_end_date)
 
-        update()
+        lineChartTrigger.a = selected_start_date
 
-        // console.log("Zoom 0 " + t.rescaleX(x2).domain()[0])
-        // console.log("Zoom 1" + t.rescaleX(x2).domain()[1])
         x.domain(t.rescaleX(x2).domain());
 
         bubble_chart.selectAll(".bubbles")
