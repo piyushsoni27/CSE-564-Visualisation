@@ -243,11 +243,6 @@ function createLineChart(data, bubbledata, attr) {
         .enter()
         .append("circle")
         .attr("class", function(d) { return "bubbles " + d.Measure_L1 })
-        .attr("cx", function(d) { return x(d.date); })
-        .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
-        .attr("r", function(d) { return z(d.Count); })
-        .style("fill", function(d) { return myColor(d.Measure_L1); })
-        .style("opacity", .5)
         .on('mouseover', function(d) {
 
             if (!isClicked) {
@@ -267,7 +262,13 @@ function createLineChart(data, bubbledata, attr) {
                     .style("stroke", "white")
                     .style("stroke-width", 0.3);
             }
-        });
+        })
+        .transition().duration(1000)
+        .attr("cx", function(d) { return x(d.date); })
+        .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+        .attr("r", function(d) { return z(d.Count); })
+        .style("fill", function(d) { return myColor(d.Measure_L1); })
+        .style("opacity", .5);
 
     Line_chart
         .append("path")
@@ -280,7 +281,7 @@ function createLineChart(data, bubbledata, attr) {
     context
         .append("path")
         .datum(data)
-        .attr("class", "line")
+        .attr("class", "line_mini")
         .attr("fill", "none")
         .attr("stroke", 'black')
         .attr("stroke-width", 1.5)
@@ -300,7 +301,7 @@ function createLineChart(data, bubbledata, attr) {
         .attr("class", "zoom")
         .attr("width", width / 2)
         .attr("height", height / 2)
-        .attr("transform", "translate(" + (margin.left + 200) + "," + margin.top + ")")
+        .attr("transform", "translate(" + (margin.left + 300) + "," + margin.top + ")")
         .call(zoom);
 
     // Add one dot in the legend for each name.
@@ -430,26 +431,7 @@ function createLineChart(data, bubbledata, attr) {
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .style("opacity", .5)
-            .on('mouseover', function(d) {
-                // console.log(isClicked)
-                if (!isClicked) {
-                    tip.show(d);
 
-                    d3.select(this)
-                        .style("opacity", 1)
-                        .style("stroke", "white")
-                        .style("stroke-width", 3);
-                }
-            })
-            .on('mouseout', function(d) {
-                if (!isClicked) {
-                    tip.hide(d);
-                    d3.select(this)
-                        .style("opacity", 0.8)
-                        .style("stroke", "white")
-                        .style("stroke-width", 0.3);
-                }
-            });
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
         focus.select(".axis--y").call(yAxis);
@@ -480,25 +462,7 @@ function createLineChart(data, bubbledata, attr) {
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .style("opacity", .5)
-            .on('mouseover', function(d) {
-                if (!isClicked) {
-                    tip.show(d);
 
-                    d3.select(this)
-                        .style("opacity", 1)
-                        .style("stroke", "white")
-                        .style("stroke-width", 3);
-                }
-            })
-            .on('mouseout', function(d) {
-                if (!isClicked) {
-                    tip.hide(d);
-                    d3.select(this)
-                        .style("opacity", 0.8)
-                        .style("stroke", "white")
-                        .style("stroke-width", 0.3);
-                }
-            });
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
@@ -518,25 +482,7 @@ function createLineChart(data, bubbledata, attr) {
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .style("opacity", .5)
-            .on('mouseover', function(d) {
-                if (!isClicked) {
-                    tip.show(d);
 
-                    d3.select(this)
-                        .style("opacity", 1)
-                        .style("stroke", "white")
-                        .style("stroke-width", 3);
-                }
-            })
-            .on('mouseout', function(d) {
-                if (!isClicked) {
-                    tip.hide(d);
-                    d3.select(this)
-                        .style("opacity", 0.8)
-                        .style("stroke", "white")
-                        .style("stroke-width", 0.3);
-                }
-            });
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
         // console.log("t invert ", t.invertX);
@@ -568,7 +514,70 @@ function createLineChart(data, bubbledata, attr) {
             .attr("r", function(d) { return z(d.Count); })
             .style("fill", function(d) { return myColor(d.Measure_L1); })
             .style("opacity", .5)
+
+        Line_chart.selectAll(".line").attr("d", line);
+        focus.select(".axis--x").call(xAxis);
+        // console.log("t invert ", t.invertX);
+        // console.log("t " + t);
+        context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+    }
+
+    function type(d) {
+        d.date = parseDate(d.date);
+        d.new_cases = +d.new_cases;
+        return d;
+    }
+
+    function updateLineChart(data, bubbledata) {
+        var parseDate = d3.timeParse("%Y-%m-%d");
+
+        data.forEach(d => {
+            d.date = parseDate(d.date)
+            d[attr] = +d[attr]
+        });
+
+        bubbledata.forEach(d => {
+            d.date = parseDate(d.date)
+            d.Count = +d.Count
+        });
+
+        var linedata_max = d3.max(data, function(d) { return +d[attr]; })
+        var linedata_min = d3.min(data, function(d) { return +d[attr]; })
+        var bubbledata_max = d3.max(bubbledata, function(d) { return d.Count; })
+        var bubbledata_min = d3.min(bubbledata, function(d) { return d.Count; })
+
+        x.domain(d3.extent(data, function(d) { return d.date; }));
+        y.domain([0, d3.max(data, function(d) { return d[attr]; })]);
+        x2.domain(x.domain());
+        y2.domain(y.domain());
+        // x.domain(d3.extent(data.line_chart_data_crime, d => xValue(d)))
+        // y.domain([0, d3.max(data.line_chart_data_crime, d => yValue(d))]).nice()
+        // yR.domain([0, d3.max(data.line_chart_data_disaster, d => yValueR(d))]).nice()
+
+        // x2.domain(x.domain());
+        // y2.domain(y.domain());
+        // y2R.domain(yR.domain());
+
+        d3.select(".axis--x").transition().duration(1000).call(xAxis);
+        d3.select(".axis--y").transition().duration(1000).call(yAxis);
+        // d3.select(".axis--y-R").transition().duration(1000).call(yAxisR);
+
+        d3.select('.line').datum(data).attr('d', line)
+            // d3.select('.line2').datum(data.line_chart_data_disaster).attr('d', line2)
+
+        bubblepoints = bubble_chart.selectAll(".dot").data(bubbledata)
+
+        bubblepoints.enter()
+            .append("circle")
+            .merge(bubblepoints)
+            .attr("class", function(d) { return "bubbles " + d.Measure_L1 })
+            .attr("cx", function(d) { return x(d.date); })
+            .attr("cy", function(d) { return y((d.Count / (bubbledata_max)) * ((linedata_max - linedata_min) / 1.1)); })
+            .attr("r", function(d) { return z(d.Count); })
+            .style("fill", function(d) { return myColor(d.Measure_L1); })
+            .style("opacity", .5)
             .on('mouseover', function(d) {
+
                 if (!isClicked) {
                     tip.show(d);
 
@@ -586,17 +595,12 @@ function createLineChart(data, bubbledata, attr) {
                         .style("stroke", "white")
                         .style("stroke-width", 0.3);
                 }
-            });
-        Line_chart.selectAll(".line").attr("d", line);
-        focus.select(".axis--x").call(xAxis);
-        // console.log("t invert ", t.invertX);
-        // console.log("t " + t);
-        context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
-    }
+            })
+            .transition().duration(1000);
 
-    function type(d) {
-        d.date = parseDate(d.date);
-        d.new_cases = +d.new_cases;
-        return d;
+        bubblepoints.exit().remove()
+
+        d3.select('.line_mini').datum(data).attr('d', line2)
+            // d3.select('.line2-mini').datum(data.line_chart_data_disaster).attr('d', line2_mini)
     }
 }
