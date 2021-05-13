@@ -196,7 +196,7 @@ function createChoropleth(data, attr, countries) {
                 if (String(+d[attr]) === "NaN") {
                     return "black"
                 }
-                if(worldmap_country === "world" || d.id === worldmap_country)
+                if (worldmap_country === "world" || d.id === worldmap_country)
                     return ramp(+d[attr])
 
                 return "gray"

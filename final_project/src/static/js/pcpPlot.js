@@ -6,10 +6,15 @@ var outerWidthpcp = 800,
     innerWidthpcp = outerWidthpcp - marginspcp.left - marginspcp.right,
     innerHeightpcp = outerHeightpcp - marginspcp.top - marginspcp.bottom;
 
-function plot_pcp(pcp_data) {
-    var countrytoid = {}
-    var countries = []
+var pcp_data
+var countrytoid = {}
+var countries = []
 
+function plot_pcp(pcp_data1) {
+    pcp_data = pcp_data1
+
+    countrytoid = {}
+    countries = []
     pcp_data.forEach(element => {
         countries.push(element["location"])
         countrytoid[element["location"]] = element["id"]
@@ -104,12 +109,13 @@ function plot_pcp(pcp_data) {
         .data(pcp_data)
         .enter()
         .append("path")
+        .on("mouseover", highlight)
+        .on("mouseleave", doNotHighlight)
         .attr("d", line)
         .attr("class", function(d) { return "line " + d.id })
         .style('stroke', function(d) { return color(d.cluster); })
         .style("opacity", 0.7)
-        .on("mouseover", highlight)
-        .on("mouseleave", doNotHighlight);
+
 
     // Add a group element for each dimension.
     var g = svg.selectAll(".dimension")
@@ -255,4 +261,128 @@ function plot_pcp(pcp_data) {
             // console.log(selected_countries)
     }
 
+    function update_pcp(pcp_data1) {
+        // console.log("update")
+        pcp_data = pcp_data1
+        countrytoid = {}
+        countries = []
+        pcp_data.forEach(element => {
+            countries.push(element["location"])
+            countrytoid[element["location"]] = element["id"]
+        });
+
+        dimensions = d3.keys(pcp_data[0]).filter(function(key) {
+            if (key !== "" && key !== "location" && key != "id") {
+                y[key] = d3.scaleLinear()
+                    .domain(d3.extent(pcp_data, function(d) { return +d[key]; }))
+                    .range([innerHeightpcp - 50, 0]);
+                return key;
+            }
+            if (key === "location") {
+                // console.log(pcp_data.location)
+                y[key] = d3.scaleBand()
+                    .domain(countries)
+                    .range([innerHeightpcp - 50, 0]);
+                return key;
+            }
+
+            ;
+        });
+
+        // Creata a x scale for each dimension
+        x.domain(dimensions)
+
+        var backgroundpath = d3.select(".background").selectAll("path").data(pcp_data)
+        backgroundpath.enter()
+            .append("path")
+            .merge(backgroundpath)
+            .attr("class", "background")
+            .transition().duration(1000)
+            .attr("d", line);
+        backgroundpath.exit().remove()
+
+        // Add blue foreground lines for focus.
+        var foregroundpath = d3.select(".foreground").selectAll("path").data(pcp_data)
+        foregroundpath
+            .enter()
+            .append("path")
+            .merge(foregroundpath)
+            .attr("class", "foreground")
+            .on("mouseover", highlight)
+            .on("mouseleave", doNotHighlight)
+            .transition().duration(1000)
+            .attr("d", line)
+            .attr("class", function(d) { return "line " + d.id })
+            .style('stroke', function(d) { return color(d.cluster); })
+            .style("opacity", 0.7)
+        foregroundpath.exit().remove()
+
+        // Add a group element for each dimension.
+        var dimensionprev = d3.selectAll(".dimension").data(dimensions)
+        d3.selectAll(".dimension")
+            .data(dimensions)
+            .enter().append("g")
+            .merge(dimensionprev)
+            .attr("class", "dimension")
+            .call(d3.drag()
+                .on("start", function(d) {
+                    svg.selectAll(".line")
+                        .transition().duration(200)
+                        .style("stroke", "lightgrey")
+                        .style("opacity", "0.2")
+                    dragging[d] = x(d);
+                    // background.attr("visibility", "hidden");
+                })
+                .on("drag", function(d) {
+                    dragging[d] = Math.min(width, Math.max(0, d3.event.x));
+                    foreground.attr("d", line);
+                    dimensions.sort(function(a, b) { return position(a) - position(b); });
+                    x.domain(dimensions);
+                    g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
+                })
+                .on("end", function(d) {
+                    delete dragging[d];
+                    transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+                    transition(foreground).attr("d", line);
+
+                    svg.selectAll(".line")
+                        .transition().duration(200).delay(1000)
+                        .style("stroke", function(d) { return (color(d.cluster)) })
+                        .style("opacity", "0.4")
+                }))
+            .transition().duration(1000)
+            .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+
+        dimensionprev.exit().remove()
+
+        // // Add an axis and title.
+        // d3.selectAll(".axispcp")
+        //     .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
+        //     .append("text")
+        //     .style("text-anchor", "middle")
+        //     .attr("transform", "rotate(-10)")
+        //     .attr("fill", "rgb(156, 152, 152)")
+        //     .attr("font-size", "13")
+        //     .attr("y", -9)
+        //     .text(function(d) { return d; })
+        //     .style("stroke", "rgb(156, 152, 152)");
+    }
+
+    function update_pcp_countries(w_country) {
+        d3.select('.foreground').selectAll('path').each(function(d) {
+            if (d.id === w_country) {
+                console.log("T")
+                    // d3.select(this).style("display", null)
+                d3.select(this).style("stroke", "red").style("opacity", 1)
+            } else {
+                console.log("F")
+                d3.select(this).style("stroke", color(d.cluster))
+            }
+        })
+    }
+
+    worldMapTrigger.registerListener(function(val) {
+        console.log(worldmap_country)
+        update_pcp_countries(worldmap_country)
+    });
 }

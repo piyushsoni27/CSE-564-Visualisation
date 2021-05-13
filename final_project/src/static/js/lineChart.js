@@ -597,25 +597,25 @@ function createLineChart(data1, bubbledata1, attr) {
         d3.select('.line_mini').datum(data).transition().duration(1000).attr('d', line2)
     }
 
-    worldMapTrigger.registerListener(function(val) {
-        // console.log(worldmap_country)
-        $(document).ready(function() {
-            $.ajax({
-                type: "POST",
-                url: "/linechart",
-                contentType: "application/json",
-                data: JSON.stringify(worldmap_country),
-                dataType: "json",
-                success: function(response) {
-                    lineBubbleData = (response)
-                    linedata = lineBubbleData['lined']
-                    bubbledata = lineBubbleData['bubbled']
-                    updateLineChart(linedata, bubbledata, selected_attr)
-                },
-                error: function(err) {
-                    console.log(err);
-                }
-            });
-        });
-    });
+    // worldMapTrigger.registerListener(function(val) {
+    //     // console.log(worldmap_country)
+    //     $(document).ready(function() {
+    //         $.ajax({
+    //             type: "POST",
+    //             url: "/linechart",
+    //             contentType: "application/json",
+    //             data: JSON.stringify(worldmap_country),
+    //             dataType: "json",
+    //             success: function(response) {
+    //                 lineBubbleData = (response)
+    //                 linedata = lineBubbleData['lined']
+    //                 bubbledata = lineBubbleData['bubbled']
+    //                 updateLineChart(linedata, bubbledata, selected_attr)
+    //             },
+    //             error: function(err) {
+    //                 console.log(err);
+    //             }
+    //         });
+    //     });
+    // });
 }

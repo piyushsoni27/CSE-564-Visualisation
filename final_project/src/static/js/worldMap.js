@@ -288,7 +288,7 @@ function worldMap(dataset, attr, countries) {
                 dataType: "json",
                 success: function(response) {
                     pcpData = (response)
-                    plot_pcp(pcpData)
+                    update_pcp(pcpData)
                 },
                 error: function(err) {
                     console.log(err);
