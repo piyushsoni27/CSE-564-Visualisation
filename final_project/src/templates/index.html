@@ -46,74 +46,74 @@
         </div>
     </div>
 
-        <div id="dashboard" class="container-fluid">
-            <div class="row">
-                <div class="col-sm-5" style="padding-right: 5px;">
-                    <div class="dash-unit">
-                        <dtitle id="worldTitle">AVERAGE DAILY NEW_CASES BETWEEN 2020-1-1 TO 2021-4-17</dtitle>
-                        <hr>
-                        <div class='row'>
-                        </div>
-                        <div class="row" title="Choropleth">
-                            <div id="worldmap-legend-svg" class="col-sm-1"></div>
-                            <div id="worldmap" class="col-sm-11"></div>
-                        </div>
-
+    <div id="dashboard" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-5" style="padding-right: 5px;">
+                <div class="dash-unit">
+                    <dtitle id="worldTitle">AVERAGE DAILY NEW_CASES BETWEEN 2020-1-1 TO 2021-4-17</dtitle>
+                    <hr>
+                    <div class='row'>
                     </div>
+                    <div class="row" title="Choropleth">
+                        <div id="worldmap-legend-svg" class="col-sm-1"></div>
+                        <div id="worldmap" class="col-sm-11"></div>
+                    </div>
+
                 </div>
-                <div class="col-sm-7" style="padding-left: 5px;">
-                    <div class="dash-unit" title="Time-Series line plot">
-                        <dtitle id="lineTitle">AVERAGE DAILY NEW_CASES OF WORLD BETWEEN 2020-1-1 TO 2021-4-17</dtitle>
-                        <select id='covidattr'>
+            </div>
+            <div class="col-sm-7" style="padding-left: 5px;">
+                <div class="dash-unit" title="Time-Series line plot">
+                    <dtitle id="lineTitle">AVERAGE DAILY NEW_CASES OF WORLD BETWEEN 2020-1-1 TO 2021-4-17</dtitle>
+                    <select id='covidattr'>
                             <option value="new_cases">Daily Cases</option>
                             <option value="new_deaths">Daily Deaths</option>
                             <option value="new_vaccinations">Daily Vaccinations</option>
                         </select>
-                        <button id="resetAll" onClick="console.log('HI')">Reset</button>
-                        <hr>
-                        <div id="linechart"></div>
-                    </div>
+                    <button id="resetAll" class="button" onClick="console.log('HI')">Reset</button>
+                    <hr>
+                    <div id="linechart"></div>
                 </div>
-
             </div>
-            <div class="row">
-                <div class="col-sm-6" style="padding-right: 5px;">
-                    <div class="dash-unit" title="Parallel Axis Coordinate Plot">
-                        <dtitle id="pcpTitle">PARALLEL CO-ORDINATES PLOT BETWEEN 2020-1-1 TO 2021-4-17</dtitle>
-                        <hr>
-                        <div id="pcp">
-                            <svg id='svgpcplot'></svg>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-2" style="padding-left: 5px; padding-right: 5px;">
-                    <div class="dash-unit" title="Covid Statistics Dashboard">
-                        <dtitle id="statTitle">Covid Statistics</dtitle>
-                        <hr>
-                        <div id="covidstats">
-                            <div id='svgcovidstats'></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4" style="padding-left: 5px;">
-                    <div class="dash-unit" title="Word Cloud">
-                        <dtitle id="wordCloudTitle"></dtitle>
-                        <hr>
-                        <div id="wordcloud">
-                            <svg id='svgWordCloud'></svg>
-                        </div>
-                    </div>
-                </div>
 
-            </div>
         </div>
+        <div class="row">
+            <div class="col-sm-6" style="padding-right: 5px;">
+                <div class="dash-unit" title="Parallel Axis Coordinate Plot">
+                    <dtitle id="pcpTitle">PARALLEL CO-ORDINATES PLOT BETWEEN 2020-1-1 TO 2021-4-17</dtitle>
+                    <hr>
+                    <div id="pcp">
+                        <svg id='svgpcplot'></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2" style="padding-left: 5px; padding-right: 5px;">
+                <div class="dash-unit" title="Covid Statistics Dashboard">
+                    <dtitle id="statTitle">Covid Statistics</dtitle>
+                    <hr>
+                    <div id="covidstats">
+                        <div id='svgcovidstats'></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4" style="padding-left: 5px;">
+                <div class="dash-unit" title="Word Cloud">
+                    <dtitle id="wordCloudTitle"></dtitle>
+                    <hr>
+                    <div id="wordcloud">
+                        <svg id='svgWordCloud'></svg>
+                    </div>
+                </div>
+            </div>
 
-        <script type="text/javascript" src="static/js/dashboard.js"></script>
-        <script type="text/javascript" src="static/js/choropleth.js"></script>
-        <script type="text/javascript" src="static/js/lineChart.js"></script>
-        <script type="text/javascript" src="static/js/wordCloud.js"></script>
-        <script type="text/javascript" src="static/js/pcpPlot.js"></script>
-        <script type="text/javascript" src="static/js/stats.js"></script>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="static/js/dashboard.js"></script>
+    <script type="text/javascript" src="static/js/choropleth.js"></script>
+    <script type="text/javascript" src="static/js/lineChart.js"></script>
+    <script type="text/javascript" src="static/js/wordCloud.js"></script>
+    <script type="text/javascript" src="static/js/pcpPlot.js"></script>
+    <script type="text/javascript" src="static/js/stats.js"></script>
 
 </body>
 

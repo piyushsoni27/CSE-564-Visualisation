@@ -2,11 +2,11 @@ function createChoropleth(data, attr, countries) {
 
     document.getElementById("worldmap").innerHTML = "";
     document.getElementById("worldmap-legend-svg").innerHTML = "";
-    
+
     attr = selected_attr
 
     var width = 650;
-    var height = 325;
+    var height = 338;
 
     var lowColor = 'rgb(250, 197, 173)'
     var highColor = 'rgb(85, 28, 1)'
@@ -322,7 +322,7 @@ function createChoropleth(data, attr, countries) {
                         }
                         if (p.id === d.id) return ramp(+p[attr])
 
-                        if(selected_countries.length !== maxPCPCountry){
+                        if (selected_countries.length !== maxPCPCountry) {
                             if (checkCountry(p.id, selected_countries)) return ramp(+p[attr])
                         }
                         return "gray"
@@ -345,7 +345,7 @@ function createChoropleth(data, attr, countries) {
                             return "black"
                         }
                         if (p.id === d.id) return ramp(+p[attr])
-                        if(selected_countries.length !== maxPCPCountry){
+                        if (selected_countries.length !== maxPCPCountry) {
                             if (checkCountry(p.id, selected_countries)) return ramp(+p[attr])
                         }
                         return "gray"
