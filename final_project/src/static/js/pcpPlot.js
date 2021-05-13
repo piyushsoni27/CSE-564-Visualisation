@@ -9,8 +9,10 @@ var outerWidthpcp = 800,
 var pcp_data
 var countrytoid = {}
 var countries = []
+var currLine = none
 
 function plot_pcp(pcp_data1) {
+    selected_countries = []
     pcp_data = pcp_data1
 
     countrytoid = {}
@@ -109,8 +111,8 @@ function plot_pcp(pcp_data1) {
         .data(pcp_data)
         .enter()
         .append("path")
-        .on("mouseover", highlight)
-        .on("mouseleave", doNotHighlight)
+        // .on("mouseover", highlight)
+        // .on("mouseleave", doNotHighlight)
         .attr("d", line)
         .attr("class", function(d) { return "line " + d.id })
         .style('stroke', function(d) { return color(d.cluster); })
@@ -254,10 +256,20 @@ function plot_pcp(pcp_data1) {
         }
         selected_countries = []
         d3.select('.foreground').selectAll('path').each(function(d) {
-                if (d3.select(this).style("display") !== "none") {
-                    selected_countries.push(d.id)
-                }
+            if (d3.select(this).style("display") !== "none") {
+                selected_countries.push(d.id)
+            }
         })
+        if (selected_countries.length == 49) {
+            d3.select('.foreground').selectAll('path').each(function(d) {
+                d3.select(this).style("stroke", color(d.cluster)).style("opacity", 0.4)
+            })
+        }
+        if (selected_countries.length == 0) {
+            d3.select('.foreground').selectAll('path').each(function(d) {
+                d3.select(this).style("stroke", color(d.cluster)).style("opacity", 0.4)
+            })
+        }
         pcpTrigger.a = selected_countries
             // console.log(selected_countries)
     }
@@ -375,6 +387,7 @@ function plot_pcp(pcp_data1) {
                 console.log("T")
                     // d3.select(this).style("display", null)
                 d3.select(this).style("stroke", "red").style("opacity", 1)
+                currLine = w_country
             } else {
                 console.log("F")
                 d3.select(this).style("stroke", color(d.cluster))
@@ -382,8 +395,7 @@ function plot_pcp(pcp_data1) {
         })
     }
 
-    worldMapTrigger.registerListener(function(val) {
-        console.log(worldmap_country)
+    worldMapTrigger2.registerListener(function(val) {
         update_pcp_countries(worldmap_country)
     });
 }
