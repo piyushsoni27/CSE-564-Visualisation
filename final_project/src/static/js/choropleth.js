@@ -204,7 +204,7 @@ function createChoropleth(data, attr, countries) {
             .on("mouseout", mouseout)
             .on("click", click)
             .style("stroke", "#FFFFFF")
-            .style("stroke-width", 1)
+            .style("stroke-width", 0.2)
             .style("fill", function(d) {
                 var retVal;
                 if (String(+d[attr]) === "NaN" || String(d[attr]) === "0") {
@@ -284,7 +284,7 @@ function createChoropleth(data, attr, countries) {
             d3.select(this)
                 .style("opacity", 1)
                 .style("stroke", "white")
-                .style("stroke-width", 3);
+                .style("stroke-width", 1);
         }
 
         function mouseout(d) {
@@ -292,7 +292,7 @@ function createChoropleth(data, attr, countries) {
                 .duration('200')
                 .style("opacity", 0);
 
-            d3.select(this).style("stroke-width", 1)
+            d3.select(this).style("stroke-width", 0.2)
             tip.hide(d)
         }
 
@@ -362,7 +362,7 @@ function createChoropleth(data, attr, countries) {
                     d3.select(countries_path_arr[i])
                         .style("opacity", 1)
                         .style("stroke", "white")
-                        .style("stroke-width", 1)
+                        .style("stroke-width", 0.2)
                         .style("fill", function(p) {
                             if (String(+p[attr]) === "NaN" || String(+p[attr]) === "0") {
                                 return "black"
@@ -380,7 +380,7 @@ function createChoropleth(data, attr, countries) {
                     d3.select(countries_path_arr[i])
                         .style("opacity", 1)
                         .style("stroke", "white")
-                        .style("stroke-width", 1)
+                        .style("stroke-width", 0.2)
                         .style("fill", function(p) {
                             if (String(+p[attr]) === "NaN" || String(+p[attr]) === "0") {
                                 return "black"
