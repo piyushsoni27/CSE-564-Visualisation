@@ -80,7 +80,7 @@ def preprocess_pcp_data():
        'SGP', 'SVK', 'SVN', 'KOR', 'ESP', 'SWE', 'CHE', 'SYR', 'TWN',
        'THA', 'GBR', 'USA']
     
-    to_remove = ["SEN", "SLV", "BIH", ]
+    to_remove = ["SEN", "SLV", "BIH","TWN","BEL","HRV" ]
 
     pcp_data = data.loc[data.id.isin(countries)].reset_index(drop=True)
     pcp_data = pcp_data.loc[~pcp_data.id.isin(to_remove)].reset_index(drop=True)  
