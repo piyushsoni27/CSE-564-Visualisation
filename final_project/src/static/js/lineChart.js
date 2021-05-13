@@ -436,7 +436,7 @@ function createLineChart(data1, bubbledata1, attr) {
         lineTitle[6] = selected_start_date
         lineTitle[8] = selected_end_date
 
-        document.getElementById("lineTitle").innerHTML = "Average daily " + selected_attr + " of " + worldmap_country + " between " + selected_start_date + " to " + selected_end_date;
+        document.getElementById("lineTitle").innerHTML = "Average daily " + selected_attr + " of " + locationIDMap[worldmap_country] + " between " + selected_start_date + " to " + selected_end_date;
 
         lineChartTrigger.a = selected_start_date
 
@@ -510,7 +510,7 @@ function createLineChart(data1, bubbledata1, attr) {
         lineTitle[8] = selected_end_date
 
         // if (worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
-        document.getElementById("lineTitle").innerHTML = "Average daily " + selected_attr + " of " + worldmap_country + " between " + selected_start_date + " to " + selected_end_date;
+        document.getElementById("lineTitle").innerHTML = "Average daily " + selected_attr + " of " + locationIDMap[worldmap_country] + " between " + selected_start_date + " to " + selected_end_date;
 
         lineChartTrigger.a = selected_start_date
 
