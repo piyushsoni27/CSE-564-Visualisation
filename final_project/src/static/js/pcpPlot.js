@@ -14,7 +14,7 @@ function plot_pcp(pcp_data1) {
     selected_countries = []
     pcp_data = pcp_data1
 
-    maxPCPCountry =  Object.keys(pcp_data).length
+    maxPCPCountry = Object.keys(pcp_data).length
 
 
     countrytoid = {}
@@ -289,7 +289,7 @@ function plot_pcp(pcp_data1) {
     function update_pcp(pcp_data1) {
         // console.log("update")
         pcp_data = pcp_data1
-        maxPCPCountry =  Object.keys(pcp_data).length
+        maxPCPCountry = Object.keys(pcp_data).length
         countrytoid = {}
         countries = []
         pcp_data.forEach(element => {
@@ -359,10 +359,10 @@ function plot_pcp(pcp_data1) {
         d3.selectAll(".axispcp")
             .each(function(d) { d3.select(this).transition().duration(1000).call(d3.axisLeft().scale(y[d])); })
 
-        d3.select('.foreground').selectAll('path').transition().duration(1000).each(function(d) {
-            d3.selectAll(".axispcp text")
-                .style("fill", "rgb(155, 155, 155)");
+        d3.selectAll(".axispcp text")
+            .style("fill", "rgb(155, 155, 155)");
 
+        d3.select('.foreground').selectAll('path').each(function(d) {
             if (d.id === currLine) {
                 d3.select(this).style("stroke", "#8000ff").style("opacity", 1)
                     .style("stroke-width", 2.5)
@@ -370,6 +370,23 @@ function plot_pcp(pcp_data1) {
                 d3.select(this).style("stroke", color(d.id)).style("opacity", 0.4).style("stroke-width", 1)
             }
         })
+
+        // Add and store a brush for each axis.
+        d3.selectAll(".brush")
+            .each(function(d) {
+                d3.select(this).call(y[d].brush = d3.brushY()
+                    .extent([
+                        [-10, 0],
+                        [10, innerHeightpcp]
+                    ])
+                    .on("start", brushstart)
+                    .on("brush", brush)
+                    .on("end", brushend));
+            })
+            .selectAll("rect")
+            .attr("x", -8)
+            .attr("width", 16);
+
     }
 
     function update_pcp_countries(w_country) {
