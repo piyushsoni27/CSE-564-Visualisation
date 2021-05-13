@@ -73,7 +73,6 @@ function plot_pcp(pcp_data1) {
 
 
     // var color = d3.scaleOrdinal(d3.schemeCategory10);
-    console.log(idcountries)
     var color = d3.scaleOrdinal()
         .domain(idcountries)
         .range(d3.schemeOranges[9]);
@@ -122,7 +121,6 @@ function plot_pcp(pcp_data1) {
         .attr("d", line)
         .attr("class", function(d) { return "line " + d.id })
         .style('stroke', function(d) {
-            console.log(color(d.id))
             return color(d.id);
         })
         .style("opacity", 0.7)
@@ -172,7 +170,10 @@ function plot_pcp(pcp_data1) {
         .attr("font-size", "13")
         .attr("y", -9)
         .text(function(d) { return d; })
-        .style("stroke", "rgb(156, 152, 152)");
+        .style("stroke", "rgb(200, 200, 200)");
+
+    d3.selectAll(".axispcp text")
+        .style("fill", "rgb(155, 155, 155)");
 
     // Add and store a brush for each axis.
     g.append("g")
@@ -356,8 +357,12 @@ function plot_pcp(pcp_data1) {
             .each(function(d) { d3.select(this).transition().duration(1000).call(d3.axisLeft().scale(y[d])); })
 
         d3.select('.foreground').selectAll('path').transition().duration(1000).each(function(d) {
+            d3.selectAll(".axispcp text")
+                .style("fill", "rgb(155, 155, 155)");
+
             if (d.id === currLine) {
                 d3.select(this).style("stroke", "green").style("opacity", 1)
+                    .style("stroke-width", 2.5)
             } else {
                 d3.select(this).style("stroke", color(d.id))
             }
@@ -368,6 +373,7 @@ function plot_pcp(pcp_data1) {
         d3.select('.foreground').selectAll('path').each(function(d) {
             if (d.id === w_country) {
                 d3.select(this).style("stroke", "green").style("opacity", 1)
+                    .style("stroke-width", 2.5)
                 currLine = w_country
             } else {
                 d3.select(this).style("stroke", color(d.id))

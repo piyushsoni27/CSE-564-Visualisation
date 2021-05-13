@@ -169,7 +169,7 @@ function createLineChart(data1, bubbledata1, attr) {
 
     var context = svg.append("g")
         .attr("class", "context")
-        .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+        .attr("transform", "translate(" + margin2.left + "," + (margin2.top + 10) + ")");
 
     // ---------------------------//
     //       HIGHLIGHT GROUP      //
@@ -198,11 +198,7 @@ function createLineChart(data1, bubbledata1, attr) {
     x2.domain(x.domain());
     y2.domain(y.domain());
 
-    if (bubbledata_max > 160) {
-        yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 20]);
-    } else {
-        yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 5]);
-    }
+    yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + bubbledata_max * 0.12]);
 
     focus.append("g")
         .attr("class", "axis axis--x")
@@ -211,9 +207,9 @@ function createLineChart(data1, bubbledata1, attr) {
 
     focus.append("g")
         .attr("class", "axis axis--y")
-        .call(yAxis.tickFormat(function(d){
-            if(d >= 1000000)
-                return (d/1000000).toFixed(2) + 'M';
+        .call(yAxis.tickFormat(function(d) {
+            if (d >= 1000000)
+                return (d / 1000000).toFixed(2) + 'M';
             else return d;
         }));
     focus.append("g")
@@ -225,14 +221,18 @@ function createLineChart(data1, bubbledata1, attr) {
         .attr("transform", "translate(" + width / 2 + " ," + (height + margin.top + 28) + ")")
         .style("text-anchor", "middle")
         .style("font-size", "20px")
-        .text("Time");
+        .attr("fill", "rgb(152, 152, 152)")
+        .text("Time")
+        .style("stroke", "rgb(200, 200, 200)");
 
     // focus chart y label
     focus.append("text")
         .attr("text-anchor", "middle")
         .attr("transform", "translate(" + (-margin.left - 10) + "," + height / 2 + ")rotate(-90)")
         .style("font-size", "18px")
-        .text("daily_" + selected_attr);
+        .attr("fill", "rgb(152, 152, 152)")
+        .text("Daily_" + selected_attr)
+        .style("stroke", "rgb(200, 200, 200)");
 
     bubble_chart.selectAll("dot")
         .data(bubbledata)
@@ -271,15 +271,15 @@ function createLineChart(data1, bubbledata1, attr) {
         .datum(data)
         .attr("class", "line")
         .attr("fill", "none")
-        .attr("stroke", 'black')
-        .attr("stroke-width", 4.5)
+        .attr("stroke", '#b33000')
+        .attr("stroke-width", 2.5)
         .attr("d", line);
     context
         .append("path")
         .datum(data)
         .attr("class", "line_mini")
         .attr("fill", "none")
-        .attr("stroke", 'black')
+        .attr("stroke", '#b33000')
         .attr("stroke-width", 1.5)
         .attr("d", line2);
 
@@ -379,6 +379,9 @@ function createLineChart(data1, bubbledata1, attr) {
             }
         })
 
+    d3.selectAll(".axis text")
+        .style("fill", "rgb(155, 155, 155)");
+
     function brushed(d) {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom" || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore brush-by-zoom
         var s = d3.event.selection || x2.range();
@@ -425,7 +428,7 @@ function createLineChart(data1, bubbledata1, attr) {
         lineTitle[6] = selected_start_date
         lineTitle[8] = selected_end_date
 
-        if(worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
+        if (worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
         else document.getElementById("lineTitle").innerHTML = "Average daily cases of world between " + selected_start_date + " to " + selected_end_date;
 
         console.log(lineTitle.join(" "))
@@ -496,7 +499,7 @@ function createLineChart(data1, bubbledata1, attr) {
         lineTitle[6] = selected_start_date
         lineTitle[8] = selected_end_date
 
-        if(worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
+        if (worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
         else document.getElementById("lineTitle").innerHTML = "Average daily cases of world between " + selected_start_date + " to " + selected_end_date;
 
         lineChartTrigger.a = selected_start_date
@@ -619,6 +622,8 @@ function createLineChart(data1, bubbledata1, attr) {
             d3.selectAll(".circlelegend").transition().duration(1000).style("visibility", "visible");
         }
         d3.select('.line_mini').datum(data).transition().duration(1000).attr('d', line2)
+        d3.selectAll(".axis text").transition().duration(1000)
+            .style("fill", "rgb(155, 155, 155)");
     }
 
     worldMapTrigger.registerListener(function(val) {

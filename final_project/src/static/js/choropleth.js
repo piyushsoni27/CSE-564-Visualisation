@@ -184,6 +184,9 @@ function createChoropleth(data, attr, countries) {
         .attr("transform", "translate(11,10)")
         .call(yAxis)
 
+    d3.selectAll(".y-axis text")
+        .style("fill", "rgb(155, 155, 155)");
+
     function updateChoropleth(data, attr, countries) {
         console.log(selected_countries)
 
@@ -386,6 +389,10 @@ function createChoropleth(data, attr, countries) {
 
         key.selectAll("g.y-axis")
             .transition().duration(100).call(yAxis);
+
+        d3.selectAll(".y-axis text")
+            .style("fill", "rgb(155, 155, 155)");
+
     }
 
     function reset() {
