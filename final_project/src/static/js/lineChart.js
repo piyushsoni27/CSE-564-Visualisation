@@ -382,6 +382,11 @@ function createLineChart(data1, bubbledata1, attr) {
     d3.selectAll(".axis text")
         .style("fill", "rgb(155, 155, 155)");
 
+    if (bubbledata.length == 0) {
+        d3.selectAll(".textlegend").style("visibility", "hidden");
+        d3.selectAll(".circlelegend").style("visibility", "hidden");
+    }
+
     function brushed(d) {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom" || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore brush-by-zoom
         var s = d3.event.selection || x2.range();
