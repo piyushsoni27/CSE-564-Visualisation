@@ -1,8 +1,8 @@
 // https://bl.ocks.org/jasondavies/1341281
 
-var outerWidthpcp = 800,
+var outerWidthpcp = 900,
     outerHeightpcp = 350,
-    marginspcp = { top: 30, right: 50, bottom: 10, left: 70 },
+    marginspcp = { top: 30, right: 50, bottom: 10, left: 80 },
     innerWidthpcp = outerWidthpcp - marginspcp.left - marginspcp.right,
     innerHeightpcp = outerHeightpcp - marginspcp.top - marginspcp.bottom;
 
@@ -17,9 +17,11 @@ function plot_pcp(pcp_data1) {
 
     countrytoid = {}
     countries = []
+    idcountries = []
     pcp_data.forEach(element => {
         countries.push(element["location"])
         countrytoid[element["location"]] = element["id"]
+        idcountries.push(element["id"])
     });
 
     d3.select("#pcp").html("")
@@ -70,11 +72,15 @@ function plot_pcp(pcp_data1) {
         .range([0, innerWidthpcp]);
 
 
-    var color = d3.scaleOrdinal(d3.schemeCategory10);
+    // var color = d3.scaleOrdinal(d3.schemeCategory10);
+    console.log(idcountries)
+    var color = d3.scaleOrdinal()
+        .domain(idcountries)
+        .range(d3.schemeOranges[9]);
 
     var highlight = function(d) {
 
-        selected_cluster = d.cluster
+        selected_cluster = d.id
 
         // first every group turns grey
         svg.selectAll(".line")
@@ -92,7 +98,7 @@ function plot_pcp(pcp_data1) {
     var doNotHighlight = function(d) {
         svg.selectAll(".line")
             .transition().duration(200).delay(1000)
-            .style("stroke", function(d) { return (color(d.cluster)) })
+            .style("stroke", function(d) { return (color(d.id)) })
             .style("opacity", "0.4")
     }
 
@@ -115,7 +121,10 @@ function plot_pcp(pcp_data1) {
         // .on("mouseleave", doNotHighlight)
         .attr("d", line)
         .attr("class", function(d) { return "line " + d.id })
-        .style('stroke', function(d) { return color(d.cluster); })
+        .style('stroke', function(d) {
+            console.log(color(d.id))
+            return color(d.id);
+        })
         .style("opacity", 0.7)
 
 
@@ -148,7 +157,7 @@ function plot_pcp(pcp_data1) {
 
                 svg.selectAll(".line")
                     .transition().duration(200).delay(1000)
-                    .style("stroke", function(d) { return (color(d.cluster)) })
+                    .style("stroke", function(d) { return (color(d.id)) })
                     .style("opacity", "0.4")
             }));
 
@@ -262,12 +271,12 @@ function plot_pcp(pcp_data1) {
         })
         if (selected_countries.length == 49) {
             d3.select('.foreground').selectAll('path').each(function(d) {
-                d3.select(this).style("stroke", color(d.cluster)).style("opacity", 0.4)
+                d3.select(this).style("stroke", color(d.id)).style("opacity", 0.4)
             })
         }
         if (selected_countries.length == 0) {
             d3.select('.foreground').selectAll('path').each(function(d) {
-                d3.select(this).style("stroke", color(d.cluster)).style("opacity", 0.4)
+                d3.select(this).style("stroke", color(d.id)).style("opacity", 0.4)
             })
         }
         pcpTrigger.a = selected_countries
@@ -326,7 +335,7 @@ function plot_pcp(pcp_data1) {
             .transition().duration(1000)
             .attr("d", line)
             .attr("class", function(d) { return "line " + d.id })
-            .style('stroke', function(d) { return color(d.cluster); })
+            .style('stroke', function(d) { return color(d.id); })
             .style("opacity", 0.7)
         foregroundpath.exit().remove()
 
@@ -345,15 +354,23 @@ function plot_pcp(pcp_data1) {
         // Add an axis and title.
         d3.selectAll(".axispcp")
             .each(function(d) { d3.select(this).transition().duration(1000).call(d3.axisLeft().scale(y[d])); })
+
+        d3.select('.foreground').selectAll('path').transition().duration(1000).each(function(d) {
+            if (d.id === currLine) {
+                d3.select(this).style("stroke", "green").style("opacity", 1)
+            } else {
+                d3.select(this).style("stroke", color(d.id))
+            }
+        })
     }
 
     function update_pcp_countries(w_country) {
         d3.select('.foreground').selectAll('path').each(function(d) {
             if (d.id === w_country) {
-                d3.select(this).style("stroke", "red").style("opacity", 1)
+                d3.select(this).style("stroke", "green").style("opacity", 1)
                 currLine = w_country
             } else {
-                d3.select(this).style("stroke", color(d.cluster))
+                d3.select(this).style("stroke", color(d.id))
             }
         })
     }

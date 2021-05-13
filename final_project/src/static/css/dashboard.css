@@ -1,31 +1,32 @@
 body {
-	background:#1f1f1f;
+    background: #1f1f1f;
     font-family: 'Open Sans', sans-serif;
 }
 
-#dashboardHeader h3{
-	text-align: center;
-	color:white;
-	font-weight: bold;
-	padding-bottom: 0;
-	margin-bottom: 0;
-	margin-top: 10px;
+#dashboardHeader h3 {
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    margin-top: 10px;
 }
 
 .dash-unit {
-	margin-top: 10px;		
-	/* margin-bottom: 10px; */
-	padding-bottom:20px;
-	padding-top:10px;
-	padding-left:10px;
-	/* padding-right:1px; */
-	border: 1px solid #383737;
-	background-image:url('../images/sep-half.png');
-	background-color: #3d3d3d;
-	color:white;
-	height:auto;
-	width:auto;
+    margin-top: 10px;
+    /* margin-bottom: 10px; */
+    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-left: 10px;
+    /* padding-right:1px; */
+    border: 1px solid #383737;
+    background-image: url('../images/sep-half.png');
+    background-color: #3d3d3d;
+    color: white;
+    height: auto;
+    width: auto;
 }
+
 
 /* .dash-unit:hover {
 	background-color: #4f4f4f;
@@ -35,36 +36,40 @@ body {
 } */
 
 .dash-unit dtitle {
-	font-size:medium;
-	font-weight: bold;
-	text-transform:uppercase;
-	text-align: center;
-	color:#ffffff;
-	margin:8px;
-	/* padding-left:100px; */
-	height:inherit;
-	letter-spacing: normal;
-	}
-
-.dash-unit dtitle#pcpTitle{
-	padding-left: 250px;
+    font-size: medium;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    color: #ffffff;
+    margin: 8px;
+    /* padding-left:100px; */
+    height: inherit;
+    letter-spacing: normal;
 }
 
-.dash-unit dtitle#wordCloudTitle{
-	padding-left: 20px;
+.dash-unit dtitle#pcpTitle {
+    padding-left: 250px;
 }
 
-.dash-unit dtitle#lineTitle{
-	padding-left: 100px;
+.dash-unit dtitle#wordCloudTitle {
+    padding-left: 20px;
 }
 
-.dash-unit dtitle#worldTitle{
-	padding-left: 100px;
+.dash-unit dtitle#lineTitle {
+    padding-left: 100px;
+}
+
+.dash-unit dtitle#worldTitle {
+    padding-left: 100px;
+}
+
+.dash-unit dtitle#statTitle {
+    padding-left: 60px;
 }
 
 .dash-unit hr {
-  	border: 0;
-  	border-top: 1px solid #151515;
-  	border-top-style: dashed;
-	margin-top:3px;
+    border: 0;
+    border-top: 1px solid #151515;
+    border-top-style: dashed;
+    margin-top: 3px;
 }

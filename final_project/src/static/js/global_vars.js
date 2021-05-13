@@ -12,7 +12,7 @@ var avg_deaths = 0
 var avg_vaccinations = 0
 var statData = ""
 
-var locationIDMap = {}
+var locationIDMap = { "world": "World" }
 
 var lineChartTrigger = {
     aInternal: null,

@@ -200,16 +200,13 @@ def get_stats_data():
         stats_line_df['date'] = pd.to_datetime(stats_line_df['date'])
         line_df_send = stats_line_df.loc[(stats_line_df.date>=start_date) & (stats_line_df.date<=end_date)]
         line_df_send.drop(["date"], axis=1,inplace=True)
-        # line_df_send.date = line_df_send.date.astype("str") 
     else:
         stats_line_df = data.loc[data.id == country, ["date", "new_cases_smoothed", "new_deaths_smoothed", "new_vaccinations_smoothed"]]
         stats_line_df['date'] = pd.to_datetime(stats_line_df['date'])
         line_df_send = stats_line_df.loc[(stats_line_df.date>=start_date) & (stats_line_df.date<=end_date)]
         line_df_send.drop(["date"], axis=1,inplace=True)
-        # line_df_send.date = line_df_send.date.astype("str")
         line_df_send.rename(columns={'new_cases_smoothed': 'new_cases', 'new_deaths_smoothed': 'new_deaths', "new_vaccinations_smoothed" : "new_vaccinations"}, inplace=True)
     
-    print(line_df_send)
     return json.dumps(line_df_send.to_dict(orient="records"))
 
 @app.route("/barchart", methods=["POST" , "GET"])
