@@ -411,6 +411,7 @@ function createLineChart(data1, bubbledata1, attr) {
         focus.select(".axis--x").call(xAxis);
         focus.select(".axis--y").call(yAxis);
         focus.select(".axis--yright").call(yAxisright);
+        d3.selectAll(".axis text").style("fill", "rgb(155, 155, 155)");
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
             .scale(width / (s[1] - s[0]))
             .translate(-s[0], 0));
@@ -457,6 +458,7 @@ function createLineChart(data1, bubbledata1, attr) {
 
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
+        d3.selectAll(".axis text").style("fill", "rgb(155, 155, 155)");
         svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
             .scale(width / (s[1] - s[0]))
             .translate(-s[0], 0));
@@ -483,6 +485,7 @@ function createLineChart(data1, bubbledata1, attr) {
 
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
+        d3.selectAll(".axis text").style("fill", "rgb(155, 155, 155)");
         context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
     }
 
@@ -528,6 +531,7 @@ function createLineChart(data1, bubbledata1, attr) {
 
         Line_chart.selectAll(".line").attr("d", line);
         focus.select(".axis--x").call(xAxis);
+        d3.selectAll(".axis text").style("fill", "rgb(155, 155, 155)");
         context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
     }
 

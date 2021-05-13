@@ -89,8 +89,8 @@ def preprocess_pcp_data():
 def get_pcp_data():
     global pcp_data
     
-    start_date = pd.to_datetime("2020-01-01")
-    end_date = pd.to_datetime("2020-11-23")
+    start_date = pd.to_datetime("2019-01-01")
+    end_date = pd.to_datetime("2022-11-23")
     
     if(request.method == 'POST'):
         dates = request.get_json()
@@ -109,8 +109,8 @@ def get_pcp_data():
 @app.route("/worldmap", methods=["POST" , "GET"])
 def get_worldmap_data():
     
-    start_date = pd.to_datetime("2020-03-25")
-    end_date = pd.to_datetime("2021-03-28")
+    start_date = pd.to_datetime("2019-03-25")
+    end_date = pd.to_datetime("2022-03-28")
     
     if(request.method == 'POST'):
         dates = request.get_json()
@@ -219,8 +219,8 @@ def get_barchart_data():
 def get_wordcloud_data():
     global hashtag_df
     
-    start_date = pd.to_datetime("2021-01-15")
-    end_date = pd.to_datetime("2021-01-30")
+    start_date = pd.to_datetime("2019-01-15")
+    end_date = pd.to_datetime("2022-01-30")
 
     
     if(request.method == 'POST'):
