@@ -235,14 +235,6 @@ function createChoropleth(data, attr, countries) {
 
                 worldMapTrigger.a = d.id
 
-                // d3.select(this)
-                //     .style("opacity", 1)
-                //     .style("stroke", "white")
-                //     .style("stroke-width", 3)
-                //     .style("fill", "red")
-                // console.log(paths._groups[0])
-
-
                 for (i = 0; i < countries_path_arr.length; i++) {
                     d3.select(countries_path_arr[i]).style("fill", function(p) {
                         if (String(+p[attr]) === "NaN") {
@@ -253,7 +245,6 @@ function createChoropleth(data, attr, countries) {
                     })
                 }
 
-                // console.log(clicked_countries)
             } else {
                 worldmap_country = "world"
                 worldMapTrigger.a = "world"
@@ -287,13 +278,11 @@ function createChoropleth(data, attr, countries) {
     function reset() {
         svg.transition()
             .duration(750)
-            // .call( zoom.transform, d3.zoomIdentity.translate(0, 0).scale(1) ); // not in d3 v4
             .call(zoom.transform, d3.zoomIdentity); // updated for d3 v4
     }
 
     function zoomed() {
         g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
-        // g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")"); // not in d3 v4
         g.attr("transform", d3.event.transform); // updated for d3 v4
     }
 
@@ -302,7 +291,6 @@ function createChoropleth(data, attr, countries) {
     }
 
     function checkCountry(country, countries) {
-        // console.log(s)
         for (i = 0; i < countries.length; i++) {
             if (countries[i] === country) {
                 return true;
@@ -320,7 +308,6 @@ function createChoropleth(data, attr, countries) {
         dates.end = selected_end_date
 
         $(document).ready(function() {
-            console.log(dates)
             $.ajax({
                 type: "POST",
                 url: "/worldmap",
@@ -357,7 +344,6 @@ function createChoropleth(data, attr, countries) {
         });
 
         $(document).ready(function() {
-            console.log(dates)
             $.ajax({
                 type: "POST",
                 url: "/pcp",

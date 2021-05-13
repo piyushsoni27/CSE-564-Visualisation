@@ -41,6 +41,8 @@ geo_features = gj['features']
 data = pd.read_csv(data_path)
 data_original = data.copy()
 
+pcp_data = pd.DataFrame()
+
 bar_df = pd.read_csv(barchart_data_path)
 world_line_df = pd.read_csv(world_line_data_path)
 bubble_df = pd.read_csv(bubble_data_path)
@@ -54,14 +56,6 @@ def preprocess():
     data.rename({"iso_code" : "id"}, axis="columns", inplace=True)
     data['date'] = pd.to_datetime(data['date'])
     
-    # countries = ['ALB', 'AUT', 'BEL', 'BIH', 'BRA', 'CAN', 'HKG', 'HRV', 'CZE',
-    #    'DNK', 'ECU', 'EGY', 'SLV', 'EST', 'FIN', 'FRA', 'DEU', 'GHA',
-    #    'GRC', 'HND', 'HUN', 'ISL', 'IND', 'IDN', 'ITA', 'JPN', 'KAZ',
-    #    'RKS', 'KWT', 'LIE', 'LTU', 'MYS', 'MUS', 'MEX', 'MNE', 'NLD',
-    #    'NZL', 'MKD', 'NOR', 'POL', 'PRT', 'IRL', 'ROU', 'SEN', 'SRB',
-    #    'SGP', 'SVK', 'SVN', 'KOR', 'ESP', 'SWE', 'CHE', 'SYR', 'TWN',
-    #    'THA', 'GBR', 'USA']
-    
     countries = []
     
     for i in range(len(gj["features"])):
@@ -70,34 +64,13 @@ def preprocess():
             countries.append(id)
             
     data = data.loc[data.id.isin(countries)].reset_index(drop=True)
-    data = data.loc[(data.human_development_index != 0) & (data.median_age != 0) & (data.gdp_per_capita != 0)].reset_index(drop=True)
     
-    
-@app.route("/pcp", methods=["POST" , "GET"])
-def get_pcp_data():
+
+def preprocess_pcp_data():
     global data
+    global pcp_data
     
-    pcp_data = data
-
-    start_date = pd.to_datetime("2020-03-25")
-    end_date = pd.to_datetime("2021-03-28")
-    
-    if(request.method == 'POST'):
-        dates = request.get_json()
-        print("pcp dates")
-        print(dates)
-        start_date = pd.to_datetime(dates["start"])
-        end_date = pd.to_datetime(dates["end"])
-
-    pcp_data['date'] = pd.to_datetime(pcp_data['date'])
-    print(start_date)
-    print(end_date)
-    
-    pcp_data = pcp_data.loc[(pcp_data.date>=start_date) & (pcp_data.date<=end_date)]
-    # print(filtered_data)
-    
-    # print(pcp_data.location.unique())
-    
+    pcp_data=data
     ## countries in npi data
     countries = ['ALB', 'AUT', 'BEL', 'BIH', 'BRA', 'CAN', 'HKG', 'HRV', 'CZE',
        'DNK', 'ECU', 'EGY', 'SLV', 'EST', 'FIN', 'FRA', 'DEU', 'GHA',
@@ -108,24 +81,30 @@ def get_pcp_data():
        'THA', 'GBR', 'USA']
     
     to_remove = ["SEN", "SLV", "BIH"]
-    
-    pcp_data = pcp_data.loc[pcp_data.id.isin(countries)].reset_index(drop=True)
+
+    pcp_data = data.loc[data.id.isin(countries)].reset_index(drop=True)
     pcp_data = pcp_data.loc[~pcp_data.id.isin(to_remove)].reset_index(drop=True)  
-    pcp_data = pcp_data.loc[(pcp_data.stringency_index != 0) & (pcp_data.new_cases_per_million != 0) & (pcp_data.new_deaths_per_million != 0) & (pcp_data.new_vaccinations_smoothed_per_million != 0)].reset_index(drop=True)
+    
+@app.route("/pcp", methods=["POST" , "GET"])
+def get_pcp_data():
+    global pcp_data
+    
+    start_date = pd.to_datetime("2020-01-01")
+    end_date = pd.to_datetime("2020-11-23")
+    
+    if(request.method == 'POST'):
+        dates = request.get_json()
+
+        start_date = pd.to_datetime(dates["start"])
+        end_date = pd.to_datetime(dates["end"])
+
+    pcp_data_send = pcp_data.loc[(pcp_data.date>=start_date) & (pcp_data.date<=end_date)]
     
     pcp_axis = ["id","location", 'gdp_per_capita', 'stringency_index', 'human_development_index', 'median_age', 'hospital_beds_per_thousand', 'new_cases', 'new_deaths', 'new_vaccinations']
-    pcp_data_temp = pcp_data[pcp_axis].groupby("location")[pcp_axis[2:]].mean().reset_index()
-    pcp_data_temp["id"] = pcp_data["id"].unique()
-    pcp_data = pcp_data_temp
-    
-    
-    # pcp_data_top = pcp_data.sort_values(by = "new_cases").tail(40)
-    # pcp_data_bottom = pcp_data.sort_values(by = "new_cases").tail(20)
-    
-    # pcp_data = pd.concat([pcp_data_top, pcp_data_bottom],ignore_index=True)
-    # print(len(pcp_data.id.unique()))
-    
-    return json.dumps(pcp_data.to_dict(orient="records"))
+    pcp_data_temp = pcp_data_send[pcp_axis].groupby("location")[pcp_axis[2:]].mean().reset_index()
+    pcp_data_temp["id"] = pcp_data_send["id"].unique()
+        
+    return json.dumps(pcp_data_temp.to_dict(orient="records"))
 
 @app.route("/worldmap", methods=["POST" , "GET"])
 def get_worldmap_data():
@@ -135,12 +114,10 @@ def get_worldmap_data():
     
     if(request.method == 'POST'):
         dates = request.get_json()
-        print(dates)
+
         start_date = pd.to_datetime(dates["start"])
         end_date = pd.to_datetime(dates["end"])
-                
-    # date_check = np.where((data.date>=start_date) & (data.date<=end_date))
-    
+                    
     filtered_data = data.loc[(data.date>=start_date) & (data.date<=end_date)]
     
     groupby_data = filtered_data.groupby(["id"])
@@ -170,7 +147,6 @@ def get_linechart_data():
     
     if(request.method == 'POST'):
         country = request.get_json()
-        print(country)
 
     if(country == "world" or country==""):        
         line_df = world_line_df
@@ -178,9 +154,7 @@ def get_linechart_data():
         line_df = data.loc[data.id == country, ["date", "new_cases_smoothed", "new_deaths_smoothed", "new_vaccinations_smoothed"]]
         line_df.date = line_df.date.astype("str")
         line_df.rename(columns={'new_cases_smoothed': 'new_cases', 'new_deaths_smoothed': 'new_deaths', "new_vaccinations_smoothed" : "new_vaccinations"}, inplace=True)
-    
-    # print(line_df)
-    
+        
     if(country != "world"):
         npi_data = bubble_df.loc[bubble_df['id']==country]
     else:
@@ -196,11 +170,7 @@ def get_linechart_data():
         npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace('\s+', '_') 
         npi_data['Measure_L1'] = npi_data['Measure_L1'].str.replace(',', '')
         npi_data.rename(columns={'Date':'date'},inplace=True)
-    # print(npi_data.Measure_L1)
-    
-    # print(world_line_df)
 
-    
     d1 = line_df.to_dict(orient="records")
     d2 = npi_data.to_dict(orient="records")
     D = {'lined':d1,'bubbled':d2}
@@ -222,7 +192,6 @@ def get_wordcloud_data():
     
     if(request.method == 'POST'):
         dates = request.get_json()
-        print(dates)
         start_date = pd.to_datetime(dates["start"])
         end_date = pd.to_datetime(dates["end"])
     
@@ -245,24 +214,8 @@ def home():
 
 if(__name__ == "__main__"):
     preprocess()
-    # get_pcp_data()
-    # country_codes = data.iso_code.unique()
-    # world_data = pd.DataFrame(columns=("iso_code", "new_cases", "new_deaths"))
-    # world_data.iso_code = country_codes
-    
-    # for code in country_codes:
-    #     world_data.loc[world_data.iso_code == code, "new_cases"] = data.loc[data.iso_code == code].new_cases.iloc[-1]
-    #     world_data.loc[world_data.iso_code == code, "new_deaths"] = data.loc[data.iso_code == code].new_deaths.iloc[-1]
-    
-    # if(os.path.isfile(covid_geo_json_path)):
-    #     with open(covid_geo_json_path) as f:
-    #         covid_geo = geojson.load(f)    
-    # else:
-    #     covid_geo = createjson(world_data)
-        
-    # get_worldmap_data()
-    
-    # get_wordcloud_data()
+    preprocess_pcp_data()
+
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
     app.run(debug=True)
