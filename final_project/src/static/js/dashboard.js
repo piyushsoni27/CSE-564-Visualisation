@@ -38,6 +38,8 @@ function resetDashboard(){
     avg_vaccinations = 0
     statData = ""
 
+    currLine = "none"
+
     $.ajax({
         type: "GET",
         url: "/worldmap",

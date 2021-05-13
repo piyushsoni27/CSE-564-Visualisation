@@ -9,7 +9,6 @@ var outerWidthpcp = 900,
 var pcp_data
 var countrytoid = {}
 var countries = []
-var currLine = "none"
 
 function plot_pcp(pcp_data1) {
     selected_countries = []

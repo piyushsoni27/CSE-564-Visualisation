@@ -54,7 +54,7 @@ function createWordCloud(data){
                         .attr("text-anchor", "middle")
                         .text(function(d) { return d.hashtag; })
                         .transition()
-                        .duration(500)
+                        .duration(400)
                         .style("font-size", function(d) { return d.size + "px"; })
                         .attr("transform", function(d) { return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")"; })
                         .style("fill-opacity", 1)

@@ -35,19 +35,6 @@
     <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
 
-
-    <!-- <style>
-     /* body {
-     background-color: lightgrey;
-       } */
-  
-    svg #svgWordCloud{
-        width: 100%;
-        height: 100%;
-        position: center;
-    }
-    </style> -->
-
 </head>
 
 <body>
@@ -57,12 +44,13 @@
                 <h3>COVID-19 Data Analyzer</h3>
             </div>
         </div>
+    </div>
 
         <div id="dashboard" class="container-fluid">
             <div class="row">
                 <div class="col-sm-5" style="padding-right: 5px;">
                     <div class="dash-unit">
-                        <dtitle id="worldTitle"></dtitle>
+                        <dtitle id="worldTitle">AVERAGE DAILY NEW_CASES BETWEEN 2020-1-1 TO 2021-4-17</dtitle>
                         <hr>
                         <div class='row'>
                         </div>
@@ -75,7 +63,7 @@
                 </div>
                 <div class="col-sm-7" style="padding-left: 5px;">
                     <div class="dash-unit" title="Time-Series line plot">
-                        <dtitle id="lineTitle"></dtitle>
+                        <dtitle id="lineTitle">AVERAGE DAILY NEW_CASES OF WORLD BETWEEN 2020-1-1 TO 2021-4-17</dtitle>
                         <select id='covidattr'>
                             <option value="new_cases">Daily Cases</option>
                             <option value="new_deaths">Daily Deaths</option>
@@ -91,7 +79,7 @@
             <div class="row">
                 <div class="col-sm-6" style="padding-right: 5px;">
                     <div class="dash-unit" title="Parallel Axis Coordinate Plot">
-                        <dtitle id="pcpTitle">Parallel Co-ordinates Plot</dtitle>
+                        <dtitle id="pcpTitle">PARALLEL CO-ORDINATES PLOT BETWEEN 2020-1-1 TO 2021-4-17</dtitle>
                         <hr>
                         <div id="pcp">
                             <svg id='svgpcplot'></svg>
