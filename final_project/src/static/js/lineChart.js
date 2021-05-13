@@ -432,11 +432,11 @@ function createLineChart(data1, bubbledata1, attr) {
         document.getElementById("worldTitle").innerHTML = "Average daily " + selected_attr + " between " + selected_start_date + " to " + selected_end_date;
         var lineTitle = document.getElementById("lineTitle").innerHTML.split(" ")
 
+        lineTitle[1] = selected_attr
         lineTitle[6] = selected_start_date
         lineTitle[8] = selected_end_date
 
-        if (worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
-        else document.getElementById("lineTitle").innerHTML = "Average daily " + selected_attr + " of world between " + selected_start_date + " to " + selected_end_date;
+        document.getElementById("lineTitle").innerHTML = "Average daily " + selected_attr + " of " + worldmap_country + " between " + selected_start_date + " to " + selected_end_date;
 
         lineChartTrigger.a = selected_start_date
 
@@ -505,11 +505,12 @@ function createLineChart(data1, bubbledata1, attr) {
         document.getElementById("worldTitle").innerHTML = "Average daily " + selected_attr + " cases between " + selected_start_date + " to " + selected_end_date;
         var lineTitle = document.getElementById("lineTitle").innerHTML.split(" ")
 
+        lineTitle[1] = selected_attr
         lineTitle[6] = selected_start_date
         lineTitle[8] = selected_end_date
 
-        if (worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
-        else document.getElementById("lineTitle").innerHTML = "Average daily " + selected_attr + " of world between " + selected_start_date + " to " + selected_end_date;
+        // if (worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
+        document.getElementById("lineTitle").innerHTML = "Average daily " + selected_attr + " of " + worldmap_country + " between " + selected_start_date + " to " + selected_end_date;
 
         lineChartTrigger.a = selected_start_date
 

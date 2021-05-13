@@ -307,7 +307,15 @@ function createChoropleth(data, attr, countries) {
 
                 worldMapTrigger.a = d.id
 
-                document.getElementById("lineTitle").innerHTML = "Daily cases between of " + locationIDMap[worldmap_country] + " between " + selected_start_date + " to " + selected_end_date;
+
+                var lineTitle = document.getElementById("lineTitle").innerHTML.split(" ")
+
+                lineTitle[1] = selected_attr
+                lineTitle[6] = selected_start_date
+                lineTitle[8] = selected_end_date
+
+                document.getElementById("lineTitle").innerHTML = "Average daily " + selected_attr + " of " + locationIDMap[worldmap_country] + " between " + selected_start_date + " to " + selected_end_date;
+
 
                 for (i = 0; i < countries_path_arr.length; i++) {
                     d3.select(countries_path_arr[i]).style("fill", function(p) {
