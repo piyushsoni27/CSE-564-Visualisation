@@ -199,13 +199,13 @@ function createChoropleth(data, attr, countries) {
                 }
                 if (worldmap_country === "world" || d.id === worldmap_country)
                     return ramp(+d[attr])
-                
+
                 return "gray"
             });
-        
+
         console.log(selected_countries.length)
-        // console.log(sele)
-        if((selected_countries.length == 0) || (selected_countries.length == 49)){
+            // console.log(sele)
+        if ((selected_countries.length == 0) || (selected_countries.length == 49)) {
             console.log("IN!!")
             for (i = 0; i < countries_path_arr.length; i++) {
                 d3.select(countries_path_arr[i]).style("fill", function(p) {
@@ -215,11 +215,11 @@ function createChoropleth(data, attr, countries) {
                     if (String(+p[attr]) === "0") {
                         return "black"
                     }
-                    
+
                     return ramp(+p[attr])
                 })
             }
-        }else if (selected_countries.length !== 0){
+        } else if (selected_countries.length !== 0) {
             for (i = 0; i < countries_path_arr.length; i++) {
                 d3.select(countries_path_arr[i]).style("fill", function(p) {
                     if (String(+p[attr]) === "NaN") {
@@ -229,14 +229,14 @@ function createChoropleth(data, attr, countries) {
                         return "black"
                     }
 
-                    if (checkCountry(p.id, selected_countries) || (p.id === worldmap_country)){
+                    if (checkCountry(p.id, selected_countries) || (p.id === worldmap_country)) {
                         return ramp(+p[attr])
                     }
                     return "gray"
                 })
             }
         }
-        
+
 
         let div = d3.select("body").append("div")
             .attr("class", "tooltip")
@@ -244,10 +244,10 @@ function createChoropleth(data, attr, countries) {
 
         function mouseover(d) {
             if (String(+d[attr]) === "NaN")
-                return 
-            if (String(+d[attr]) === "0") 
                 return
-            
+            if (String(+d[attr]) === "0")
+                return
+
             tip.show(d);
 
             d3.select(this)
@@ -267,7 +267,7 @@ function createChoropleth(data, attr, countries) {
 
         function click(d) {
             console.log(String(+d[attr]) === "0")
-            if (String(+d[attr]) !== "0"){
+            if (String(+d[attr]) !== "0") {
                 clicked_ptr.push({ ptr: this, color: ramp(+d[attr]) })
                 clicked_countries.push(d.id)
 
@@ -285,9 +285,9 @@ function createChoropleth(data, attr, countries) {
                     })
                 }
 
-            } 
+            }
 
-            if(String(+d[attr]) !== "NaN") {
+            if (String(+d[attr]) !== "NaN") {
                 clicked_ptr.push({ ptr: this, color: ramp(+d[attr]) })
                 clicked_countries.push(d.id)
 
@@ -305,9 +305,9 @@ function createChoropleth(data, attr, countries) {
                     })
                 }
             }
-            
-            
-            if (String(+d[attr]) === "NaN"){
+
+
+            if (String(+d[attr]) === "NaN") {
                 worldmap_country = "world"
                 worldMapTrigger.a = "world"
 
@@ -341,7 +341,7 @@ function createChoropleth(data, attr, countries) {
                             return ramp(+p[attr])
                         })
                 }
-            }   
+            }
             tip.hide()
         }
 
@@ -372,7 +372,7 @@ function createChoropleth(data, attr, countries) {
 
     function checkCountry(country, countries) {
         var ind = countries.indexOf(country)
-        if(ind === -1) return false
+        if (ind === -1) return false
         return true;
     }
 
@@ -383,7 +383,7 @@ function createChoropleth(data, attr, countries) {
         dates = {}
         dates.start = selected_start_date
         dates.end = selected_end_date
-
+        worldMapTrigger3.a = dates
         $(document).ready(function() {
             $.ajax({
                 type: "POST",
@@ -420,37 +420,37 @@ function createChoropleth(data, attr, countries) {
             });
         });
 
-        $(document).ready(function() {
-            $.ajax({
-                type: "POST",
-                url: "/pcp",
-                contentType: "application/json",
-                data: JSON.stringify(dates),
-                dataType: "json",
-                success: function(response) {
-                    pcpData = (response)
-                    plot_pcp(pcpData)
-                },
-                error: function(err) {
-                    console.log(err);
-                }
-            });
-        });
+        // $(document).ready(function() {
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/pcp",
+        //         contentType: "application/json",
+        //         data: JSON.stringify(dates),
+        //         dataType: "json",
+        //         success: function(response) {
+        //             pcpData = (response)
+        //             plot_pcp(pcpData)
+        //         },
+        //         error: function(err) {
+        //             console.log(err);
+        //         }
+        //     });
+        // });
     });
 
     pcpTrigger.registerListener(function(val) {
         console.log(selected_countries)
-        // $.ajax({
-        //     type: "GET",
-        //     url: "/worldmap",
-        //     success: function(response) {
-        //         worldMapData = (response)
-        //         updateChoropleth(worldMapData, selected_attr, selected_countries)
-        //     },
-        //     error: function(err) {
-        //         console.log(err);
-        //     }
-        // });
+            // $.ajax({
+            //     type: "GET",
+            //     url: "/worldmap",
+            //     success: function(response) {
+            //         worldMapData = (response)
+            //         updateChoropleth(worldMapData, selected_attr, selected_countries)
+            //     },
+            //     error: function(err) {
+            //         console.log(err);
+            //     }
+            // });
         updateChoropleth(data, selected_attr, selected_countries)
     });
 }

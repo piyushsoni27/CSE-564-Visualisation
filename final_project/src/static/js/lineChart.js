@@ -107,7 +107,7 @@ function createLineChart(data1, bubbledata1, attr) {
 
     // Add a scale for bubble color
     var myColor = d3.scaleOrdinal()
-        .domain(["Contact_tracing", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Public_Healthcare", "Returning_to_normal_life"])
+        .domain(["Contact_tracing", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Public_Healthcare", "Ease_of_restrictions"])
         .range(d3.schemeSet2);
 
     var brush = d3.brushX()
@@ -296,7 +296,7 @@ function createLineChart(data1, bubbledata1, attr) {
 
     // Add one dot in the legend for each name.
     var size = 8
-    var allgroups = ["Contact_tracing", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Public_Healthcare", "Returning_to_normal_life"]
+    var allgroups = ["Contact_tracing", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Public_Healthcare", "Ease_of_restrictions"]
 
     svg.selectAll("myrect")
         .data(allgroups)
@@ -598,8 +598,6 @@ function createLineChart(data1, bubbledata1, attr) {
     }
 
     worldMapTrigger.registerListener(function(val) {
-        console.log(worldmap_country)
-            // worldmap_country_2 = worldmap_country
         worldMapTrigger2.a = worldmap_country
         $(document).ready(function() {
             $.ajax({

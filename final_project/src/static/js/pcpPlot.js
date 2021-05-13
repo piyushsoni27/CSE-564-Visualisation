@@ -9,7 +9,7 @@ var outerWidthpcp = 800,
 var pcp_data
 var countrytoid = {}
 var countries = []
-var currLine = none
+var currLine = "none"
 
 function plot_pcp(pcp_data1) {
     selected_countries = []
@@ -337,48 +337,14 @@ function plot_pcp(pcp_data1) {
             .enter().append("g")
             .merge(dimensionprev)
             .attr("class", "dimension")
-            .call(d3.drag()
-                .on("start", function(d) {
-                    svg.selectAll(".line")
-                        .transition().duration(200)
-                        .style("stroke", "lightgrey")
-                        .style("opacity", "0.2")
-                    dragging[d] = x(d);
-                    // background.attr("visibility", "hidden");
-                })
-                .on("drag", function(d) {
-                    dragging[d] = Math.min(width, Math.max(0, d3.event.x));
-                    foreground.attr("d", line);
-                    dimensions.sort(function(a, b) { return position(a) - position(b); });
-                    x.domain(dimensions);
-                    g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
-                })
-                .on("end", function(d) {
-                    delete dragging[d];
-                    transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
-                    transition(foreground).attr("d", line);
-
-                    svg.selectAll(".line")
-                        .transition().duration(200).delay(1000)
-                        .style("stroke", function(d) { return (color(d.cluster)) })
-                        .style("opacity", "0.4")
-                }))
             .transition().duration(1000)
             .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
 
         dimensionprev.exit().remove()
 
-        // // Add an axis and title.
-        // d3.selectAll(".axispcp")
-        //     .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
-        //     .append("text")
-        //     .style("text-anchor", "middle")
-        //     .attr("transform", "rotate(-10)")
-        //     .attr("fill", "rgb(156, 152, 152)")
-        //     .attr("font-size", "13")
-        //     .attr("y", -9)
-        //     .text(function(d) { return d; })
-        //     .style("stroke", "rgb(156, 152, 152)");
+        // Add an axis and title.
+        d3.selectAll(".axispcp")
+            .each(function(d) { d3.select(this).transition().duration(1000).call(d3.axisLeft().scale(y[d])); })
     }
 
     function update_pcp_countries(w_country) {
@@ -397,5 +363,25 @@ function plot_pcp(pcp_data1) {
 
     worldMapTrigger2.registerListener(function(val) {
         update_pcp_countries(worldmap_country)
+    });
+
+    worldMapTrigger3.registerListener(function(val) {
+        dates = val
+        $(document).ready(function() {
+            $.ajax({
+                type: "POST",
+                url: "/pcp",
+                contentType: "application/json",
+                data: JSON.stringify(dates),
+                dataType: "json",
+                success: function(response) {
+                    pcpData = (response)
+                    update_pcp(pcpData)
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
     });
 }
