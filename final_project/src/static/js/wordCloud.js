@@ -1,6 +1,6 @@
 // https://bl.ocks.org/alexb823/706a98eb9e729f0754f31cd6f4803155
 
-var outerWidthWordCloud = 700, outerHeightWordCloud = 500/760 * outerWidthWordCloud
+var outerWidthWordCloud = 550, outerHeightWordCloud = 350
 
 var marginWordCloud = {top: 10, right: 10, bottom: 10, left: 10};
 var innerWidthWordCloud = outerWidthWordCloud - marginWordCloud.left - marginWordCloud.right;

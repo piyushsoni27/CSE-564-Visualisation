@@ -11,6 +11,9 @@ var avg_cases = 0
 var avg_deaths = 0
 var avg_vaccinations = 0
 var statData = ""
+
+var locationIDMap = {}
+
 var lineChartTrigger = {
     aInternal: null,
     aListener: function(val) {},
@@ -124,6 +127,9 @@ $.ajax({
         for (var i in worldData.features)
             all_countries.push(worldData.features[i].properties.name);
 
+        worldData.features.forEach(element => {
+            locationIDMap[element["id"]] = element.properties.name
+        });
         createChoropleth(worldData, selected_attr)
     },
     error: function(err) {

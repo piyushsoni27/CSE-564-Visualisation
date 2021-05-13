@@ -51,85 +51,84 @@
 </head>
 
 <body>
-    <div id="dashboard" class="container-fluid">
-        <div class="row">
-            <div class="col-sm-5">
-                <div class="dash-unit">
-                    <!-- <dtitle>Choropleth</dtitle>
-                    <hr> -->
-                    <div class='row'>
-                        <h2>Average daily cases between 10 - 12</h1>
-                    </div>
-                    <div class="row" title="Choropleth">
-                        <div id="worldmap-legend-svg" class="col-sm-1"></div>
-                        <div id="worldmap" class="col-sm-11"></div>
-                    </div>
-
-                </div>
+    <div class="navbar-nav navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div id="dashboardHeader">
+                <h3>Covid Data Analyzer</h3>
             </div>
-            <div class="col-sm-7">
-                <div class="dash-unit">
-                    <dtitle>Line Chart</dtitle>
-                    <select id='covidattr'>
+        </div>
+
+        <div id="dashboard" class="container-fluid">
+            <div class="row">
+                <div class="col-sm-5" style="padding-right: 5px;">
+                    <div class="dash-unit">
+                        <dtitle id="worldTitle"></dtitle>
+                        <hr>
+                        <div class='row'>
+                        </div>
+                        <div class="row" title="Choropleth">
+                            <div id="worldmap-legend-svg" class="col-sm-1"></div>
+                            <div id="worldmap" class="col-sm-11"></div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-7" style="padding-left: 5px;">
+                    <div class="dash-unit" title="Time-Series line plot">
+                        <dtitle id="lineTitle"></dtitle>
+                        <select id='covidattr'>
                         <option value="new_cases">Daily Cases</option>
                         <option value="new_deaths">Daily Deaths</option>
                         <option value="new_vaccinations">Daily Vaccinations</option>
                     </select>
-                    <hr>
-                    <div id="linechart">
-                        <svg id='svgLineChart'></svg>
+                        <hr>
+                        <div id="linechart"></div>
                     </div>
                 </div>
-            </div>
 
-        </div>
-        <div class="row">
-            <!-- <div class="col">
-                <div id="barchart" class="dash-unit">
-                    <svg id='svgBarChart'></svg>
-                </div>
-            </div> -->
-            <div class="col-sm-6">
-                <div class="dash-unit">
-                    <dtitle>PCP</dtitle>
-                    <hr>
-                    <div id="pcp">
-                        <svg id='svgpcplot'></svg>
+            </div>
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="dash-unit" title="Parallel Axis Coordinate Plot">
+                        <dtitle id="pcpTitle">Parallel Co-ordinates Plot</dtitle>
+                        <hr>
+                        <div id="pcp">
+                            <svg id='svgpcplot'></svg>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="dash-unit">
-                    <dtitle>Word Cloud</dtitle>
-                    <hr>
-                    <div id="wordcloud">
-                        <svg id='svgWordCloud'></svg>
+                <div class="col-sm-5">
+                    <div class="dash-unit" title="Word Cloud">
+                        <dtitle id="wordCloudTitle"></dtitle>
+                        <hr>
+                        <div id="wordcloud">
+                            <svg id='svgWordCloud'></svg>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="dash-unit">
-                    <dtitle>Covid Statistics</dtitle>
-                    <hr>
-                    <div id="covidstats">
-                        <svg id='svgcovidstats'></svg>
+                <div class="col-sm-2">
+                    <div class="dash-unit">
+                        <dtitle>Covid Statistics</dtitle>
+                        <hr>
+                        <div id="covidstats">
+                            <svg id='svgcovidstats'></svg>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <!-- <script type="text/javascript" src="static/js/worldMap.js"></script> -->
-    <script type="text/javascript" src="static/js/choropleth.js"></script>
-    <script type="text/javascript" src="static/js/lineChart.js"></script>
-    <script type="text/javascript" src="static/js/barChart.js"></script>
-    <script type="text/javascript" src="static/js/wordCloud.js"></script>
-    <script type="text/javascript" src="static/js/us-states.js"></script>
-    <script type="text/javascript" src="static/js/pcpPlot.js"></script>
-    <script type="text/javascript" src="static/js/stats.js"></script>
-    <!-- <script type="text/javascript" src="static/js/choroLeaf.js"></script> -->
-    <script type="text/javascript" src="static/js/dashboard.js"></script>
+        <!-- <script type="text/javascript" src="static/js/worldMap.js"></script> -->
+        <script type="text/javascript" src="static/js/choropleth.js"></script>
+        <script type="text/javascript" src="static/js/lineChart.js"></script>
+        <script type="text/javascript" src="static/js/barChart.js"></script>
+        <script type="text/javascript" src="static/js/wordCloud.js"></script>
+        <script type="text/javascript" src="static/js/us-states.js"></script>
+        <script type="text/javascript" src="static/js/pcpPlot.js"></script>
+        <script type="text/javascript" src="static/js/stats.js"></script>
+        <!-- <script type="text/javascript" src="static/js/choroLeaf.js"></script> -->
+        <script type="text/javascript" src="static/js/dashboard.js"></script>
 
 
 </body>
