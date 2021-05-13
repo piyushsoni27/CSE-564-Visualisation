@@ -54,7 +54,7 @@
     <div class="navbar-nav navbar-inverse navbar-fixed-top">
         <div class="container">
             <div id="dashboardHeader">
-                <h3>Covid Data Analyzer</h3>
+                <h3>COVID-19 Data Analyzer</h3>
             </div>
         </div>
 
@@ -77,10 +77,11 @@
                     <div class="dash-unit" title="Time-Series line plot">
                         <dtitle id="lineTitle"></dtitle>
                         <select id='covidattr'>
-                        <option value="new_cases">Daily Cases</option>
-                        <option value="new_deaths">Daily Deaths</option>
-                        <option value="new_vaccinations">Daily Vaccinations</option>
-                    </select>
+                            <option value="new_cases">Daily Cases</option>
+                            <option value="new_deaths">Daily Deaths</option>
+                            <option value="new_vaccinations">Daily Vaccinations</option>
+                        </select>
+                        <button id="resetAll" onClick="console.log('HI')">Reset</button>
                         <hr>
                         <div id="linechart"></div>
                     </div>

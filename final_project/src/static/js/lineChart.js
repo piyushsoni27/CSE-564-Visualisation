@@ -420,18 +420,17 @@ function createLineChart(data1, bubbledata1, attr) {
         selected_start_date = start_date.getFullYear() + '-' + (start_date.getMonth() + 1) + '-' + start_date.getDate()
         selected_end_date = end_date.getFullYear() + '-' + (end_date.getMonth() + 1) + '-' + end_date.getDate()
 
-        document.getElementById("wordCloudTitle").innerHTML = "Trending tweets hashtags between " + selected_start_date + " to " + selected_end_date;
+        document.getElementById("wordCloudTitle").innerHTML = "Trending Hashtags between " + selected_start_date + " to " + selected_end_date;
+        document.getElementById("pcpTitle").innerHTML = "Parallel Co-ordinates Plot between " + selected_start_date + " to " + selected_end_date;
 
-        document.getElementById("worldTitle").innerHTML = "Average daily cases between " + selected_start_date + " to " + selected_end_date;
+        document.getElementById("worldTitle").innerHTML = "Average daily " + selected_attr + " between " + selected_start_date + " to " + selected_end_date;
         var lineTitle = document.getElementById("lineTitle").innerHTML.split(" ")
 
         lineTitle[6] = selected_start_date
         lineTitle[8] = selected_end_date
 
         if (worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
-        else document.getElementById("lineTitle").innerHTML = "Average daily cases of world between " + selected_start_date + " to " + selected_end_date;
-
-        console.log(lineTitle.join(" "))
+        else document.getElementById("lineTitle").innerHTML = "Average daily " + selected_attr + " of world between " + selected_start_date + " to " + selected_end_date;
 
         lineChartTrigger.a = selected_start_date
 
@@ -491,16 +490,18 @@ function createLineChart(data1, bubbledata1, attr) {
         selected_start_date = start_date.getFullYear() + '-' + (start_date.getMonth() + 1) + '-' + start_date.getDate()
         selected_end_date = end_date.getFullYear() + '-' + (end_date.getMonth() + 1) + '-' + end_date.getDate()
 
-        document.getElementById("wordCloudTitle").innerHTML = "Trending tweets hashtags between " + selected_start_date + " to " + selected_end_date;
+        document.getElementById("wordCloudTitle").innerHTML = "Trending Hashtags between " + selected_start_date + " to " + selected_end_date;
 
-        document.getElementById("worldTitle").innerHTML = "Average daily cases between " + selected_start_date + " to " + selected_end_date;
+        document.getElementById("pcpTitle").innerHTML = "Parallel Co-ordinates Plot between " + selected_start_date + " to " + selected_end_date;
+
+        document.getElementById("worldTitle").innerHTML = "Average daily " + selected_attr + " cases between " + selected_start_date + " to " + selected_end_date;
         var lineTitle = document.getElementById("lineTitle").innerHTML.split(" ")
 
         lineTitle[6] = selected_start_date
         lineTitle[8] = selected_end_date
 
         if (worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
-        else document.getElementById("lineTitle").innerHTML = "Average daily cases of world between " + selected_start_date + " to " + selected_end_date;
+        else document.getElementById("lineTitle").innerHTML = "Average daily " + selected_attr + " of world between " + selected_start_date + " to " + selected_end_date;
 
         lineChartTrigger.a = selected_start_date
 
