@@ -257,7 +257,8 @@ function plot_pcp(pcp_data1) {
                 if (d3.select(this).style("display") !== "none") {
                     selected_countries.push(d.id)
                 }
-            })
+        })
+        pcpTrigger.a = selected_countries
             // console.log(selected_countries)
     }
 
