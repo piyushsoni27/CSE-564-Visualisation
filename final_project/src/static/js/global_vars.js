@@ -14,6 +14,8 @@ var statData = ""
 
 var currLine = "none"
 
+var maxPCPCountry = 0;
+
 var locationIDMap = { "world": "World" }
 
 var lineChartTrigger = {

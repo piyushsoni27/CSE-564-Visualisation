@@ -14,6 +14,9 @@ function plot_pcp(pcp_data1) {
     selected_countries = []
     pcp_data = pcp_data1
 
+    maxPCPCountry =  Object.keys(pcp_data).length
+
+
     countrytoid = {}
     countries = []
     idcountries = []
@@ -269,7 +272,7 @@ function plot_pcp(pcp_data1) {
                 selected_countries.push(d.id)
             }
         })
-        if (selected_countries.length == 49) {
+        if (selected_countries.length == maxPCPCountry) {
             d3.select('.foreground').selectAll('path').each(function(d) {
                 d3.select(this).style("stroke", color(d.id)).style("opacity", 0.4)
             })
@@ -286,6 +289,7 @@ function plot_pcp(pcp_data1) {
     function update_pcp(pcp_data1) {
         // console.log("update")
         pcp_data = pcp_data1
+        maxPCPCountry =  Object.keys(pcp_data).length
         countrytoid = {}
         countries = []
         pcp_data.forEach(element => {
