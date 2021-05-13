@@ -569,11 +569,7 @@ function createLineChart(data1, bubbledata1, attr) {
         x2.domain(x.domain());
         y2.domain(y.domain());
         z.domain([bubbledata_min, bubbledata_max]).range([5, 20]);
-        if (bubbledata_max > 160) {
-            yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 20]);
-        } else {
-            yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + 5]);
-        }
+        yright.domain([0, d3.max(bubbledata, function(d) { return d.Count; }) + bubbledata_max * 0.12]);
 
         d3.select(".axis--x").transition().duration(1000).call(xAxis);
         d3.select(".axis--y").transition().duration(1000).call(yAxis);

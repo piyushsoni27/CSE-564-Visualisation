@@ -78,7 +78,7 @@ def preprocess_pcp_data():
        'RKS', 'KWT', 'LIE', 'LTU', 'MYS', 'MUS', 'MEX', 'MNE', 'NLD',
        'NZL', 'MKD', 'NOR', 'POL', 'PRT', 'IRL', 'ROU', 'SEN', 'SRB',
        'SGP', 'SVK', 'SVN', 'KOR', 'ESP', 'SWE', 'CHE', 'SYR', 'TWN',
-       'THA', 'GBR', 'USA']
+       'THA', 'GBR', 'USA', 'AUS']
     
     to_remove = ["SEN", "SLV", "BIH", "TWN", "BEL", "HRV", "SYR", "MNE", "CZE", "MKD", "SVK", "GHA", "EGY", "EST", "ROU"]
 
