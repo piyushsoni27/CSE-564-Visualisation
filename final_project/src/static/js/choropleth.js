@@ -192,8 +192,6 @@ function createChoropleth(data, attr, countries) {
         .style("fill", "rgb(155, 155, 155)");
 
     function updateChoropleth(data, attr, countries) {
-        console.log(selected_countries)
-
         attr = selected_attr
 
         maxVal = d3.max(data.features, function(d) { return +d[attr] })
@@ -223,7 +221,7 @@ function createChoropleth(data, attr, countries) {
                 return "gray"
             });
 
-        if ((selected_countries.length == 0) || (selected_countries.length == 49)) {
+        if ((selected_countries.length == 0) || (selected_countries.length == maxPCPCountry)) {
             if (worldmap_country == "world") {
                 for (i = 0; i < countries_path_arr.length; i++) {
                     d3.select(countries_path_arr[i]).style("fill", function(p) {
@@ -324,7 +322,7 @@ function createChoropleth(data, attr, countries) {
                         }
                         if (p.id === d.id) return ramp(+p[attr])
 
-                        if(selected_countries.length !== 49){
+                        if(selected_countries.length !== maxPCPCountry){
                             if (checkCountry(p.id, selected_countries)) return ramp(+p[attr])
                         }
                         return "gray"
@@ -347,7 +345,7 @@ function createChoropleth(data, attr, countries) {
                             return "black"
                         }
                         if (p.id === d.id) return ramp(+p[attr])
-                        if(selected_countries.length !== 49){
+                        if(selected_countries.length !== maxPCPCountry){
                             if (checkCountry(p.id, selected_countries)) return ramp(+p[attr])
                         }
                         return "gray"
