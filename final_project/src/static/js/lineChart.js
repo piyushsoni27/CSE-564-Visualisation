@@ -598,8 +598,6 @@ function createLineChart(data1, bubbledata1, attr) {
     }
 
     worldMapTrigger.registerListener(function(val) {
-        console.log(worldmap_country)
-            // worldmap_country_2 = worldmap_country
         worldMapTrigger2.a = worldmap_country
         $(document).ready(function() {
             $.ajax({

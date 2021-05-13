@@ -9,7 +9,7 @@ var outerWidthpcp = 800,
 var pcp_data
 var countrytoid = {}
 var countries = []
-var currLine = none
+var currLine = "none"
 
 function plot_pcp(pcp_data1) {
     selected_countries = []
@@ -367,29 +367,14 @@ function plot_pcp(pcp_data1) {
             .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
 
         dimensionprev.exit().remove()
-
-        // // Add an axis and title.
-        // d3.selectAll(".axispcp")
-        //     .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
-        //     .append("text")
-        //     .style("text-anchor", "middle")
-        //     .attr("transform", "rotate(-10)")
-        //     .attr("fill", "rgb(156, 152, 152)")
-        //     .attr("font-size", "13")
-        //     .attr("y", -9)
-        //     .text(function(d) { return d; })
-        //     .style("stroke", "rgb(156, 152, 152)");
     }
 
     function update_pcp_countries(w_country) {
         d3.select('.foreground').selectAll('path').each(function(d) {
             if (d.id === w_country) {
-                console.log("T")
-                    // d3.select(this).style("display", null)
                 d3.select(this).style("stroke", "red").style("opacity", 1)
                 currLine = w_country
             } else {
-                console.log("F")
                 d3.select(this).style("stroke", color(d.cluster))
             }
         })

@@ -80,7 +80,7 @@ def preprocess_pcp_data():
        'SGP', 'SVK', 'SVN', 'KOR', 'ESP', 'SWE', 'CHE', 'SYR', 'TWN',
        'THA', 'GBR', 'USA']
     
-    to_remove = ["SEN", "SLV", "BIH"]
+    to_remove = ["SEN", "SLV", "BIH", ]
 
     pcp_data = data.loc[data.id.isin(countries)].reset_index(drop=True)
     pcp_data = pcp_data.loc[~pcp_data.id.isin(to_remove)].reset_index(drop=True)  
@@ -100,7 +100,7 @@ def get_pcp_data():
 
     pcp_data_send = pcp_data.loc[(pcp_data.date>=start_date) & (pcp_data.date<=end_date)]
     
-    pcp_axis = ["id","location", 'gdp_per_capita', 'stringency_index', 'human_development_index', 'median_age', 'hospital_beds_per_thousand', 'new_cases', 'new_deaths', 'new_vaccinations']
+    pcp_axis = ["id","location", 'gdp_per_capita', 'stringency_index', 'human_development_index', 'median_age', 'hospital_beds_per_thousand', 'positive_rate', 'new_cases_per_million', 'new_deaths_per_million', 'new_vaccinations_smoothed_per_million']
     pcp_data_temp = pcp_data_send[pcp_axis].groupby("location")[pcp_axis[2:]].mean().reset_index()
     pcp_data_temp["id"] = pcp_data_send["id"].unique()
         
