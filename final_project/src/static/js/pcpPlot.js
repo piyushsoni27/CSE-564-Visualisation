@@ -122,7 +122,7 @@ function plot_pcp(pcp_data1) {
         .style('stroke', function(d) {
             return color(d.id);
         })
-        .style("opacity", 0.7)
+        .style("opacity", 0.4)
 
 
     // Add a group element for each dimension.
@@ -271,12 +271,12 @@ function plot_pcp(pcp_data1) {
         })
         if (selected_countries.length == 49) {
             d3.select('.foreground').selectAll('path').each(function(d) {
-                d3.select(this).style("stroke", color(d.id)).style("opacity", 0.4)
+                d3.select(this).style("stroke", color(d.id)).style("opacity", 0.4).style("stroke-width", 1)
             })
         }
         if (selected_countries.length == 0) {
             d3.select('.foreground').selectAll('path').each(function(d) {
-                d3.select(this).style("stroke", color(d.id)).style("opacity", 0.4)
+                d3.select(this).style("stroke", color(d.id)).style("opacity", 0.4).style("stroke-width", 1)
             })
         }
         pcpTrigger.a = selected_countries
@@ -336,7 +336,7 @@ function plot_pcp(pcp_data1) {
             .attr("d", line)
             .attr("class", function(d) { return "line " + d.id })
             .style('stroke', function(d) { return color(d.id); })
-            .style("opacity", 0.7)
+            .style("opacity", 0.4)
         foregroundpath.exit().remove()
 
         // Add a group element for each dimension.
@@ -360,10 +360,10 @@ function plot_pcp(pcp_data1) {
                 .style("fill", "rgb(155, 155, 155)");
 
             if (d.id === currLine) {
-                d3.select(this).style("stroke", "green").style("opacity", 1)
+                d3.select(this).style("stroke", "#8000ff").style("opacity", 1)
                     .style("stroke-width", 2.5)
             } else {
-                d3.select(this).style("stroke", color(d.id))
+                d3.select(this).style("stroke", color(d.id)).style("opacity", 0.4).style("stroke-width", 1)
             }
         })
     }
@@ -371,11 +371,11 @@ function plot_pcp(pcp_data1) {
     function update_pcp_countries(w_country) {
         d3.select('.foreground').selectAll('path').each(function(d) {
             if (d.id === w_country) {
-                d3.select(this).style("stroke", "green").style("opacity", 1)
+                d3.select(this).style("stroke", "#8000ff").style("opacity", 1)
                     .style("stroke-width", 2.5)
                 currLine = w_country
             } else {
-                d3.select(this).style("stroke", color(d.id))
+                d3.select(this).style("stroke", color(d.id)).style("opacity", 0.4).style("stroke-width", 1)
             }
         })
     }
