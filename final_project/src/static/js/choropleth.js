@@ -2,10 +2,13 @@ function createChoropleth(data, attr, countries) {
     attr = selected_attr
 
     var width = 650;
-    var height = 350;
+    var height = 320;
 
     var lowColor = 'rgb(250, 197, 173)'
     var highColor = 'rgb(85, 28, 1)'
+
+    // var lowColor = 'rgb(250, 197, 173)'
+    // var highColor = '#ff8c00'
 
     var clicked_countries = []
     var clicked_ptr = []

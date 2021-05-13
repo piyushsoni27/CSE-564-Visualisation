@@ -9,10 +9,10 @@
 // var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
 // var innerHeightLine = outerHeightLine - marginBottomLineChart.top - marginBottomLineChart.bottom - 10
 
-var outerWidthLine = 760,
-    outerHeightLine = 425 / 760 * outerWidthLine -20
-var marginUpperLineChart = { top: 10, right: 70, bottom: 100, left: 40 }
-var marginBottomLineChart = { top: 350, right: 70, bottom: 50, left: 40 }
+var outerWidthLine = 1000,
+    outerHeightLine = 320
+var marginUpperLineChart = { top: 10, right: 300, bottom: 100, left: 40 }
+var marginBottomLineChart = { top: 255, right: 300, bottom: 50, left: 40 }
 var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
 var innerHeightLine = outerHeightLine - marginUpperLineChart.top - marginUpperLineChart.bottom - 20
 
@@ -34,6 +34,8 @@ function createLineChart(data1, bubbledata1, attr) {
 
     var isClicked = false
     var clicked_bubble = ""
+
+    d3.select("#lineChartLabels")
 
     var plotOuter = d3.select("#linechart")
         .append("svg")
@@ -209,7 +211,11 @@ function createLineChart(data1, bubbledata1, attr) {
 
     focus.append("g")
         .attr("class", "axis axis--y")
-        .call(yAxis);
+        .call(yAxis.tickFormat(function(d){
+            if(d >= 1000000)
+                return (d/1000000).toFixed(2) + 'M';
+            else return d;
+        }));
     focus.append("g")
         .attr("class", "axis axis--yright")
         .attr("transform", "translate(" + width + ",0)")
@@ -226,7 +232,7 @@ function createLineChart(data1, bubbledata1, attr) {
         .attr("text-anchor", "middle")
         .attr("transform", "translate(" + (-margin.left - 10) + "," + height / 2 + ")rotate(-90)")
         .style("font-size", "18px")
-        .text("Number of Cases");
+        .text("daily_" + selected_attr);
 
     bubble_chart.selectAll("dot")
         .data(bubbledata)
@@ -295,7 +301,7 @@ function createLineChart(data1, bubbledata1, attr) {
         .call(zoom);
 
     // Add one dot in the legend for each name.
-    var size = 8
+    var size = 20
     var allgroups = ["Contact_tracing", "Social_distancing", "Travel_restriction", "Resource_allocation", "Risk_communication", "Public_Healthcare", "Ease_of_restrictions"]
 
     svg.selectAll("myrect")
@@ -303,31 +309,31 @@ function createLineChart(data1, bubbledata1, attr) {
         .enter()
         .append("circle")
         .attr("class", function(d) { return "circlelegend legend_circle_" + d })
-        .attr("cx", 310)
+        .attr("cx", 780)
         .attr("cy", function(d, i) { return 10 + i * (size + 5) })
-        .attr("r", 4)
+        .attr("r", 6)
         .style("fill", function(d) { return myColor(d) })
         .on("mouseover", function(d) {
             // console.log(d)
             if (!isClicked) {
-                d3.select("." + "legend_circle_" + d).attr("r", 7)
+                d3.select("." + "legend_circle_" + d).attr("r", 9)
                 highlight(d);
             }
         })
         .on("mouseleave", function(d) {
             if (!isClicked) {
-                d3.select("." + "legend_circle_" + d).attr("r", 4)
+                d3.select("." + "legend_circle_" + d).attr("r", 6)
                 noHighlight(d);
             }
         })
         .on("click", function(d) {
             if (!isClicked) {
-                d3.selectAll(".circlelegend").attr("r", 4)
-                d3.select("." + "legend_circle_" + d).attr("r", 7)
+                d3.selectAll(".circlelegend").attr("r", 6)
+                d3.select("." + "legend_circle_" + d).attr("r", 9)
                 highlight(d);
                 isClicked = !isClicked
             } else {
-                d3.select("." + "legend_circle_" + d).attr("r", 4)
+                d3.select("." + "legend_circle_" + d).attr("r", 6)
                 noHighlight(d)
                 isClicked = !isClicked
             }
@@ -340,34 +346,34 @@ function createLineChart(data1, bubbledata1, attr) {
         .enter()
         .append("text")
         .attr("class", function(d) { return "textlegend legend_text_" + d })
-        .attr("x", 310 + size * .8)
-        .attr("y", function(d, i) { return i * (size + 5) + (size / 2) + 5 })
+        .attr("x", 780 + size * .8)
+        .attr("y", function(d, i) { return i * (size + 5) + (size / 2) + 1 })
         .style("fill", function(d) { return myColor(d) })
         .text(function(d) { return d })
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
-        .style("font-size", "8px")
+        .style("font-size", "12px")
         .on("mouseover", function(d) {
             if (!isClicked) {
-                d3.select("." + "legend_text_" + d).style("font-size", "14px")
+                d3.select("." + "legend_text_" + d).style("font-size", "16px")
                 highlight(d);
             }
         })
         .on("mouseleave", function(d) {
             if (!isClicked) {
-                d3.select("." + "legend_text_" + d).style("font-size", "8px")
+                d3.select("." + "legend_text_" + d).style("font-size", "12px")
                 noHighlight(d);
             }
         })
         .on("click", function(d) {
             if (!isClicked) {
-                d3.selectAll(".textlegend").style("font-size", "8px")
-                d3.select("." + "legend_text_" + d).style("font-size", "14px")
+                d3.selectAll(".textlegend").style("font-size", "12px")
+                d3.select("." + "legend_text_" + d).style("font-size", "16px")
                 highlight(d);
                 isClicked = !isClicked
                     // console.log(isClicked)
             } else {
-                d3.select("." + "legend_text_" + d).style("font-size", "8px")
+                d3.select("." + "legend_text_" + d).style("font-size", "12px")
                 noHighlight(d)
                 isClicked = !isClicked
             }
@@ -411,7 +417,7 @@ function createLineChart(data1, bubbledata1, attr) {
         selected_start_date = start_date.getFullYear() + '-' + (start_date.getMonth() + 1) + '-' + start_date.getDate()
         selected_end_date = end_date.getFullYear() + '-' + (end_date.getMonth() + 1) + '-' + end_date.getDate()
 
-        document.getElementById("wordCloudTitle").innerHTML = "Word Cloud of trending tweets hashtags between " + selected_start_date + " to " + selected_end_date;
+        document.getElementById("wordCloudTitle").innerHTML = "Trending tweets hashtags between " + selected_start_date + " to " + selected_end_date;
 
         document.getElementById("worldTitle").innerHTML = "Average daily cases between " + selected_start_date + " to " + selected_end_date;
         var lineTitle = document.getElementById("lineTitle").innerHTML.split(" ")
@@ -482,7 +488,7 @@ function createLineChart(data1, bubbledata1, attr) {
         selected_start_date = start_date.getFullYear() + '-' + (start_date.getMonth() + 1) + '-' + start_date.getDate()
         selected_end_date = end_date.getFullYear() + '-' + (end_date.getMonth() + 1) + '-' + end_date.getDate()
 
-        document.getElementById("wordCloudTitle").innerHTML = "Word Cloud of trending tweets hashtags between " + selected_start_date + " to " + selected_end_date;
+        document.getElementById("wordCloudTitle").innerHTML = "Trending tweets hashtags between " + selected_start_date + " to " + selected_end_date;
 
         document.getElementById("worldTitle").innerHTML = "Average daily cases between " + selected_start_date + " to " + selected_end_date;
         var lineTitle = document.getElementById("lineTitle").innerHTML.split(" ")

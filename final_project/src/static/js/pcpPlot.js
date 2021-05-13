@@ -1,7 +1,7 @@
 // https://bl.ocks.org/jasondavies/1341281
 
 var outerWidthpcp = 800,
-    outerHeightpcp = 400,
+    outerHeightpcp = 350,
     marginspcp = { top: 30, right: 50, bottom: 10, left: 70 },
     innerWidthpcp = outerWidthpcp - marginspcp.left - marginspcp.right,
     innerHeightpcp = outerHeightpcp - marginspcp.top - marginspcp.bottom;
@@ -50,14 +50,14 @@ function plot_pcp(pcp_data1) {
         if (key !== "" && key !== "location" && key != "id") {
             y[key] = d3.scaleLinear()
                 .domain(d3.extent(pcp_data, function(d) { return +d[key]; }))
-                .range([innerHeightpcp - 50, 0]);
+                .range([innerHeightpcp, 0]);
             return key;
         }
         if (key === "location") {
             // console.log(pcp_data.location)
             y[key] = d3.scaleBand()
                 .domain(countries)
-                .range([innerHeightpcp - 50, 0]);
+                .range([innerHeightpcp, 0]);
             return key;
         }
 
@@ -288,14 +288,14 @@ function plot_pcp(pcp_data1) {
             if (key !== "" && key !== "location" && key != "id") {
                 y[key] = d3.scaleLinear()
                     .domain(d3.extent(pcp_data, function(d) { return +d[key]; }))
-                    .range([innerHeightpcp - 50, 0]);
+                    .range([innerHeightpcp, 0]);
                 return key;
             }
             if (key === "location") {
                 // console.log(pcp_data.location)
                 y[key] = d3.scaleBand()
                     .domain(countries)
-                    .range([innerHeightpcp - 50, 0]);
+                    .range([innerHeightpcp, 0]);
                 return key;
             }
 
@@ -321,8 +321,8 @@ function plot_pcp(pcp_data1) {
             .append("path")
             .merge(foregroundpath)
             .attr("class", "foreground")
-            .on("mouseover", highlight)
-            .on("mouseleave", doNotHighlight)
+            // .on("mouseover", highlight)
+            // .on("mouseleave", doNotHighlight)
             .transition().duration(1000)
             .attr("d", line)
             .attr("class", function(d) { return "line " + d.id })
