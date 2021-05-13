@@ -22,6 +22,7 @@ df_new['Date'] = pd.to_datetime(df_new.Date)
 df_new.rename(columns={'iso3':'id'},inplace=True)
 df_new.replace("Case identification, contact tracing and related measures","Contact tracing",inplace=True)
 df_new.replace("Healthcare and public health capacity","Public Healthcare",inplace=True)
+df_new.replace("Returning to normal life","Ease of restrictions",inplace=True)
 
 print(df_new['Measure_L1'])
 df_new.to_csv(save_path, index=False, encoding='utf-8-sig')

@@ -53,6 +53,21 @@ var worldMapTrigger2 = {
     }
 }
 
+var worldMapTrigger3 = {
+    aInternal: null,
+    aListener: function(val) {},
+    set a(val) {
+        this.aInternal = val;
+        this.aListener(val);
+    },
+    get a() {
+        return this.aInternal;
+    },
+    registerListener: function(listener) {
+        this.aListener = listener;
+    }
+}
+
 var pcpTrigger = {
     aInternal: null,
     aListener: function(val) {},
