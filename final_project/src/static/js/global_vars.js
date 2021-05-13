@@ -7,7 +7,10 @@ var selected_attr = "new_cases"
 var selected_start_date = "2020-01-23"
 var selected_end_date = "2021-04-17"
 var selected_countries = []
-
+var avg_cases = 0
+var avg_deaths = 0
+var avg_vaccinations = 0
+var statData = ""
 var lineChartTrigger = {
     aInternal: null,
     aListener: function(val) {},
@@ -83,6 +86,36 @@ var pcpTrigger = {
     }
 }
 
+var statsTrigger = {
+    aInternal: null,
+    aListener: function(val) {},
+    set a(val) {
+        this.aInternal = val;
+        this.aListener(val);
+    },
+    get a() {
+        return this.aInternal;
+    },
+    registerListener: function(listener) {
+        this.aListener = listener;
+    }
+}
+
+var statsTrigger2 = {
+    aInternal: null,
+    aListener: function(val) {},
+    set a(val) {
+        this.aInternal = val;
+        this.aListener(val);
+    },
+    get a() {
+        return this.aInternal;
+    },
+    registerListener: function(listener) {
+        this.aListener = listener;
+    }
+}
+
 $.ajax({
     type: "GET",
     url: "/worldmap",
@@ -130,6 +163,18 @@ $.ajax({
     success: function(response) {
         pcpData = JSON.parse(response)
         plot_pcp(pcpData)
+    },
+    error: function(err) {
+        console.log(err);
+    }
+});
+
+$.ajax({
+    type: "GET",
+    url: "/stats",
+    success: function(response) {
+        stats = JSON.parse(response)
+        plotStats(stats)
     },
     error: function(err) {
         console.log(err);

@@ -176,6 +176,42 @@ def get_linechart_data():
     D = {'lined':d1,'bubbled':d2}
     return json.dumps(D)
 
+@app.route("/stats", methods=["POST" , "GET"])
+def get_stats_data():
+    global world_line_df
+    
+    stats_line_df = pd.DataFrame()
+    
+    country = "world"
+    
+    start_date = pd.to_datetime("2019-03-25")
+    end_date = pd.to_datetime("2022-03-28")
+    
+    if(request.method == 'POST'):
+        finalVal = request.get_json()
+        country = finalVal['country']
+        dates = finalVal['date']
+        if(dates["start"]!=""):
+            start_date = pd.to_datetime(dates["start"])
+            end_date = pd.to_datetime(dates["end"])
+
+    if(country == "world"):        
+        stats_line_df = world_line_df.copy()
+        stats_line_df['date'] = pd.to_datetime(stats_line_df['date'])
+        line_df_send = stats_line_df.loc[(stats_line_df.date>=start_date) & (stats_line_df.date<=end_date)]
+        line_df_send.drop(["date"], axis=1,inplace=True)
+        # line_df_send.date = line_df_send.date.astype("str") 
+    else:
+        stats_line_df = data.loc[data.id == country, ["date", "new_cases_smoothed", "new_deaths_smoothed", "new_vaccinations_smoothed"]]
+        stats_line_df['date'] = pd.to_datetime(stats_line_df['date'])
+        line_df_send = stats_line_df.loc[(stats_line_df.date>=start_date) & (stats_line_df.date<=end_date)]
+        line_df_send.drop(["date"], axis=1,inplace=True)
+        # line_df_send.date = line_df_send.date.astype("str")
+        line_df_send.rename(columns={'new_cases_smoothed': 'new_cases', 'new_deaths_smoothed': 'new_deaths', "new_vaccinations_smoothed" : "new_vaccinations"}, inplace=True)
+    
+    print(line_df_send)
+    return json.dumps(line_df_send.to_dict(orient="records"))
+
 @app.route("/barchart", methods=["POST" , "GET"])
 def get_barchart_data():
     global bar_df

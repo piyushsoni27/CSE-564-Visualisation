@@ -170,9 +170,9 @@ function createChoropleth(data, attr, countries) {
         .range([h, 0])
         .domain([minVal, maxVal]);
 
-    var yAxis = d3.axisRight(y).tickFormat(function(d){
-        if(d >= 100000)
-            return (d/1000000).toFixed(2) + 'M';
+    var yAxis = d3.axisRight(y).tickFormat(function(d) {
+        if (d >= 100000)
+            return (d / 1000000).toFixed(2) + 'M';
         else return d;
     });
 
@@ -204,17 +204,17 @@ function createChoropleth(data, attr, countries) {
                 }
                 if (worldmap_country === "world")
                     return ramp(+d[attr])
-                
-                if(d.id === worldmap_country){
+
+                if (d.id === worldmap_country) {
                     return ramp(+d[attr])
                 }
-                
-                
+
+
                 return "gray"
             });
-        
-        if((selected_countries.length == 0) || (selected_countries.length == 49)){
-            if(worldmap_country == "world"){
+
+        if ((selected_countries.length == 0) || (selected_countries.length == 49)) {
+            if (worldmap_country == "world") {
                 for (i = 0; i < countries_path_arr.length; i++) {
                     d3.select(countries_path_arr[i]).style("fill", function(p) {
                         if (String(+p[attr]) === "NaN") {
@@ -223,11 +223,11 @@ function createChoropleth(data, attr, countries) {
                         if (String(+p[attr]) === "0") {
                             return "black"
                         }
-                        
+
                         return ramp(+p[attr])
                     })
                 }
-            }else{
+            } else {
                 d3.select(countries_path_arr[i]).style("fill", function(p) {
                     if (String(+p[attr]) === "NaN") {
                         return "black"
@@ -235,14 +235,14 @@ function createChoropleth(data, attr, countries) {
                     if (String(+p[attr]) === "0") {
                         return "black"
                     }
-                    if ((p.id === worldmap_country)){
+                    if ((p.id === worldmap_country)) {
                         return ramp(+p[attr])
                     }
                     return "gray"
                 })
             }
-            
-        }else if (selected_countries.length !== 0){
+
+        } else if (selected_countries.length !== 0) {
             for (i = 0; i < countries_path_arr.length; i++) {
                 d3.select(countries_path_arr[i]).style("fill", function(p) {
                     if (String(+p[attr]) === "NaN") {
@@ -289,7 +289,7 @@ function createChoropleth(data, attr, countries) {
         }
 
         function click(d) {
-            if (String(+d[attr]) !== "0"){
+            if (String(+d[attr]) !== "0") {
                 clicked_ptr.push({ ptr: this, color: ramp(+d[attr]) })
                 clicked_countries.push(d.id)
 
@@ -303,7 +303,7 @@ function createChoropleth(data, attr, countries) {
                             return "black"
                         }
                         if (p.id === d.id) return ramp(+p[attr])
-                        if (checkCountry(p.id,selected_countries)) return ramp(+p[attr])
+                        if (checkCountry(p.id, selected_countries)) return ramp(+p[attr])
                         return "gray"
                     })
                 }
@@ -324,7 +324,7 @@ function createChoropleth(data, attr, countries) {
                             return "black"
                         }
                         if (p.id === d.id) return ramp(+p[attr])
-                        if (checkCountry(p.id,selected_countries)) return ramp(+p[attr])
+                        if (checkCountry(p.id, selected_countries)) return ramp(+p[attr])
                         return "gray"
                     })
                 }
@@ -373,9 +373,9 @@ function createChoropleth(data, attr, countries) {
             .range([h, 0])
             .domain([minVal, maxVal]);
 
-        var yAxis = d3.axisRight(y).tickFormat(function(d){
-            if(d >= 100000)
-                return (d/1000000).toFixed(2) + 'M';
+        var yAxis = d3.axisRight(y).tickFormat(function(d) {
+            if (d >= 100000)
+                return (d / 1000000).toFixed(2) + 'M';
             else return d;
         });
 
@@ -412,6 +412,8 @@ function createChoropleth(data, attr, countries) {
         dates.start = selected_start_date
         dates.end = selected_end_date
         worldMapTrigger3.a = dates
+        finalVal = { "date": dates, "country": worldmap_country }
+        statsTrigger.a = finalVal
         $(document).ready(function() {
             $.ajax({
                 type: "POST",

@@ -610,6 +610,8 @@ function createLineChart(data1, bubbledata1, attr) {
                     lineBubbleData = (response)
                     linedata = lineBubbleData['lined']
                     bubbledata = lineBubbleData['bubbled']
+                    statData = linedata
+                    statsTrigger2.a = statData
                     updateLineChart(linedata, bubbledata, selected_attr)
                 },
                 error: function(err) {
