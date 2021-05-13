@@ -63,8 +63,9 @@ body {
     padding-left: 100px;
 }
 
-.dash-unit dtitle#statTitle {
-    padding-left: 60px;
+.dash-unit div#statTitle {
+    /* padding-left: 60px; */
+	align-items: center;
 }
 
 .dash-unit hr {
