@@ -310,7 +310,7 @@ function createLineChart(data1, bubbledata1, attr) {
         .append("circle")
         .attr("class", function(d) { return "circlelegend legend_circle_" + d })
         .attr("cx", 780)
-        .attr("cy", function(d, i) { return 10 + i * (size + 5) })
+        .attr("cy", function(d, i) { return 50 + i * (size + 5) })
         .attr("r", 6)
         .style("fill", function(d) { return myColor(d) })
         .on("mouseover", function(d) {
@@ -347,7 +347,7 @@ function createLineChart(data1, bubbledata1, attr) {
         .append("text")
         .attr("class", function(d) { return "textlegend legend_text_" + d })
         .attr("x", 780 + size * .8)
-        .attr("y", function(d, i) { return i * (size + 5) + (size / 2) + 1 })
+        .attr("y", function(d, i) { return i * (size + 5) + (size / 2) + 40 })
         .style("fill", function(d) { return myColor(d) })
         .text(function(d) { return d })
         .attr("text-anchor", "left")
