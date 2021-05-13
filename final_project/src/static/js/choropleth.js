@@ -99,8 +99,8 @@ function createChoropleth(data, attr, countries) {
 
     // D3 Projection
     var projection = d3.geoMercator()
-        .translate([(width) / 2, height / 2])
-        .scale([100]);
+        .translate([(width) / 2 - 20, height / 2 + 50])
+        .scale([90]);
 
     var zoom = d3.zoom()
         .scaleExtent([1, 9])
