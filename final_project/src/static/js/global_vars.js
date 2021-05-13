@@ -8,6 +8,8 @@ var selected_start_date = "2020-01-23"
 var selected_end_date = "2021-04-17"
 var selected_countries = []
 
+var locationIDMap = {}
+
 var lineChartTrigger = {
     aInternal: null,
     aListener: function(val) {},
@@ -91,6 +93,9 @@ $.ajax({
         for (var i in worldData.features)
             all_countries.push(worldData.features[i].properties.name);
 
+        worldData.features.forEach(element => {
+            locationIDMap[element["id"]] = element.properties.name
+        });
         createChoropleth(worldData, selected_attr)
     },
     error: function(err) {

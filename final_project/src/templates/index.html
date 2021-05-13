@@ -55,10 +55,10 @@
         <div class="row">
             <div class="col-sm-5">
                 <div class="dash-unit">
-                    <!-- <dtitle>Choropleth</dtitle>
-                    <hr> -->
+                    <dtitle id="worldTitle"></dtitle>
+                    <hr>
                     <div class='row'>
-                        <h2>Average daily cases between 10 - 12</h1>
+                        <!-- <h3 id="worldTitle" text-align="center">Average daily cases between</h1> -->
                     </div>
                     <div class="row" title="Choropleth">
                         <div id="worldmap-legend-svg" class="col-sm-1"></div>
@@ -68,8 +68,8 @@
                 </div>
             </div>
             <div class="col-sm-7">
-                <div class="dash-unit">
-                    <dtitle>Line Chart</dtitle>
+                <div class="dash-unit" title="Time-Series line plot">
+                    <dtitle id="lineTitle"></dtitle>
                     <select id='covidattr'>
                         <option value="new_cases">Daily Cases</option>
                         <option value="new_deaths">Daily Deaths</option>
@@ -90,8 +90,8 @@
                 </div>
             </div> -->
             <div class="col-sm-7">
-                <div class="dash-unit">
-                    <dtitle>PCP</dtitle>
+                <div class="dash-unit" title="Parallel Axis Coordinate Plot">
+                    <dtitle id="pcpTitle">Parallel Co-ordinates Plot</dtitle>
                     <hr>
                     <div id="pcp">
                         <svg id='svgpcplot'></svg>
@@ -99,8 +99,8 @@
                 </div>
             </div>
             <div class = "col-sm-5">
-                <div class="dash-unit">
-                    <dtitle>Word Cloud</dtitle>
+                <div class="dash-unit" title="Word Cloud">
+                    <dtitle id="wordCloudTitle"></dtitle>
                     <hr>
                     <div id="wordcloud">
                         <svg id='svgWordCloud'></svg>

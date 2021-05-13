@@ -2,7 +2,7 @@ function createChoropleth(data, attr, countries) {
     attr = selected_attr
 
     var width = 650;
-    var height = 425;
+    var height = 350;
 
     var lowColor = 'rgb(250, 197, 173)'
     var highColor = 'rgb(85, 28, 1)'
@@ -296,6 +296,8 @@ function createChoropleth(data, attr, countries) {
                 worldmap_country = d.id;
 
                 worldMapTrigger.a = d.id
+
+                document.getElementById("lineTitle").innerHTML = "Daily cases between of " + locationIDMap[worldmap_country] + " between " + selected_start_date + " to " + selected_end_date;
 
                 for (i = 0; i < countries_path_arr.length; i++) {
                     d3.select(countries_path_arr[i]).style("fill", function(p) {

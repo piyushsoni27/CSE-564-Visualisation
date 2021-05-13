@@ -10,11 +10,11 @@
 // var innerHeightLine = outerHeightLine - marginBottomLineChart.top - marginBottomLineChart.bottom - 10
 
 var outerWidthLine = 760,
-    outerHeightLine = 425 / 760 * outerWidthLine
-var marginUpperLineChart = { top: 10, right: 70, bottom: 110, left: 40 }
-var marginBottomLineChart = { top: 355, right: 70, bottom: 50, left: 40 }
+    outerHeightLine = 425 / 760 * outerWidthLine -20
+var marginUpperLineChart = { top: 10, right: 70, bottom: 100, left: 40 }
+var marginBottomLineChart = { top: 350, right: 70, bottom: 50, left: 40 }
 var innerWidthLine = outerWidthLine - marginUpperLineChart.left - marginUpperLineChart.right - 10
-var innerHeightLine = outerHeightLine - marginUpperLineChart.top - marginUpperLineChart.bottom - 10
+var innerHeightLine = outerHeightLine - marginUpperLineChart.top - marginUpperLineChart.bottom - 20
 
 var start_date
 var end_date
@@ -411,6 +411,19 @@ function createLineChart(data1, bubbledata1, attr) {
         selected_start_date = start_date.getFullYear() + '-' + (start_date.getMonth() + 1) + '-' + start_date.getDate()
         selected_end_date = end_date.getFullYear() + '-' + (end_date.getMonth() + 1) + '-' + end_date.getDate()
 
+        document.getElementById("wordCloudTitle").innerHTML = "Word Cloud of trending tweets hashtags between " + selected_start_date + " to " + selected_end_date;
+
+        document.getElementById("worldTitle").innerHTML = "Average daily cases between " + selected_start_date + " to " + selected_end_date;
+        var lineTitle = document.getElementById("lineTitle").innerHTML.split(" ")
+
+        lineTitle[6] = selected_start_date
+        lineTitle[8] = selected_end_date
+
+        if(worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
+        else document.getElementById("lineTitle").innerHTML = "Average daily cases of world between " + selected_start_date + " to " + selected_end_date;
+
+        console.log(lineTitle.join(" "))
+
         lineChartTrigger.a = selected_start_date
 
         x.domain(s.map(x2.invert, x2));
@@ -439,8 +452,7 @@ function createLineChart(data1, bubbledata1, attr) {
     function zoomed() {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush" || (d3.event.sourceEvent && d3.event.sourceEvent.type === "end")) return; // ignore zoom-by-brush
         var t = d3.event.transform;
-        // console.log("Zoom 0 " + t.rescaleX(x2).domain()[0])
-        // console.log("Zoom 1" + t.rescaleX(x2).domain()[1])
+
         x.domain(t.rescaleX(x2).domain());
         bubble_chart.selectAll(".bubbles")
             .attr("cx", function(d) { return x(d.date); })
@@ -470,8 +482,16 @@ function createLineChart(data1, bubbledata1, attr) {
         selected_start_date = start_date.getFullYear() + '-' + (start_date.getMonth() + 1) + '-' + start_date.getDate()
         selected_end_date = end_date.getFullYear() + '-' + (end_date.getMonth() + 1) + '-' + end_date.getDate()
 
-        console.log("Zoom 0 " + selected_start_date)
-        console.log("Zoom 1 " + selected_end_date)
+        document.getElementById("wordCloudTitle").innerHTML = "Word Cloud of trending tweets hashtags between " + selected_start_date + " to " + selected_end_date;
+
+        document.getElementById("worldTitle").innerHTML = "Average daily cases between " + selected_start_date + " to " + selected_end_date;
+        var lineTitle = document.getElementById("lineTitle").innerHTML.split(" ")
+
+        lineTitle[6] = selected_start_date
+        lineTitle[8] = selected_end_date
+
+        if(worldmap_country !== "world") document.getElementById("lineTitle").innerHTML = lineTitle.join(" ")
+        else document.getElementById("lineTitle").innerHTML = "Average daily cases of world between " + selected_start_date + " to " + selected_end_date;
 
         lineChartTrigger.a = selected_start_date
 
@@ -503,10 +523,8 @@ function createLineChart(data1, bubbledata1, attr) {
     }
 
     function updateLineChart(data1, bubbledata1, attr_new) {
-        // console.log("update")
         data = data1
         bubbledata = bubbledata1
-            // console.log(bubbledata.length)
 
         var parseDate = d3.timeParse("%Y-%m-%d");
 

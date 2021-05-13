@@ -26,14 +26,33 @@ body {
 } */
 
 .dash-unit dtitle {
-	font-size:11px;
+	font-size:medium;
+	font-weight: bold;
 	text-transform:uppercase;
+	text-align: center;
 	color:#ffffff;
 	margin:8px;
-	padding:0px;
-	height:inherit	
+	/* padding-left:100px; */
+	height:inherit;
+	letter-spacing: normal;
 	}
-	
+
+.dash-unit dtitle#pcpTitle{
+	padding-left: 250px;
+}
+
+.dash-unit dtitle#wordCloudTitle{
+	padding-left: 20px;
+}
+
+.dash-unit dtitle#lineTitle{
+	padding-left: 100px;
+}
+
+.dash-unit dtitle#worldTitle{
+	padding-left: 100px;
+}
+
 .dash-unit hr {
   	border: 0;
   	border-top: 1px solid #151515;
