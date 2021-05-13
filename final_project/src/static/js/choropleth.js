@@ -193,28 +193,67 @@ function createChoropleth(data, attr, countries) {
             .style("stroke", "#FFFFFF")
             .style("stroke-width", 1)
             .style("fill", function(d) {
-                if (String(+d[attr]) === "NaN") {
+                var retVal;
+                if (String(+d[attr]) === "NaN" || String(d[attr]) === "0") {
                     return "black"
                 }
                 if(worldmap_country === "world" || d.id === worldmap_country)
                     return ramp(+d[attr])
-
+                
                 return "gray"
             });
+        
+        console.log(selected_countries.length)
+        // console.log(sele)
+        if((selected_countries.length == 0) || (selected_countries.length == 49)){
+            console.log("IN!!")
+            for (i = 0; i < countries_path_arr.length; i++) {
+                d3.select(countries_path_arr[i]).style("fill", function(p) {
+                    if (String(+p[attr]) === "NaN") {
+                        return "black"
+                    }
+                    if (String(+p[attr]) === "0") {
+                        return "black"
+                    }
+                    
+                    return ramp(+p[attr])
+                })
+            }
+        }else if (selected_countries.length !== 0){
+            for (i = 0; i < countries_path_arr.length; i++) {
+                d3.select(countries_path_arr[i]).style("fill", function(p) {
+                    if (String(+p[attr]) === "NaN") {
+                        return "black"
+                    }
+                    if (String(+p[attr]) === "0") {
+                        return "black"
+                    }
+
+                    if (checkCountry(p.id, selected_countries) || (p.id === worldmap_country)){
+                        return ramp(+p[attr])
+                    }
+                    return "gray"
+                })
+            }
+        }
+        
 
         let div = d3.select("body").append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
 
         function mouseover(d) {
-            if (String(+d[attr]) !== "NaN") {
-                tip.show(d);
+            if (String(+d[attr]) === "NaN")
+                return 
+            if (String(+d[attr]) === "0") 
+                return
+            
+            tip.show(d);
 
-                d3.select(this)
-                    .style("opacity", 1)
-                    .style("stroke", "white")
-                    .style("stroke-width", 3);
-            }
+            d3.select(this)
+                .style("opacity", 1)
+                .style("stroke", "white")
+                .style("stroke-width", 3);
         }
 
         function mouseout(d) {
@@ -227,7 +266,8 @@ function createChoropleth(data, attr, countries) {
         }
 
         function click(d) {
-            if (String(+d[attr]) !== "NaN") {
+            console.log(String(+d[attr]) === "0")
+            if (String(+d[attr]) !== "0"){
                 clicked_ptr.push({ ptr: this, color: ramp(+d[attr]) })
                 clicked_countries.push(d.id)
 
@@ -237,7 +277,7 @@ function createChoropleth(data, attr, countries) {
 
                 for (i = 0; i < countries_path_arr.length; i++) {
                     d3.select(countries_path_arr[i]).style("fill", function(p) {
-                        if (String(+p[attr]) === "NaN") {
+                        if (String(+p[attr]) === "NaN" || String(+p[attr]) === "0") {
                             return "black"
                         }
                         if (p.id === d.id) return ramp(+d[attr])
@@ -245,7 +285,29 @@ function createChoropleth(data, attr, countries) {
                     })
                 }
 
-            } else {
+            } 
+
+            if(String(+d[attr]) !== "NaN") {
+                clicked_ptr.push({ ptr: this, color: ramp(+d[attr]) })
+                clicked_countries.push(d.id)
+
+                worldmap_country = d.id;
+
+                worldMapTrigger.a = d.id
+
+                for (i = 0; i < countries_path_arr.length; i++) {
+                    d3.select(countries_path_arr[i]).style("fill", function(p) {
+                        if (String(+p[attr]) === "NaN" || String(+p[attr]) === "0") {
+                            return "black"
+                        }
+                        if (p.id === d.id) return ramp(+d[attr])
+                        return "gray"
+                    })
+                }
+            }
+            
+            
+            if (String(+d[attr]) === "NaN"){
                 worldmap_country = "world"
                 worldMapTrigger.a = "world"
 
@@ -255,13 +317,31 @@ function createChoropleth(data, attr, countries) {
                         .style("stroke", "white")
                         .style("stroke-width", 1)
                         .style("fill", function(p) {
-                            if (String(+p[attr]) === "NaN") {
+                            if (String(+p[attr]) === "NaN" || String(+p[attr]) === "0") {
                                 return "black"
                             }
                             return ramp(+p[attr])
                         })
                 }
             }
+
+            if (String(+d[attr]) === "0") {
+                worldmap_country = "world"
+                worldMapTrigger.a = "world"
+
+                for (i = 0; i < countries_path_arr.length; i++) {
+                    d3.select(countries_path_arr[i])
+                        .style("opacity", 1)
+                        .style("stroke", "white")
+                        .style("stroke-width", 1)
+                        .style("fill", function(p) {
+                            if (String(+p[attr]) === "NaN" || String(+p[attr]) === "0") {
+                                return "black"
+                            }
+                            return ramp(+p[attr])
+                        })
+                }
+            }   
             tip.hide()
         }
 
@@ -291,12 +371,9 @@ function createChoropleth(data, attr, countries) {
     }
 
     function checkCountry(country, countries) {
-        for (i = 0; i < countries.length; i++) {
-            if (countries[i] === country) {
-                return true;
-            }
-        }
-        return false;
+        var ind = countries.indexOf(country)
+        if(ind === -1) return false
+        return true;
     }
 
     updateChoropleth(data, selected_attr, selected_countries)
@@ -359,5 +436,21 @@ function createChoropleth(data, attr, countries) {
                 }
             });
         });
+    });
+
+    pcpTrigger.registerListener(function(val) {
+        console.log(selected_countries)
+        // $.ajax({
+        //     type: "GET",
+        //     url: "/worldmap",
+        //     success: function(response) {
+        //         worldMapData = (response)
+        //         updateChoropleth(worldMapData, selected_attr, selected_countries)
+        //     },
+        //     error: function(err) {
+        //         console.log(err);
+        //     }
+        // });
+        updateChoropleth(data, selected_attr, selected_countries)
     });
 }
