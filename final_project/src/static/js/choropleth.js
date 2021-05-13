@@ -206,7 +206,6 @@ function createChoropleth(data, attr, countries) {
                     return ramp(+d[attr])
                 
                 if(d.id === worldmap_country){
-                    console.log("true")
                     return ramp(+d[attr])
                 }
                 
@@ -253,14 +252,14 @@ function createChoropleth(data, attr, countries) {
                         return "black"
                     }
 
-                    if (checkCountry(p.id, selected_countries) || (p.id === worldmap_country)){
+                    if (checkCountry(p.id, selected_countries) || (p.id === worldmap_country)) {
                         return ramp(+p[attr])
                     }
                     return "gray"
                 })
             }
         }
-        
+
 
         let div = d3.select("body").append("div")
             .attr("class", "tooltip")
@@ -268,10 +267,10 @@ function createChoropleth(data, attr, countries) {
 
         function mouseover(d) {
             if (String(+d[attr]) === "NaN")
-                return 
-            if (String(+d[attr]) === "0") 
                 return
-            
+            if (String(+d[attr]) === "0")
+                return
+
             tip.show(d);
 
             d3.select(this)
@@ -309,9 +308,9 @@ function createChoropleth(data, attr, countries) {
                     })
                 }
 
-            } 
+            }
 
-            if(String(+d[attr]) !== "NaN") {
+            if (String(+d[attr]) !== "NaN") {
                 clicked_ptr.push({ ptr: this, color: ramp(+d[attr]) })
                 clicked_countries.push(d.id)
 
@@ -330,9 +329,9 @@ function createChoropleth(data, attr, countries) {
                     })
                 }
             }
-            
-            
-            if (String(+d[attr]) === "NaN"){
+
+
+            if (String(+d[attr]) === "NaN") {
                 worldmap_country = "world"
                 worldMapTrigger.a = "world"
 
@@ -366,7 +365,7 @@ function createChoropleth(data, attr, countries) {
                             return ramp(+p[attr])
                         })
                 }
-            }   
+            }
             tip.hide()
         }
 
@@ -401,7 +400,7 @@ function createChoropleth(data, attr, countries) {
 
     function checkCountry(country, countries) {
         var ind = countries.indexOf(country)
-        if(ind === -1) return false
+        if (ind === -1) return false
         return true;
     }
 
@@ -412,7 +411,7 @@ function createChoropleth(data, attr, countries) {
         dates = {}
         dates.start = selected_start_date
         dates.end = selected_end_date
-
+        worldMapTrigger3.a = dates
         $(document).ready(function() {
             $.ajax({
                 type: "POST",
@@ -442,23 +441,6 @@ function createChoropleth(data, attr, countries) {
                     wordCloudData = (response)
 
                     createWordCloud(wordCloudData)
-                },
-                error: function(err) {
-                    console.log(err);
-                }
-            });
-        });
-
-        $(document).ready(function() {
-            $.ajax({
-                type: "POST",
-                url: "/pcp",
-                contentType: "application/json",
-                data: JSON.stringify(dates),
-                dataType: "json",
-                success: function(response) {
-                    pcpData = (response)
-                    plot_pcp(pcpData)
                 },
                 error: function(err) {
                     console.log(err);
